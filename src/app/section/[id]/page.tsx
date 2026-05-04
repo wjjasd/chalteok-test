@@ -1,0 +1,127 @@
+'use client'
+
+import { useParams, useRouter } from 'next/navigation'
+import { SECTIONS, SectionId, getActiveSections } from '@/lib/questions'
+import { useRFIStore } from '@/store/rfi'
+import StepLayout from '@/components/StepLayout'
+
+const SECTION_ORDER: SectionId[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+const LIKERT_LABELS = ['전혀\n아니다', '거의\n아니다', '보통\n이다', '대체로\n그렇다', '매우\n그렇다']
+
+function idToSection(id: string): SectionId {
+  return id.toUpperCase() as SectionId
+}
+
+function sectionToStep(sectionId: SectionId): number {
+  return SECTION_ORDER.indexOf(sectionId) + 5
+}
+
+function nextRoute(
+  currentId: SectionId,
+  activeSections: SectionId[],
+): string {
+  const currentIdx = SECTION_ORDER.indexOf(currentId)
+  // 다음 섹션 중 활성 섹션 찾기
+  for (let i = currentIdx + 1; i < SECTION_ORDER.length; i++) {
+    const next = SECTION_ORDER[i]
+    if (activeSections.includes(next)) {
+      return `/section/${next.toLowerCase()}`
+    }
+  }
+  return '/flags'
+}
+
+export default function SectionPage() {
+  const params = useParams()
+  const router = useRouter()
+  const rawId = Array.isArray(params.id) ? params.id[0] : (params.id ?? 'a')
+  const sectionId = idToSection(rawId)
+  const section = SECTIONS.find((s) => s.id === sectionId)
+
+  const answers = useRFIStore((s) => s.answers)
+  const setAnswer = useRFIStore((s) => s.setAnswer)
+  const relationshipStage = useRFIStore((s) => s.profile.relationshipStage)
+  const activeSections = getActiveSections(relationshipStage)
+
+  if (!section) {
+    return <div className="p-8 text-center text-gray-400">잘못된 섹션입니다.</div>
+  }
+
+  const allAnswered = section.questions.every(
+    (q) => answers[`Q${q.id}`] !== undefined,
+  )
+
+  const handleNext = () => {
+    router.push(nextRoute(sectionId, activeSections))
+  }
+
+  const isOptional = !activeSections.includes(sectionId)
+
+  return (
+    <StepLayout
+      step={sectionToStep(sectionId)}
+      totalSteps={14}
+      title={`${sectionId}. ${section.title}`}
+      subtitle={section.subtitle}
+    >
+      {isOptional && (
+        <div className="mb-4 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-700">
+          현재 관계 단계에서 선택적 섹션입니다. 응답하지 않으면 점수 산출에서 제외됩니다.
+        </div>
+      )}
+
+      <div className="space-y-6 mb-8">
+        {section.questions.map((q, qi) => {
+          const key = `Q${q.id}`
+          const current = answers[key] as number | undefined
+
+          return (
+            <div key={q.id} className="bg-white rounded-2xl border border-gray-100 p-4">
+              <p className="text-sm font-medium text-gray-800 mb-4 leading-relaxed">
+                <span className="text-gray-400 mr-1">{qi + 1}.</span>
+                {q.text}
+              </p>
+              <div className="grid grid-cols-5 gap-1.5">
+                {[0, 1, 2, 3, 4].map((val) => (
+                  <button
+                    key={val}
+                    type="button"
+                    onClick={() => setAnswer(key, val)}
+                    className={`flex flex-col items-center gap-1 py-2 px-1 rounded-xl border text-xs transition-colors ${
+                      current === val
+                        ? 'bg-rose-500 text-white border-rose-500'
+                        : 'bg-gray-50 text-gray-500 border-gray-200 hover:border-rose-300'
+                    }`}
+                  >
+                    <span className="font-semibold text-base leading-none">{val}</span>
+                    <span className="text-center leading-tight whitespace-pre-line text-[10px]">
+                      {LIKERT_LABELS[val]}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+
+      <div className="flex gap-3">
+        {isOptional && (
+          <button
+            onClick={handleNext}
+            className="flex-1 py-4 rounded-2xl font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
+          >
+            건너뛰기
+          </button>
+        )}
+        <button
+          onClick={handleNext}
+          disabled={!allAnswered && !isOptional}
+          className="flex-1 py-4 rounded-2xl font-semibold transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed bg-rose-500 hover:bg-rose-600 text-white"
+        >
+          다음
+        </button>
+      </div>
+    </StepLayout>
+  )
+}
