@@ -89,7 +89,7 @@ export default function ResultPage() {
       try {
         await new Promise<void>((resolve, reject) => {
           const s = document.createElement('script')
-          s.src = 'https://t1.kakaocdn.net/kakaojs/latest/kakao.js'
+          s.src = 'https://developers.kakao.com/sdk/js/kakao.js'
           s.onload = () => resolve()
           s.onerror = () => reject()
           document.head.appendChild(s)
