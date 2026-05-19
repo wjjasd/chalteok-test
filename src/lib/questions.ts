@@ -124,6 +124,7 @@ export const CUTOFF_QUESTIONS = [
 export const ACTIVE_SECTIONS_BY_STAGE: Record<string, SectionId[]> = {
   first_meeting: ['A', 'B'],
   one_to_three_months: ['A', 'B', 'C', 'D', 'F'],
+  three_to_six_months: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
   three_months_plus: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
   six_months_plus: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],
   one_year_plus: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'],

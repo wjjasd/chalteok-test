@@ -7,6 +7,7 @@ export interface SharePayload {
   finalScore: number
   grade: Grade
   cutoffCount: number
+  cutoffYesIds: number[]
   activeSections: SectionId[]
 }
 
