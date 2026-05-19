@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Noto_Sans_KR } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 
 const notoSansKr = Noto_Sans_KR({
@@ -21,7 +22,13 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ko" className={`${notoSansKr.variable} h-full antialiased`}>
-      <body className="min-h-full bg-gray-50 font-sans">{children}</body>
+      <body className="min-h-full bg-gray-50 font-sans">
+        {children}
+        <Script
+          src="https://t1.kakaocdn.net/kakaojs/latest/kakao.js"
+          strategy="afterInteractive"
+        />
+      </body>
     </html>
   )
 }
