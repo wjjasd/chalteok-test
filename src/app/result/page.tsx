@@ -42,6 +42,7 @@ export default function ResultPage() {
 
   const [result, setResult] = useState<ScoreResult | null>(null)
   const [weights, setWeights] = useState<Record<SectionId, number>>(storeWeights)
+  const [cutoffYesIds, setCutoffYesIds] = useState<number[]>([])
   const [copied, setCopied] = useState(false)
 
   useEffect(() => {
@@ -57,6 +58,7 @@ export default function ResultPage() {
           cutoffCount: shared.cutoffCount,
         })
         setWeights(shared.weights)
+        setCutoffYesIds(shared.cutoffYesIds ?? [])
         return
       }
     }
@@ -69,6 +71,7 @@ export default function ResultPage() {
     const r = calcResult(storeAnswers, storeWeights, storeStage)
     setResult(r)
     setWeights(storeWeights)
+    setCutoffYesIds([41, 42, 43, 44, 45].filter((id) => storeAnswers[`Q${id}`] === true))
   }, [])
 
   const handleShare = () => {
@@ -79,6 +82,7 @@ export default function ResultPage() {
       finalScore: result.finalScore,
       grade: result.grade,
       cutoffCount: result.cutoffCount,
+      cutoffYesIds,
       activeSections: result.activeSections,
     }
     const hash = encodeShare(payload)
@@ -151,8 +155,7 @@ export default function ResultPage() {
             </p>
             <div className="mt-2 space-y-1">
               {CUTOFF_QUESTIONS.map((q) => {
-                const yes = storeAnswers[`Q${q.id}`] === true
-                if (!yes) return null
+                if (!cutoffYesIds.includes(q.id)) return null
                 return (
                   <p key={q.id} className={`text-xs ${cutoffBadge.text_color}`}>
                     · {q.text}
