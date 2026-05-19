@@ -6,8 +6,14 @@ declare global {
       Share: {
         sendDefault: (obj: {
           objectType: string
-          text: string
-          link: { mobileWebUrl: string; webUrl: string }
+          text?: string
+          content?: {
+            title: string
+            description?: string
+            imageUrl?: string
+            link: { mobileWebUrl: string; webUrl: string }
+          }
+          link?: { mobileWebUrl: string; webUrl: string }
         }) => void
       }
     }

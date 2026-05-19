@@ -115,9 +115,13 @@ export default function ResultPage() {
     }
     const url = `${window.location.origin}/result#${encodeShare(payload)}`
     window.Kakao.Share.sendDefault({
-      objectType: 'text',
-      text: `내 관계 적합도 점수는 ${Math.round(result.finalScore)}점 (${result.grade}등급)입니다.\nRFI는 자기 성찰 도구이며, 관계 진단이 아닙니다.`,
-      link: { mobileWebUrl: url, webUrl: url },
+      objectType: 'feed',
+      content: {
+        title: `내 찰떡 궁합 점수: ${Math.round(result.finalScore)}점 (${result.grade}등급)`,
+        description: 'RFI는 자기 성찰 도구이며, 관계 진단이 아닙니다.',
+        imageUrl: `${window.location.origin}/og-image.png`,
+        link: { mobileWebUrl: url, webUrl: url },
+      },
     })
   }
 
