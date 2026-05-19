@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full bg-gray-50 font-sans">
         {children}
         <Script
-          src="https://t1.kakaocdn.net/kakaojs/latest/kakao.js"
+          src="https://developers.kakao.com/sdk/js/kakao.js"
           strategy="afterInteractive"
         />
       </body>
