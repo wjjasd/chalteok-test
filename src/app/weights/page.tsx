@@ -37,12 +37,23 @@ const PRESETS: { label: string; desc: string; weights: Record<SectionId, number>
 const MIN_W = 5
 const MAX_W = 40
 
+const VALUE_LABELS: Record<string, string> = {
+  trust: '신뢰',
+  communication: '소통',
+  emotional_stability: '정서적 안정',
+  values: '가치관 일치',
+  lifestyle: '생활 습관',
+  attraction: '신체적 끌림',
+}
+
 export default function WeightsPage() {
   const router = useRouter()
   const weights = useRFIStore((s) => s.weights)
   const setWeight = useRFIStore((s) => s.setWeight)
   const setWeights = useRFIStore((s) => s.setWeights)
   const resetWeights = useRFIStore((s) => s.resetWeights)
+  const applyRecommendedWeights = useRFIStore((s) => s.applyRecommendedWeights)
+  const importantValues = useRFIStore((s) => s.profile.importantValues)
 
   const total = Object.values(weights).reduce((a, b) => a + b, 0)
   const remaining = 100 - total
@@ -60,6 +71,29 @@ export default function WeightsPage() {
       title="섹션 가중치 설정"
       subtitle="각 영역이 나에게 얼마나 중요한지 100포인트를 배분해 주세요."
     >
+      {/* P5 기반 자동 추천 */}
+      {importantValues.length > 0 && (
+        <div className="mb-4 bg-rose-50 border border-rose-200 rounded-2xl p-4">
+          <p className="text-xs text-gray-500 mb-2 font-medium">내 우선순위 기반 추천</p>
+          <div className="flex flex-wrap gap-1.5 mb-3">
+            {importantValues.map((v) => (
+              <span
+                key={v}
+                className="text-xs px-2 py-1 rounded-lg bg-rose-100 text-rose-700 font-medium"
+              >
+                {VALUE_LABELS[v] ?? v}
+              </span>
+            ))}
+          </div>
+          <button
+            onClick={applyRecommendedWeights}
+            className="text-xs px-3 py-1.5 rounded-xl bg-rose-500 text-white hover:bg-rose-600 transition-colors font-medium"
+          >
+            이 우선순위로 가중치 추천 적용
+          </button>
+        </div>
+      )}
+
       {/* 프리셋 */}
       <div className="mb-4">
         <p className="text-xs text-gray-500 mb-2 font-medium">빠른 설정 (프리셋)</p>
