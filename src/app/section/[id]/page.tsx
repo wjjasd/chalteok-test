@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { SECTIONS, SectionId, getActiveSections } from '@/lib/questions'
 import { useRFIStore } from '@/store/rfi'
@@ -21,7 +22,6 @@ function nextRoute(
   activeSections: SectionId[],
 ): string {
   const currentIdx = SECTION_ORDER.indexOf(currentId)
-  // 다음 섹션 중 활성 섹션 찾기
   for (let i = currentIdx + 1; i < SECTION_ORDER.length; i++) {
     const next = SECTION_ORDER[i]
     if (activeSections.includes(next)) {
@@ -34,6 +34,7 @@ function nextRoute(
 export default function SectionPage() {
   const params = useParams()
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
   const rawId = Array.isArray(params.id) ? params.id[0] : (params.id ?? 'a')
   const sectionId = idToSection(rawId)
   const section = SECTIONS.find((s) => s.id === sectionId)
@@ -52,10 +53,9 @@ export default function SectionPage() {
   )
 
   const handleNext = () => {
+    setLoading(true)
     router.push(nextRoute(sectionId, activeSections))
   }
-
-  const isOptional = !activeSections.includes(sectionId)
 
   return (
     <StepLayout
@@ -64,12 +64,6 @@ export default function SectionPage() {
       title={`${sectionId}. ${section.title}`}
       subtitle={section.subtitle}
     >
-      {isOptional && (
-        <div className="mb-4 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-700">
-          현재 관계 단계에서 선택적 섹션입니다. 응답하지 않으면 점수 산출에서 제외됩니다.
-        </div>
-      )}
-
       <div className="space-y-6 mb-8">
         {section.questions.map((q, qi) => {
           const key = `Q${q.id}`
@@ -105,23 +99,15 @@ export default function SectionPage() {
         })}
       </div>
 
-      <div className="flex gap-3">
-        {isOptional && (
-          <button
-            onClick={handleNext}
-            className="flex-1 py-4 rounded-2xl font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 transition-colors"
-          >
-            건너뛰기
-          </button>
-        )}
-        <button
-          onClick={handleNext}
-          disabled={!allAnswered && !isOptional}
-          className="flex-1 py-4 rounded-2xl font-semibold transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed bg-rose-500 hover:bg-rose-600 text-white"
-        >
-          다음
-        </button>
-      </div>
+      <button
+        onClick={handleNext}
+        disabled={!allAnswered || loading}
+        className="w-full py-4 rounded-2xl font-semibold transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed bg-rose-500 hover:bg-rose-600 text-white"
+      >
+        {loading ? (
+          <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        ) : '다음'}
+      </button>
     </StepLayout>
   )
 }

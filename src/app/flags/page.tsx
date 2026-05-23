@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { CUTOFF_QUESTIONS } from '@/lib/questions'
 import { useRFIStore } from '@/store/rfi'
@@ -7,6 +8,7 @@ import StepLayout from '@/components/StepLayout'
 
 export default function FlagsPage() {
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
   const answers = useRFIStore((s) => s.answers)
   const setAnswer = useRFIStore((s) => s.setAnswer)
 
@@ -65,11 +67,13 @@ export default function FlagsPage() {
       </div>
 
       <button
-        onClick={() => router.push('/result')}
-        disabled={!allAnswered}
+        onClick={() => { setLoading(true); router.push('/result') }}
+        disabled={!allAnswered || loading}
         className="w-full py-4 rounded-2xl font-semibold transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed bg-rose-500 hover:bg-rose-600 text-white"
       >
-        결과 보기
+        {loading ? (
+          <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        ) : '결과 보기'}
       </button>
     </StepLayout>
   )

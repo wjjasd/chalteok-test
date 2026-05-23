@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useRFIStore } from '@/store/rfi'
 import { SectionId } from '@/lib/questions'
@@ -48,6 +49,7 @@ const VALUE_LABELS: Record<string, string> = {
 
 export default function WeightsPage() {
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
   const weights = useRFIStore((s) => s.weights)
   const setWeight = useRFIStore((s) => s.setWeight)
   const setWeights = useRFIStore((s) => s.setWeights)
@@ -161,11 +163,13 @@ export default function WeightsPage() {
       </p>
 
       <button
-        onClick={() => router.push('/section/a')}
-        disabled={!isValid}
+        onClick={() => { setLoading(true); router.push('/section/a') }}
+        disabled={!isValid || loading}
         className="w-full py-4 rounded-2xl font-semibold transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed bg-rose-500 hover:bg-rose-600 text-white"
       >
-        {isValid ? '설문 시작하기' : `합계가 ${total}점입니다 (100점이 되어야 합니다)`}
+        {loading ? (
+          <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        ) : isValid ? '설문 시작하기' : `합계가 ${total}점입니다 (100점이 되어야 합니다)`}
       </button>
     </StepLayout>
   )
