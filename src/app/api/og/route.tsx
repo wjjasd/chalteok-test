@@ -14,11 +14,19 @@ const GRADE_BG: Record<string, string> = {
 }
 
 const GRADE_FG: Record<string, string> = {
-  S: '#14532d',
-  A: '#1e3a8a',
-  B: '#713f12',
-  C: '#7c2d12',
-  D: '#7f1d1d',
+  S: '#16a34a',
+  A: '#2563eb',
+  B: '#ca8a04',
+  C: '#ea580c',
+  D: '#dc2626',
+}
+
+const GRADE_LABEL_EN: Record<string, string> = {
+  S: 'Perfect Match',
+  A: 'Great Match',
+  B: 'Good Match',
+  C: 'Needs Work',
+  D: 'Low Match',
 }
 
 export async function GET(request: NextRequest) {
@@ -27,13 +35,10 @@ export async function GET(request: NextRequest) {
 
   const score = payload ? Math.round(payload.finalScore) : null
   const grade = payload?.grade ?? null
-  const gradeLabel = grade ? (GRADE_CONFIG[grade]?.label ?? '') : ''
+  const gradeLabelKo = grade ? (GRADE_CONFIG[grade]?.label ?? '') : ''
+  const gradeLabelEn = grade ? (GRADE_LABEL_EN[grade] ?? '') : ''
   const gradeBg = grade ? (GRADE_BG[grade] ?? '#f3f4f6') : '#f3f4f6'
-  const gradeFg = grade ? (GRADE_FG[grade] ?? '#111827') : '#111827'
-
-  const fontData = await fetch(
-    'https://fonts.gstatic.com/s/notosanskr/v36/PbykFmXiEBPT4ITbgNA5Cgm203Tq4JJWq209pU0DPdWuqxJFA4GNDCBYtw.0.woff2'
-  ).then((r) => r.arrayBuffer())
+  const gradeFg = grade ? (GRADE_FG[grade] ?? '#111827') : '#e11d48'
 
   return new ImageResponse(
     (
@@ -46,63 +51,89 @@ export async function GET(request: NextRequest) {
           alignItems: 'center',
           justifyContent: 'center',
           background: 'linear-gradient(135deg, #fff1f2 0%, #fce7f3 100%)',
-          fontFamily: 'Noto Sans KR',
           padding: '60px',
         }}
       >
-        <div style={{ fontSize: 30, color: '#e11d48', fontWeight: 700, marginBottom: 32 }}>
-          찰떡 궁합 테스트
+        {/* 서비스명 */}
+        <div
+          style={{
+            fontSize: 28,
+            fontWeight: 700,
+            color: '#e11d48',
+            letterSpacing: '0.05em',
+            marginBottom: 36,
+            textTransform: 'uppercase',
+          }}
+        >
+          CHALTEOK MATCH TEST
         </div>
 
         {score !== null ? (
           <>
+            {/* 점수 */}
             <div
               style={{
-                fontSize: 128,
-                fontWeight: 900,
-                color: '#111827',
-                lineHeight: 1,
-                letterSpacing: '-4px',
-              }}
-            >
-              {score}점
-            </div>
-            <div
-              style={{
-                marginTop: 28,
-                fontSize: 38,
-                fontWeight: 700,
-                color: gradeFg,
-                backgroundColor: gradeBg,
-                padding: '14px 40px',
-                borderRadius: 20,
                 display: 'flex',
+                alignItems: 'baseline',
+                gap: 8,
               }}
             >
-              {grade}등급 — {gradeLabel}
+              <div
+                style={{
+                  fontSize: 140,
+                  fontWeight: 900,
+                  color: '#111827',
+                  lineHeight: 1,
+                  letterSpacing: '-6px',
+                }}
+              >
+                {score}
+              </div>
+              <div style={{ fontSize: 48, fontWeight: 700, color: '#374151' }}>
+                pts
+              </div>
+            </div>
+
+            {/* 등급 배지 */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                marginTop: 28,
+                backgroundColor: gradeBg,
+                padding: '16px 48px',
+                borderRadius: 20,
+              }}
+            >
+              <div style={{ fontSize: 42, fontWeight: 900, color: gradeFg }}>
+                {grade} GRADE
+              </div>
+              <div style={{ fontSize: 22, fontWeight: 600, color: gradeFg, opacity: 0.8 }}>
+                {gradeLabelEn}
+              </div>
             </div>
           </>
         ) : (
-          <div style={{ fontSize: 60, fontWeight: 800, color: '#111827', textAlign: 'center' }}>
-            나와 그 사람, 찰떡일까?
+          <div
+            style={{
+              fontSize: 56,
+              fontWeight: 800,
+              color: '#111827',
+              textAlign: 'center',
+              lineHeight: 1.3,
+            }}
+          >
+            How Compatible Are You?
           </div>
         )}
 
-        <div style={{ fontSize: 22, color: '#9ca3af', marginTop: 48 }}>
+        {/* 도메인 */}
+        <div style={{ fontSize: 20, color: '#9ca3af', marginTop: 44 }}>
           chalteok.kro.kr
         </div>
       </div>
     ),
-    {
-      width: 1200,
-      height: 630,
-      fonts: [
-        {
-          name: 'Noto Sans KR',
-          data: fontData,
-          style: 'normal',
-        },
-      ],
-    }
+    { width: 1200, height: 630 }
   )
 }
