@@ -31,6 +31,10 @@ export async function GET(request: NextRequest) {
   const gradeBg = grade ? (GRADE_BG[grade] ?? '#f3f4f6') : '#f3f4f6'
   const gradeFg = grade ? (GRADE_FG[grade] ?? '#111827') : '#111827'
 
+  const fontData = await fetch(
+    'https://fonts.gstatic.com/s/notosanskr/v36/PbykFmXiEBPT4ITbgNA5Cgm203Tq4JJWq209pU0DPdWuqxJFA4GNDCBYtw.0.woff2'
+  ).then((r) => r.arrayBuffer())
+
   return new ImageResponse(
     (
       <div
@@ -42,7 +46,7 @@ export async function GET(request: NextRequest) {
           alignItems: 'center',
           justifyContent: 'center',
           background: 'linear-gradient(135deg, #fff1f2 0%, #fce7f3 100%)',
-          fontFamily: 'system-ui, -apple-system, sans-serif',
+          fontFamily: 'Noto Sans KR',
           padding: '60px',
         }}
       >
@@ -89,6 +93,16 @@ export async function GET(request: NextRequest) {
         </div>
       </div>
     ),
-    { width: 1200, height: 630 }
+    {
+      width: 1200,
+      height: 630,
+      fonts: [
+        {
+          name: 'Noto Sans KR',
+          data: fontData,
+          style: 'normal',
+        },
+      ],
+    }
   )
 }
