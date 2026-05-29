@@ -14,7 +14,7 @@ function idToSection(id: string): SectionId {
 }
 
 function sectionToStep(sectionId: SectionId): number {
-  return SECTION_ORDER.indexOf(sectionId) + 5
+  return SECTION_ORDER.indexOf(sectionId) + 4
 }
 
 function nextRoute(
@@ -60,7 +60,7 @@ export default function SectionPage() {
   return (
     <StepLayout
       step={sectionToStep(sectionId)}
-      totalSteps={14}
+      totalSteps={13}
       title={`${sectionId}. ${section.title}`}
       subtitle={section.subtitle}
     >

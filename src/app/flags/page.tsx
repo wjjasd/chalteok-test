@@ -18,8 +18,8 @@ export default function FlagsPage() {
 
   return (
     <StepLayout
-      step={13}
-      totalSteps={14}
+      step={12}
+      totalSteps={13}
       title="컷오프 항목 확인"
       subtitle="이 항목들은 점수에 반영되지 않지만, 결과 화면에서 별도로 안내됩니다."
     >
