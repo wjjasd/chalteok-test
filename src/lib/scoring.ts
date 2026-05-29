@@ -1,6 +1,6 @@
 import { SECTIONS, SectionId, getActiveSections } from './questions'
 
-const REVERSE_QUESTIONS = new Set([5, 10, 15, 20, 25, 30, 35, 40])
+const REVERSE_QUESTIONS = new Set<number>([])
 
 export function scoreQuestion(qId: number, raw: number): number {
   return REVERSE_QUESTIONS.has(qId) ? 4 - raw : raw
@@ -109,12 +109,14 @@ export function recommendWeights(importantValues: string[]): Record<SectionId, n
   const weights: Record<SectionId, number> = { A: base, B: base, C: base, D: base, E: base, F: base, G: base, H: base }
 
   const bonusMap: Record<string, { section: SectionId; bonus: number }[]> = {
-    trust: [{ section: 'F', bonus: 8 }],
-    communication: [{ section: 'B', bonus: 8 }],
-    emotional_stability: [{ section: 'C', bonus: 5 }, { section: 'H', bonus: 5 }],
-    values: [{ section: 'D', bonus: 8 }],
-    lifestyle: [{ section: 'E', bonus: 8 }],
-    attraction: [{ section: 'A', bonus: 8 }],
+    attraction:           [{ section: 'A', bonus: 8 }],
+    communication:        [{ section: 'B', bonus: 8 }],
+    emotional_stability:  [{ section: 'C', bonus: 8 }],
+    values:               [{ section: 'D', bonus: 8 }],
+    lifestyle:            [{ section: 'E', bonus: 8 }],
+    trust:                [{ section: 'F', bonus: 8 }],
+    relational_dynamics:  [{ section: 'G', bonus: 8 }],
+    self_growth:          [{ section: 'H', bonus: 8 }],
   }
 
   let totalBonus = 0

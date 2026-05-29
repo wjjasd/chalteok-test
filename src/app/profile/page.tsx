@@ -45,12 +45,14 @@ const PAST_RELATIONSHIPS = [
 ]
 
 const IMPORTANT_VALUES = [
-  { value: 'trust', label: '신뢰' },
-  { value: 'communication', label: '소통' },
-  { value: 'emotional_stability', label: '정서적 안정' },
-  { value: 'values', label: '가치관 일치' },
-  { value: 'lifestyle', label: '생활 습관' },
-  { value: 'attraction', label: '신체적 끌림' },
+  { value: 'attraction',          label: '설렘·끌림' },
+  { value: 'communication',       label: '대화' },
+  { value: 'emotional_stability', label: '감정 안정' },
+  { value: 'values',              label: '가치관' },
+  { value: 'lifestyle',           label: '생활습관' },
+  { value: 'trust',               label: '신뢰' },
+  { value: 'relational_dynamics', label: '갈등 회복' },
+  { value: 'self_growth',         label: '자존감' },
 ]
 
 const EMOTIONAL_STATES = [
@@ -109,12 +111,13 @@ export default function ProfilePage() {
   const router = useRouter()
   const profile = useRFIStore((s) => s.profile)
   const setProfile = useRFIStore((s) => s.setProfile)
+  const applyRecommendedWeights = useRFIStore((s) => s.applyRecommendedWeights)
 
   const toggleValue = (v: string) => {
     const current = profile.importantValues
     if (current.includes(v)) {
       setProfile({ importantValues: current.filter((x) => x !== v) })
-    } else if (current.length < 3) {
+    } else {
       setProfile({ importantValues: [...current, v] })
     }
   }
@@ -157,19 +160,16 @@ export default function ProfilePage() {
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-2">
             관계에서 가장 중요하게 여기는 것 <span className="text-rose-500">*</span>
-            <span className="text-gray-400 font-normal ml-1">(최대 3개)</span>
           </label>
           <div className="flex flex-wrap gap-2">
             {IMPORTANT_VALUES.map((opt) => {
               const selected = profile.importantValues.includes(opt.value)
-              const maxed = profile.importantValues.length >= 3 && !selected
               return (
                 <button
                   key={opt.value}
                   type="button"
                   onClick={() => toggleValue(opt.value)}
-                  disabled={maxed}
-                  className={`px-3 py-2 rounded-xl text-sm border transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
+                  className={`px-3 py-2 rounded-xl text-sm border transition-colors ${
                     selected
                       ? 'bg-rose-500 text-white border-rose-500'
                       : 'bg-white text-gray-700 border-gray-200 hover:border-rose-300'
@@ -216,11 +216,11 @@ export default function ProfilePage() {
       </div>
 
       <button
-        onClick={() => router.push('/weights')}
+        onClick={() => { applyRecommendedWeights(); router.push('/section/a') }}
         disabled={!canProceed}
         className="mt-8 w-full py-4 rounded-2xl font-semibold transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed bg-rose-500 hover:bg-rose-600 text-white"
       >
-        다음 — 가중치 설정
+        다음
       </button>
     </StepLayout>
   )
