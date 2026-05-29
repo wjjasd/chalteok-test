@@ -9,11 +9,31 @@ const BASE_URL = 'https://chalteok.kro.kr'
 export async function generateMetadata({
   searchParams,
 }: {
-  searchParams: Promise<{ d?: string }>
+  searchParams: Promise<{ d?: string; s?: string; g?: string }>
 }): Promise<Metadata> {
-  const { d } = await searchParams
-  const payload = d ? decodeShare(d) : null
+  const { d, s, g } = await searchParams
 
+  // ?s=<score>&g=<grade> 짧은 공유 URL
+  if (s && g && ['S', 'A', 'B', 'C', 'D'].includes(g)) {
+    const score = parseInt(s, 10)
+    if (!isNaN(score)) {
+      const gradeLabel = GRADE_CONFIG[g as keyof typeof GRADE_CONFIG]?.label ?? ''
+      return {
+        title: `찰떡 궁합 테스트 — ${score}점 (${g}등급)`,
+        openGraph: {
+          url: `${BASE_URL}/result?s=${score}&g=${g}`,
+          type: 'website',
+          siteName: '찰떡 궁합 테스트',
+          title: `내 찰떡 궁합 점수: ${score}점 (${g}등급 — ${gradeLabel})`,
+          description: '찰떡 궁합 테스트는 자기 성찰 도구이며, 관계 진단이 아닙니다.',
+          images: [{ url: `${BASE_URL}/api/og?s=${score}&g=${g}`, width: 1200, height: 630 }],
+        },
+      }
+    }
+  }
+
+  // ?d= 전체 데이터 URL
+  const payload = d ? decodeShare(d) : null
   if (payload) {
     const score = Math.round(payload.finalScore)
     const gradeLabel = GRADE_CONFIG[payload.grade]?.label ?? ''
