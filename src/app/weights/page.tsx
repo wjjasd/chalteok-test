@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useRFIStore } from '@/store/rfi'
+import { useQuizStore } from '@/store/quiz'
 import { SectionId } from '@/lib/questions'
 import StepLayout from '@/components/StepLayout'
 
@@ -50,12 +50,12 @@ const VALUE_LABELS: Record<string, string> = {
 export default function WeightsPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const weights = useRFIStore((s) => s.weights)
-  const setWeight = useRFIStore((s) => s.setWeight)
-  const setWeights = useRFIStore((s) => s.setWeights)
-  const resetWeights = useRFIStore((s) => s.resetWeights)
-  const applyRecommendedWeights = useRFIStore((s) => s.applyRecommendedWeights)
-  const importantValues = useRFIStore((s) => s.profile.importantValues)
+  const weights = useQuizStore((s) => s.weights)
+  const setWeight = useQuizStore((s) => s.setWeight)
+  const setWeights = useQuizStore((s) => s.setWeights)
+  const resetWeights = useQuizStore((s) => s.resetWeights)
+  const applyRecommendedWeights = useQuizStore((s) => s.applyRecommendedWeights)
+  const importantValues = useQuizStore((s) => s.profile.importantValues)
 
   const total = Object.values(weights).reduce((a, b) => a + b, 0)
   const remaining = 100 - total

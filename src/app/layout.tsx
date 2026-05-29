@@ -10,11 +10,11 @@ const notoSansKr = Noto_Sans_KR({
 })
 
 export const metadata: Metadata = {
-  title: 'RFI — 관계 적합도 인터뷰',
+  title: '찰떡 궁합 테스트',
   description: '두 사람의 관계 적합도를 구조화된 설문을 통해 성찰하는 도구입니다.',
   openGraph: {
-    title: 'RFI — 관계 적합도 인터뷰',
-    description: '자기 성찰을 위한 관계 적합도 인터뷰 도구',
+    title: '찰떡 궁합 테스트',
+    description: '자기 성찰을 위한 찰떡 궁합 테스트',
     type: 'website',
   },
 }

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { SECTIONS, SectionId, getActiveSections } from '@/lib/questions'
-import { useRFIStore } from '@/store/rfi'
+import { useQuizStore } from '@/store/quiz'
 import StepLayout from '@/components/StepLayout'
 
 const SECTION_ORDER: SectionId[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
@@ -39,9 +39,9 @@ export default function SectionPage() {
   const sectionId = idToSection(rawId)
   const section = SECTIONS.find((s) => s.id === sectionId)
 
-  const answers = useRFIStore((s) => s.answers)
-  const setAnswer = useRFIStore((s) => s.setAnswer)
-  const relationshipStage = useRFIStore((s) => s.profile.relationshipStage)
+  const answers = useQuizStore((s) => s.answers)
+  const setAnswer = useQuizStore((s) => s.setAnswer)
+  const relationshipStage = useQuizStore((s) => s.profile.relationshipStage)
   const activeSections = getActiveSections(relationshipStage)
 
   if (!section) {

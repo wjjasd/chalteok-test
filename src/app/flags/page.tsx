@@ -3,14 +3,14 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { CUTOFF_QUESTIONS } from '@/lib/questions'
-import { useRFIStore } from '@/store/rfi'
+import { useQuizStore } from '@/store/quiz'
 import StepLayout from '@/components/StepLayout'
 
 export default function FlagsPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
-  const answers = useRFIStore((s) => s.answers)
-  const setAnswer = useRFIStore((s) => s.setAnswer)
+  const answers = useQuizStore((s) => s.answers)
+  const setAnswer = useQuizStore((s) => s.setAnswer)
 
   const allAnswered = CUTOFF_QUESTIONS.every(
     (q) => answers[`Q${q.id}`] !== undefined,

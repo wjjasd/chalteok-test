@@ -16,7 +16,7 @@ const DEFAULT_WEIGHTS: Record<SectionId, number> = {
   A: 12, B: 13, C: 12, D: 13, E: 12, F: 13, G: 13, H: 12,
 }
 
-interface RFIState {
+interface QuizState {
   termsAgreed: boolean
   profile: Profile
   weights: Record<SectionId, number>
@@ -42,7 +42,7 @@ const initialProfile: Profile = {
   conflictFrequency: '',
 }
 
-export const useRFIStore = create<RFIState>()((set, get) => ({
+export const useQuizStore = create<QuizState>()((set, get) => ({
   termsAgreed: false,
   profile: initialProfile,
   weights: { ...DEFAULT_WEIGHTS },
