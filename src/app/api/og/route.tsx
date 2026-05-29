@@ -14,20 +14,32 @@ const GRADE_LABEL: Record<string, string> = {
 }
 
 export async function GET(request: NextRequest) {
-  const d = request.nextUrl.searchParams.get('d')
-
+  // ?s=<score>&g=<grade> 형식 (짧은 URL) 우선, 없으면 ?d= 레거시 지원
+  const sp = request.nextUrl.searchParams
   let score: number | null = null
   let grade: string | null = null
 
-  if (d) {
-    try {
-      const json = JSON.parse(decodeURIComponent(atob(d)))
-      if (json && typeof json.finalScore === 'number' && json.grade) {
-        score = Math.round(json.finalScore)
-        grade = String(json.grade)
+  const sParam = sp.get('s')
+  const gParam = sp.get('g')
+
+  if (sParam && gParam) {
+    const n = parseInt(sParam, 10)
+    if (!isNaN(n) && ['S', 'A', 'B', 'C', 'D'].includes(gParam)) {
+      score = n
+      grade = gParam
+    }
+  } else {
+    const d = sp.get('d')
+    if (d) {
+      try {
+        const json = JSON.parse(decodeURIComponent(atob(d)))
+        if (json && typeof json.finalScore === 'number' && json.grade) {
+          score = Math.round(json.finalScore)
+          grade = String(json.grade)
+        }
+      } catch {
+        // invalid
       }
-    } catch {
-      // invalid payload
     }
   }
 
