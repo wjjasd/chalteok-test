@@ -36,7 +36,7 @@ export async function generateMetadata({
     openGraph: {
       title: '찰떡 궁합 테스트',
       description: '나와 그 사람, 찰떡일까? 관계 적합도 자기 성찰 도구',
-      images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+      images: [{ url: '/api/og', width: 1200, height: 630 }],
     },
   }
 }
