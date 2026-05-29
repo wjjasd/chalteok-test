@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
             <div
               style={{
                 display: 'flex',
-                alignItems: 'baseline',
+                alignItems: 'flex-end',
                 gap: 8,
               }}
             >
