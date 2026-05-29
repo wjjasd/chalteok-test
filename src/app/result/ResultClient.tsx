@@ -123,8 +123,26 @@ export default function ResultClient() {
   }, [])
 
   useEffect(() => {
-    // ?d= 쿼리 파라미터 방식 (신규)
     const searchParams = new URLSearchParams(window.location.search)
+
+    // ?s=<score>&g=<grade> 방식 (카카오 짧은 URL)
+    const sParam = searchParams.get('s')
+    const gParam = searchParams.get('g')
+    if (sParam && gParam && ['S', 'A', 'B', 'C', 'D'].includes(gParam)) {
+      const score = parseInt(sParam, 10)
+      if (!isNaN(score)) {
+        setResult({
+          sectionPercents: {} as Record<SectionId, number>,
+          finalScore: score,
+          grade: gParam as ScoreResult['grade'],
+          activeSections: [],
+          cutoffCount: 0,
+        })
+        return
+      }
+    }
+
+    // ?d= 쿼리 파라미터 방식 (신규)
     const d = searchParams.get('d')
     if (d) {
       const shared: SharePayload | null = decodeShare(d)
@@ -196,24 +214,17 @@ export default function ResultClient() {
     if (key && !window.Kakao.isInitialized()) {
       window.Kakao.init(key)
     }
-    const payload: SharePayload = {
-      sectionPercents: result.sectionPercents,
-      weights,
-      finalScore: result.finalScore,
-      grade: result.grade,
-      cutoffCount: result.cutoffCount,
-      cutoffYesIds,
-      activeSections: result.activeSections,
-    }
-    const encoded = encodeShare(payload)
-    const url = `${window.location.origin}/result?d=${encodeURIComponent(encoded)}`
+    const score = Math.round(result.finalScore)
+    const grade = result.grade
+    const shortUrl = `${window.location.origin}/result?s=${score}&g=${grade}`
+    const imageUrl = `${window.location.origin}/api/og?s=${score}&g=${grade}`
     window.Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
-        title: `내 찰떡 궁합 점수: ${Math.round(result.finalScore)}점 (${result.grade}등급)`,
+        title: `내 찰떡 궁합 점수: ${score}점 (${grade}등급)`,
         description: '찰떡 궁합 테스트는 자기 성찰 도구이며, 관계 진단이 아닙니다.',
-        imageUrl: `${window.location.origin}/api/og?d=${encodeURIComponent(encoded)}`,
-        link: { mobileWebUrl: url, webUrl: url },
+        imageUrl,
+        link: { mobileWebUrl: shortUrl, webUrl: shortUrl },
       },
     })
   }
