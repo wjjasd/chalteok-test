@@ -4,6 +4,8 @@ import ResultClient from './ResultClient'
 import { decodeShare } from '@/lib/share'
 import { GRADE_CONFIG } from '@/lib/scoring'
 
+const BASE_URL = 'https://chalteok.kro.kr'
+
 export async function generateMetadata({
   searchParams,
 }: {
@@ -15,18 +17,17 @@ export async function generateMetadata({
   if (payload) {
     const score = Math.round(payload.finalScore)
     const gradeLabel = GRADE_CONFIG[payload.grade]?.label ?? ''
+    const ogImageUrl = `${BASE_URL}/api/og?s=${score}&g=${payload.grade}`
+    const pageUrl = `${BASE_URL}/result?d=${encodeURIComponent(d!)}`
     return {
       title: `찰떡 궁합 테스트 — ${score}점 (${payload.grade}등급)`,
       openGraph: {
+        url: pageUrl,
+        type: 'website',
+        siteName: '찰떡 궁합 테스트',
         title: `내 찰떡 궁합 점수: ${score}점 (${payload.grade}등급 — ${gradeLabel})`,
         description: '찰떡 궁합 테스트는 자기 성찰 도구이며, 관계 진단이 아닙니다.',
-        images: [
-          {
-            url: `/api/og?d=${encodeURIComponent(d!)}`,
-            width: 1200,
-            height: 630,
-          },
-        ],
+        images: [{ url: ogImageUrl, width: 1200, height: 630 }],
       },
     }
   }
@@ -34,9 +35,12 @@ export async function generateMetadata({
   return {
     title: '찰떡 궁합 테스트 — 결과',
     openGraph: {
+      url: `${BASE_URL}/result`,
+      type: 'website',
+      siteName: '찰떡 궁합 테스트',
       title: '찰떡 궁합 테스트',
       description: '나와 그 사람, 찰떡일까? 관계 적합도 자기 성찰 도구',
-      images: [{ url: '/api/og', width: 1200, height: 630 }],
+      images: [{ url: `${BASE_URL}/api/og`, width: 1200, height: 630 }],
     },
   }
 }
