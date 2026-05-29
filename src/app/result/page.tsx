@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { useRFIStore } from '@/store/rfi'
+import { useQuizStore } from '@/store/quiz'
 import { calcResult, GRADE_CONFIG, ScoreResult } from '@/lib/scoring'
 import { SectionId, SECTIONS, CUTOFF_QUESTIONS } from '@/lib/questions'
 import { encodeShare, decodeShare, SharePayload } from '@/lib/share'
@@ -104,9 +104,9 @@ function getCutoffBadge(count: number) {
 
 export default function ResultPage() {
   const router = useRouter()
-  const storeAnswers = useRFIStore((s) => s.answers)
-  const storeWeights = useRFIStore((s) => s.weights)
-  const storeStage = useRFIStore((s) => s.profile.relationshipStage)
+  const storeAnswers = useQuizStore((s) => s.answers)
+  const storeWeights = useQuizStore((s) => s.weights)
+  const storeStage = useQuizStore((s) => s.profile.relationshipStage)
 
   const captureRef = useRef<HTMLDivElement>(null)
   const [result, setResult] = useState<ScoreResult | null>(null)
@@ -186,7 +186,7 @@ export default function ResultPage() {
       objectType: 'feed',
       content: {
         title: `내 찰떡 궁합 점수: ${Math.round(result.finalScore)}점 (${result.grade}등급)`,
-        description: 'RFI는 자기 성찰 도구이며, 관계 진단이 아닙니다.',
+        description: '찰떡 궁합 테스트는 자기 성찰 도구이며, 관계 진단이 아닙니다.',
         imageUrl: `${window.location.origin}/og-image.png`,
         link: { mobileWebUrl: url, webUrl: url },
       },
@@ -308,10 +308,10 @@ export default function ResultPage() {
       ctx.fillStyle = '#9ca3af'
       ctx.font = '11px system-ui, sans-serif'
       ctx.textAlign = 'center'
-      ctx.fillText('RFI는 자기 성찰 도구이며, 관계 진단이 아닙니다.', W / 2, y + 8)
+      ctx.fillText('찰떡 궁합 테스트는 자기 성찰 도구이며, 관계 진단이 아닙니다.', W / 2, y + 8)
 
       const link = document.createElement('a')
-      link.download = `RFI_결과_${Math.round(result.finalScore)}점.png`
+      link.download = `찰떡궁합_결과_${Math.round(result.finalScore)}점.png`
       link.href = canvas.toDataURL('image/png')
       link.click()
     } finally {
@@ -457,7 +457,7 @@ export default function ResultPage() {
             관계에 대한 중요한 결정은 신뢰할 수 있는 주변인 또는 전문 상담사와 상의하시기 바랍니다.
           </p>
           <p className="mt-2 text-xs text-gray-400">
-            RFI는 자기 성찰 도구이며, 관계 진단이 아닙니다.
+            찰떡 궁합 테스트는 자기 성찰 도구이며, 관계 진단이 아닙니다.
           </p>
         </div>
 
@@ -484,7 +484,7 @@ export default function ResultPage() {
           </button>
           <button
             onClick={() => {
-              useRFIStore.getState().reset()
+              useQuizStore.getState().reset()
               router.push('/')
             }}
             className="py-3.5 rounded-2xl font-semibold border border-gray-200 text-gray-600 bg-white hover:bg-gray-50 transition-colors text-sm"

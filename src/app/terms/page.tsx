@@ -2,12 +2,12 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useRFIStore } from '@/store/rfi'
+import { useQuizStore } from '@/store/quiz'
 import StepLayout from '@/components/StepLayout'
 
 export default function TermsPage() {
   const router = useRouter()
-  const setTermsAgreed = useRFIStore((s) => s.setTermsAgreed)
+  const setTermsAgreed = useQuizStore((s) => s.setTermsAgreed)
   const [check1, setCheck1] = useState(false)
   const [check2, setCheck2] = useState(false)
 

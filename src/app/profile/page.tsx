@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useRFIStore } from '@/store/rfi'
+import { useQuizStore } from '@/store/quiz'
 import StepLayout from '@/components/StepLayout'
 
 const AGE_GROUPS = [
@@ -109,9 +109,9 @@ function SelectField({
 
 export default function ProfilePage() {
   const router = useRouter()
-  const profile = useRFIStore((s) => s.profile)
-  const setProfile = useRFIStore((s) => s.setProfile)
-  const applyRecommendedWeights = useRFIStore((s) => s.applyRecommendedWeights)
+  const profile = useQuizStore((s) => s.profile)
+  const setProfile = useQuizStore((s) => s.setProfile)
+  const applyRecommendedWeights = useQuizStore((s) => s.applyRecommendedWeights)
 
   const toggleValue = (v: string) => {
     const current = profile.importantValues
