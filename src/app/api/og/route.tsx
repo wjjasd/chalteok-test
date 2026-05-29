@@ -84,7 +84,6 @@ export async function GET(request: NextRequest) {
                   fontWeight: 900,
                   color: '#111827',
                   lineHeight: 1,
-                  letterSpacing: '-6px',
                 }}
               >
                 {score}
@@ -102,7 +101,10 @@ export async function GET(request: NextRequest) {
                 alignItems: 'center',
                 marginTop: 28,
                 backgroundColor: gradeBg,
-                padding: '16px 48px',
+                paddingTop: 16,
+                paddingBottom: 16,
+                paddingLeft: 48,
+                paddingRight: 48,
                 borderRadius: 20,
               }}
             >
