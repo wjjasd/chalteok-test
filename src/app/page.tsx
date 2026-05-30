@@ -6,7 +6,7 @@ export default function LandingPage() {
       <div className="w-full max-w-lg text-center">
         <div className="mb-6">
           <span className="inline-block bg-rose-100 text-rose-600 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">
-            Relationship Fit Interview
+            관계 적합도 테스트
           </span>
         </div>
 
