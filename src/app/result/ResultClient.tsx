@@ -259,45 +259,30 @@ export default function ResultClient() {
 
   const handleDownload = () => {
     if (!result) return
+    const safeResult = result
     setCapturing(true)
     try {
       const W = 600
       const P = 36
-      const sections = [...result.activeSections].sort((a, b) => weights[b] - weights[a])
-      const totalH = P + 28 + 8 + 28 + 16 + 80 + 8 + 44 + 16 + 1 + 16 + 24 + sections.length * 44 + 16 + 20 + P
-
       const dpr = Math.min(window.devicePixelRatio || 2, 3)
-      const canvas = document.createElement('canvas')
-      canvas.width = W * dpr
-      canvas.height = totalH * dpr
-      const ctx = canvas.getContext('2d')!
-      ctx.scale(dpr, dpr)
 
-      ctx.fillStyle = '#ffffff'
-      ctx.fillRect(0, 0, W, totalH)
-
-      let y = P
-
-      ctx.font = 'bold 11px system-ui, sans-serif'
-      ctx.textAlign = 'center'
-      ctx.textBaseline = 'middle'
-      const badgeW = ctx.measureText('궁합 점수').width + 24
-      ctx.fillStyle = '#ffe4e6'
-      ctx.beginPath()
-      ctx.roundRect((W - badgeW) / 2, y, badgeW, 22, 11)
-      ctx.fill()
-      ctx.fillStyle = '#e11d48'
-      ctx.fillText('궁합 점수', W / 2, y + 11)
-      y += 30
-
-      ctx.fillStyle = '#111827'
-      ctx.font = 'bold 20px system-ui, sans-serif'
-      ctx.fillText('상대방과 나의 적합도', W / 2, y + 10)
-      y += 32
-
-      ctx.font = 'bold 72px system-ui, sans-serif'
-      ctx.fillText(`${Math.round(result.finalScore)}점`, W / 2, y + 56)
-      y += 80
+      // wrapText: maxWidth에 맞춰 줄 배열 반환
+      function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
+        const words = text.split(' ')
+        const lines: string[] = []
+        let current = ''
+        for (const word of words) {
+          const candidate = current ? `${current} ${word}` : word
+          if (ctx.measureText(candidate).width > maxWidth && current) {
+            lines.push(current)
+            current = word
+          } else {
+            current = candidate
+          }
+        }
+        if (current) lines.push(current)
+        return lines
+      }
 
       const GRADE_COLORS: Record<string, { bg: string; fg: string }> = {
         S: { bg: '#dcfce7', fg: '#14532d' },
@@ -306,68 +291,254 @@ export default function ResultClient() {
         C: { bg: '#ffedd5', fg: '#7c2d12' },
         D: { bg: '#fee2e2', fg: '#7f1d1d' },
       }
-      const gc = GRADE_COLORS[result.grade] ?? { bg: '#f3f4f6', fg: '#111827' }
-      const gradeLabel = GRADE_CONFIG[result.grade]?.label ?? ''
-      const gradeText = `${result.grade}등급 — ${gradeLabel}`
-      ctx.font = 'bold 15px system-ui, sans-serif'
-      const gradeW = ctx.measureText(gradeText).width + 32
-      ctx.fillStyle = gc.bg
-      ctx.beginPath()
-      ctx.roundRect((W - gradeW) / 2, y, gradeW, 36, 10)
-      ctx.fill()
-      ctx.fillStyle = gc.fg
-      ctx.fillText(gradeText, W / 2, y + 18)
-      y += 52
 
-      ctx.fillStyle = '#f3f4f6'
-      ctx.fillRect(P, y, W - P * 2, 1)
-      y += 16
+      const sections = [...safeResult.activeSections].sort((a, b) => weights[b] - weights[a])
+      const score = Math.round(safeResult.finalScore)
+      const gc = GRADE_COLORS[safeResult.grade] ?? { bg: '#f3f4f6', fg: '#111827' }
+      const gradeConfig = GRADE_CONFIG[safeResult.grade]
 
-      ctx.fillStyle = '#374151'
-      ctx.font = 'bold 13px system-ui, sans-serif'
-      ctx.textAlign = 'left'
-      ctx.fillText('영역별 점수', P, y + 8)
-      y += 24
+      // --- 1-pass: 충분히 큰 canvas에 그리며 최종 y 추적 ---
+      const LARGE_H = 4000
+      const measureCanvas = document.createElement('canvas')
+      measureCanvas.width = W * dpr
+      measureCanvas.height = LARGE_H * dpr
+      const mctx = measureCanvas.getContext('2d')!
+      mctx.scale(dpr, dpr)
 
-      for (const id of sections) {
-        const pct = Math.round(result.sectionPercents[id])
-        const barColor = pct >= 70 ? '#4ade80' : pct >= 50 ? '#facc15' : '#f87171'
-        const barMaxW = W - P * 2
+      function drawAll(ctx: CanvasRenderingContext2D, totalH: number): number {
+        ctx.textBaseline = 'middle'
 
-        ctx.fillStyle = '#374151'
-        ctx.font = '13px system-ui, sans-serif'
+        // A. 배경
+        ctx.fillStyle = '#fff8f8'
+        ctx.fillRect(0, 0, W, totalH)
+
+        // A-1. 헤더 영역 배경
+        ctx.fillStyle = '#fff1f2'
+        ctx.fillRect(0, 0, W, 80)
+
+        let y = 0
+
+        // B. 헤더 (height=80)
+        // "찰떡" 좌측
+        ctx.font = 'bold 18px system-ui, sans-serif'
         ctx.textAlign = 'left'
-        ctx.fillText(`${id}. ${SECTION_TITLES[id]}`, P, y + 8)
+        ctx.fillStyle = '#e11d48'
+        ctx.fillText('찰떡', P, 40)
 
-        ctx.fillStyle = '#111827'
-        ctx.font = 'bold 13px system-ui, sans-serif'
+        // "궁합 점수" 우측
+        ctx.font = '12px system-ui, sans-serif'
         ctx.textAlign = 'right'
-        ctx.fillText(`${pct}%`, W - P, y + 8)
+        ctx.fillStyle = '#9ca3af'
+        ctx.fillText('궁합 점수', W - P, 40)
 
-        y += 20
-        ctx.fillStyle = '#e5e7eb'
+        // "상대방과 나의 적합도" 하단 중앙
+        ctx.font = 'bold 20px system-ui, sans-serif'
+        ctx.textAlign = 'center'
+        ctx.fillStyle = '#111827'
+        ctx.fillText('상대방과 나의 적합도', W / 2, 64)
+
+        y = 80
+
+        // C. 반원 게이지
+        const gaugeRadius = 110
+        const gaugeThickness = 14
+        const gaugeCenterX = W / 2
+        const gaugeCenterY = y + gaugeRadius + 16
+        const gaugeHeight = gaugeRadius + 16 + 48 // 반지름 + 위 여백 + 점수 텍스트 공간
+
+        // 배경 arc (π ~ 2π)
         ctx.beginPath()
-        ctx.roundRect(P, y, barMaxW, 10, 5)
-        ctx.fill()
+        ctx.arc(gaugeCenterX, gaugeCenterY, gaugeRadius, Math.PI, 2 * Math.PI)
+        ctx.strokeStyle = '#e5e7eb'
+        ctx.lineWidth = gaugeThickness
+        ctx.lineCap = 'round'
+        ctx.stroke()
 
-        const fillW = barMaxW * pct / 100
-        if (fillW > 0) {
-          ctx.fillStyle = barColor
+        // 점수 arc
+        const scoreRatio = Math.min(score / 100, 1)
+        const scoreArcEnd = Math.PI + scoreRatio * Math.PI
+        let arcColor = '#f87171'
+        if (score >= 85) arcColor = '#4ade80'
+        else if (score >= 70) arcColor = '#60a5fa'
+        else if (score >= 55) arcColor = '#facc15'
+        else if (score >= 40) arcColor = '#fb923c'
+
+        if (scoreRatio > 0) {
           ctx.beginPath()
-          ctx.roundRect(P, y, Math.max(fillW, 8), 10, 5)
-          ctx.fill()
+          ctx.arc(gaugeCenterX, gaugeCenterY, gaugeRadius, Math.PI, scoreArcEnd)
+          ctx.strokeStyle = arcColor
+          ctx.lineWidth = gaugeThickness
+          ctx.lineCap = 'round'
+          ctx.stroke()
         }
+
+        // 점수 텍스트 (게이지 중앙 하단)
+        const scoreText = `${score}`
+        ctx.font = 'bold 56px system-ui, sans-serif'
+        ctx.textAlign = 'right'
+        ctx.fillStyle = '#111827'
+        const scoreMetrics = ctx.measureText(scoreText)
+        const scoreTotalW = scoreMetrics.width
+        ctx.font = 'bold 20px system-ui, sans-serif'
+        const unitMetrics = ctx.measureText('점')
+        const unitW = unitMetrics.width
+        const textBlockW = scoreTotalW + 4 + unitW
+        const textStartX = gaugeCenterX + textBlockW / 2
+
+        ctx.font = 'bold 56px system-ui, sans-serif'
+        ctx.textAlign = 'right'
+        ctx.fillStyle = '#111827'
+        ctx.fillText(scoreText, textStartX - unitW - 4, gaugeCenterY + 8)
+
+        ctx.font = 'bold 20px system-ui, sans-serif'
+        ctx.textAlign = 'left'
+        ctx.fillStyle = '#6b7280'
+        ctx.fillText('점', textStartX - unitW, gaugeCenterY + 8)
+
+        y += gaugeHeight
+
+        // D. 등급 배지
+        const gradeLabel = gradeConfig?.label ?? ''
+        const gradeText = `${safeResult.grade}등급 — ${gradeLabel}`
+        ctx.font = 'bold 15px system-ui, sans-serif'
+        ctx.textAlign = 'center'
+        const gradeTextW = ctx.measureText(gradeText).width + 32
+        ctx.fillStyle = gc.bg
+        ctx.beginPath()
+        ctx.roundRect((W - gradeTextW) / 2, y, gradeTextW, 36, 10)
+        ctx.fill()
+        ctx.fillStyle = gc.fg
+        ctx.fillText(gradeText, W / 2, y + 18)
+        y += 44
+
+        // 등급 설명 (wrapText, 14px, #6b7280, 중앙 정렬)
+        ctx.font = '14px system-ui, sans-serif'
+        ctx.fillStyle = '#6b7280'
+        ctx.textAlign = 'center'
+        const descLines = wrapText(ctx, gradeConfig?.description ?? '', W - P * 2)
+        for (const line of descLines) {
+          ctx.fillText(line, W / 2, y + 9)
+          y += 20
+        }
+        y += 12
+
+        // E. 컷오프 경고 박스
+        if (safeResult.cutoffCount > 0) {
+          const isSevereCutoff = safeResult.cutoffCount >= 3
+          const warnBg = isSevereCutoff ? '#fee2e2' : '#fef9c3'
+          const warnBorder = isSevereCutoff ? '#fca5a5' : '#fde68a'
+          const warnText = `⚠️ 경고 항목 ${safeResult.cutoffCount}개 감지`
+
+          ctx.fillStyle = warnBg
+          ctx.beginPath()
+          ctx.roundRect(P, y, W - P * 2, 36, 8)
+          ctx.fill()
+          ctx.strokeStyle = warnBorder
+          ctx.lineWidth = 1
+          ctx.beginPath()
+          ctx.roundRect(P, y, W - P * 2, 36, 8)
+          ctx.stroke()
+
+          ctx.font = 'bold 13px system-ui, sans-serif'
+          ctx.textAlign = 'left'
+          ctx.fillStyle = isSevereCutoff ? '#991b1b' : '#78350f'
+          ctx.fillText(warnText, P + 12, y + 18)
+          y += 44
+        }
+
+        // F. 구분선 + "영역별 점수" 헤딩
+        ctx.fillStyle = '#e5e7eb'
+        ctx.fillRect(P, y, W - P * 2, 1)
+        y += 16
+
+        ctx.font = 'bold 14px system-ui, sans-serif'
+        ctx.textAlign = 'left'
+        ctx.fillStyle = '#374151'
+        ctx.fillText('영역별 점수', P, y + 8)
+        y += 28
+
+        // G. 섹션 반복
+        for (let i = 0; i < sections.length; i++) {
+          const id = sections[i]
+          const pct = Math.round(safeResult.sectionPercents[id])
+          const barColor = pct >= 70 ? '#4ade80' : pct >= 55 ? '#facc15' : '#f87171'
+          const barMaxW = W - P * 2
+
+          // 섹션명 + 퍼센트
+          ctx.font = '13px system-ui, sans-serif'
+          ctx.textAlign = 'left'
+          ctx.fillStyle = '#374151'
+          ctx.fillText(`${id}. ${SECTION_TITLES[id]}`, P, y + 8)
+
+          ctx.font = 'bold 13px system-ui, sans-serif'
+          ctx.textAlign = 'right'
+          ctx.fillStyle = '#111827'
+          ctx.fillText(`${pct}%`, W - P, y + 8)
+          y += 24
+
+          // 바 차트 (높이 12px)
+          ctx.fillStyle = '#e5e7eb'
+          ctx.beginPath()
+          ctx.roundRect(P, y, barMaxW, 12, 6)
+          ctx.fill()
+
+          const fillW = barMaxW * pct / 100
+          if (fillW > 0) {
+            ctx.fillStyle = barColor
+            ctx.beginPath()
+            ctx.roundRect(P, y, Math.max(fillW, 8), 12, 6)
+            ctx.fill()
+          }
+          y += 18
+
+          // 코멘트 (wrapText, 12px, 줄 간격 17px)
+          ctx.font = '12px system-ui, sans-serif'
+          ctx.textAlign = 'left'
+          ctx.fillStyle = '#6b7280'
+          const comment = getSectionComment(pct, id)
+          const commentLines = wrapText(ctx, comment, W - P * 2)
+          for (const line of commentLines) {
+            ctx.fillText(line, P, y + 8)
+            y += 17
+          }
+          y += 12
+
+          // 섹션 사이 구분선 (마지막 제외)
+          if (i < sections.length - 1) {
+            ctx.fillStyle = '#f3f4f6'
+            ctx.fillRect(P, y, W - P * 2, 1)
+            y += 16
+          }
+        }
+
+        // H. 푸터
+        y += 20
+        ctx.font = '11px system-ui, sans-serif'
+        ctx.textAlign = 'center'
+        ctx.fillStyle = '#9ca3af'
+        ctx.fillText('찰떡 궁합 테스트는 자기 성찰 도구이며, 관계 진단이 아닙니다.', W / 2, y + 8)
         y += 24
+
+        ctx.fillStyle = '#e11d48'
+        ctx.fillText('chalteok.kro.kr', W / 2, y + 8)
+        y += 24
+
+        return y + P
       }
 
-      y += 16
-      ctx.fillStyle = '#9ca3af'
-      ctx.font = '11px system-ui, sans-serif'
-      ctx.textAlign = 'center'
-      ctx.fillText('찰떡 궁합 테스트는 자기 성찰 도구이며, 관계 진단이 아닙니다.', W / 2, y + 8)
+      // 1-pass: 최종 높이 측정
+      const measuredH = drawAll(mctx, LARGE_H)
+
+      // 2-pass: 정확한 높이로 최종 canvas 생성
+      const canvas = document.createElement('canvas')
+      canvas.width = W * dpr
+      canvas.height = measuredH * dpr
+      const ctx = canvas.getContext('2d')!
+      ctx.scale(dpr, dpr)
+      drawAll(ctx, measuredH)
 
       const link = document.createElement('a')
-      link.download = `찰떡궁합_결과_${Math.round(result.finalScore)}점.png`
+      link.download = `찰떡궁합_결과_${score}점.png`
       link.href = canvas.toDataURL('image/png')
       link.click()
     } finally {
