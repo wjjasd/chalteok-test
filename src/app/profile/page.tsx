@@ -94,7 +94,7 @@ function SelectField({
             key={opt.value}
             type="button"
             onClick={() => onChange(opt.value)}
-            className={`px-3 py-2 rounded-xl text-sm border transition-colors ${
+            className={`px-3 py-2.5 rounded-xl text-sm border transition-colors ${
               value === opt.value
                 ? 'bg-rose-500 text-white border-rose-500'
                 : 'bg-white text-gray-700 border-gray-200 hover:border-rose-300'
@@ -171,7 +171,7 @@ export default function ProfilePage() {
                   key={opt.value}
                   type="button"
                   onClick={() => toggleValue(opt.value)}
-                  className={`px-3 py-2 rounded-xl text-sm border transition-colors ${
+                  className={`px-3 py-2.5 rounded-xl text-sm border transition-colors ${
                     selected
                       ? 'bg-rose-500 text-white border-rose-500'
                       : 'bg-white text-gray-700 border-gray-200 hover:border-rose-300'
@@ -197,7 +197,7 @@ export default function ProfilePage() {
                 key={opt.value}
                 type="button"
                 onClick={() => setProfile({ emotionalState: opt.value })}
-                className={`px-3 py-2 rounded-xl text-sm border transition-colors ${
+                className={`px-3 py-2.5 rounded-xl text-sm border transition-colors ${
                   profile.emotionalState === opt.value
                     ? 'bg-rose-500 text-white border-rose-500'
                     : 'bg-white text-gray-700 border-gray-200 hover:border-rose-300'

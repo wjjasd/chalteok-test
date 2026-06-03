@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { useQuizStore } from '@/store/quiz'
 import { calcResult, GRADE_CONFIG, ScoreResult } from '@/lib/scoring'
-import { SectionId, SECTIONS, CUTOFF_QUESTIONS } from '@/lib/questions'
+import { SectionId, CUTOFF_QUESTIONS } from '@/lib/questions'
 import { encodeShare, decodeShare, SharePayload } from '@/lib/share'
 import ScoreGauge from '@/components/ScoreGauge'
 
@@ -132,8 +132,8 @@ export default function ResultClient() {
       const score = parseInt(sParam, 10)
       if (!isNaN(score)) {
         const SECTION_ORDER: SectionId[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-        let sectionPercents: Record<SectionId, number> = {} as Record<SectionId, number>
-        let activeSections: SectionId[] = []
+        const sectionPercents: Record<SectionId, number> = {} as Record<SectionId, number>
+        const activeSections: SectionId[] = []
         let cutoffCount = 0
         try {
           const pParam = searchParams.get('p')
