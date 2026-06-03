@@ -581,11 +581,11 @@ export default function ResultClient() {
   )
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-16">
+    <main className="min-h-screen bg-gray-50 pb-16">
       <div ref={captureRef} className="max-w-lg mx-auto px-4 pt-8 space-y-6">
         {/* 헤더 */}
         <div className="text-center">
-          <span className="inline-block bg-rose-100 text-rose-600 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide mb-3">
+          <span className="inline-block bg-rose-100 text-rose-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide mb-3">
             궁합 점수
           </span>
           <h1 className="text-2xl font-bold text-gray-900">상대방과 나의 적합도</h1>
@@ -681,7 +681,7 @@ export default function ResultClient() {
             이 결과는 전문적인 관계 진단이 아닌, 자기 성찰을 위한 참고 자료입니다.
             관계에 대한 중요한 결정은 신뢰할 수 있는 주변인 또는 전문 상담사와 상의하시기 바랍니다.
           </p>
-          <p className="mt-2 text-xs text-gray-400">
+          <p className="mt-2 text-xs text-gray-500">
             찰떡 궁합 테스트는 자기 성찰 도구이며, 관계 진단이 아닙니다.
           </p>
         </div>
@@ -690,7 +690,7 @@ export default function ResultClient() {
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={handleShare}
-            className="py-3.5 rounded-2xl font-semibold border border-rose-200 text-rose-600 bg-rose-50 hover:bg-rose-100 transition-colors text-sm"
+            className="py-3.5 rounded-2xl font-semibold border border-rose-200 text-rose-700 bg-rose-50 hover:bg-rose-100 transition-colors text-sm"
           >
             {copied ? '복사됨!' : '🔗 URL 공유'}
           </button>
@@ -718,6 +718,6 @@ export default function ResultClient() {
           </button>
         </div>
       </div>
-    </div>
+    </main>
   )
 }

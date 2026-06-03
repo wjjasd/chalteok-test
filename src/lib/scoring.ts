@@ -51,7 +51,7 @@ export const GRADE_CONFIG: Record<Grade, { label: string; color: string; bg: str
   },
   A: {
     label: '양호한 적합도',
-    color: 'text-blue-600',
+    color: 'text-blue-700',
     bg: 'bg-blue-100',
     description: '대체로 좋은 적합도를 보이고 있습니다. 일부 영역에서 대화와 조율이 도움이 될 수 있습니다.',
   },
