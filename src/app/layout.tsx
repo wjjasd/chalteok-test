@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     siteName: '찰떡 궁합 테스트',
     title: '찰떡 궁합 테스트',
     description: '자기 성찰을 위한 찰떡 궁합 테스트',
-    images: [{ url: '/api/og', width: 1200, height: 630 }],
+    images: [{ url: '/og/root.png', width: 1200, height: 630 }],
   },
 }
 

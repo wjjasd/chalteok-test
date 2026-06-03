@@ -125,18 +125,38 @@ export default function ResultClient() {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search)
 
-    // ?s=<score>&g=<grade> 방식 (카카오 짧은 URL)
+    // ?s=<score>&g=<grade>[&p=<section base64>&a=<active hex>&c=<cutoff>] 방식 (카카오 공유 URL)
     const sParam = searchParams.get('s')
     const gParam = searchParams.get('g')
     if (sParam && gParam && ['S', 'A', 'B', 'C', 'D'].includes(gParam)) {
       const score = parseInt(sParam, 10)
       if (!isNaN(score)) {
+        const SECTION_ORDER: SectionId[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+        let sectionPercents: Record<SectionId, number> = {} as Record<SectionId, number>
+        let activeSections: SectionId[] = []
+        let cutoffCount = 0
+        try {
+          const pParam = searchParams.get('p')
+          const aParam = searchParams.get('a')
+          const cParam = searchParams.get('c')
+          if (pParam && aParam) {
+            const percentsArr: number[] = JSON.parse(atob(pParam))
+            const activeMask = parseInt(aParam, 16)
+            SECTION_ORDER.forEach((id, i) => {
+              sectionPercents[id] = percentsArr[i] ?? 0
+              if (activeMask & (1 << i)) activeSections.push(id)
+            })
+          }
+          if (cParam) cutoffCount = parseInt(cParam, 10) || 0
+        } catch {
+          // p/a 없거나 파싱 실패 시 빈 데이터로 fallback
+        }
         setResult({
-          sectionPercents: {} as Record<SectionId, number>,
+          sectionPercents,
           finalScore: score,
           grade: gParam as ScoreResult['grade'],
-          activeSections: [],
-          cutoffCount: 0,
+          activeSections,
+          cutoffCount,
         })
         return
       }
@@ -216,15 +236,23 @@ export default function ResultClient() {
     }
     const score = Math.round(result.finalScore)
     const grade = result.grade
-    const shortUrl = `${window.location.origin}/result?s=${score}&g=${grade}`
-    const imageUrl = `${window.location.origin}/api/og?s=${score}&g=${grade}`
+    const SECTION_ORDER: SectionId[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+    const percentsArr = SECTION_ORDER.map((id) => Math.round(result.sectionPercents[id] ?? 0))
+    const activeMask = SECTION_ORDER.reduce(
+      (mask, id, i) => (result.activeSections.includes(id) ? mask | (1 << i) : mask), 0
+    )
+    const p = btoa(JSON.stringify(percentsArr))
+    const a = activeMask.toString(16).padStart(2, '0')
+    const c = result.cutoffCount
+    const compactUrl = `${window.location.origin}/result?s=${score}&g=${grade}&p=${encodeURIComponent(p)}&a=${a}&c=${c}`
+    const imageUrl = `${window.location.origin}/og/${grade}.png`
     window.Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
         title: `내 찰떡 궁합 점수: ${score}점 (${grade}등급)`,
         description: '찰떡 궁합 테스트는 자기 성찰 도구이며, 관계 진단이 아닙니다.',
         imageUrl,
-        link: { mobileWebUrl: shortUrl, webUrl: shortUrl },
+        link: { mobileWebUrl: compactUrl, webUrl: compactUrl },
       },
     })
   }
