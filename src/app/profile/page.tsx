@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQuizStore } from '@/store/quiz'
 import StepLayout from '@/components/StepLayout'
@@ -109,6 +110,7 @@ function SelectField({
 
 export default function ProfilePage() {
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
   const profile = useQuizStore((s) => s.profile)
   const setProfile = useQuizStore((s) => s.setProfile)
   const applyRecommendedWeights = useQuizStore((s) => s.applyRecommendedWeights)
@@ -216,11 +218,13 @@ export default function ProfilePage() {
       </div>
 
       <button
-        onClick={() => { applyRecommendedWeights(); router.push('/section/a') }}
-        disabled={!canProceed}
+        onClick={() => { setLoading(true); applyRecommendedWeights(); router.push('/section/a') }}
+        disabled={!canProceed || loading}
         className="mt-8 w-full py-4 rounded-2xl font-semibold transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed bg-rose-500 hover:bg-rose-600 text-white"
       >
-        다음
+        {loading ? (
+          <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        ) : '다음'}
       </button>
     </StepLayout>
   )
