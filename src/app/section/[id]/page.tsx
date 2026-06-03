@@ -88,7 +88,7 @@ export default function SectionPage() {
                     }`}
                   >
                     <span className="font-semibold text-base leading-none">{val}</span>
-                    <span className="text-center leading-tight whitespace-pre-line text-[10px]">
+                    <span className="text-center leading-tight whitespace-pre-line text-[11px]">
                       {LIKERT_LABELS[val]}
                     </span>
                   </button>

@@ -41,7 +41,7 @@ export default function FlagsPage() {
                 <button
                   type="button"
                   onClick={() => setAnswer(key, true)}
-                  className={`flex-1 py-3 rounded-xl font-semibold text-sm border transition-colors ${
+                  className={`flex-1 py-3.5 rounded-xl font-semibold text-sm border transition-colors ${
                     current === true
                       ? 'bg-red-500 text-white border-red-500'
                       : 'bg-white text-gray-700 border-gray-200 hover:border-red-300'
@@ -52,7 +52,7 @@ export default function FlagsPage() {
                 <button
                   type="button"
                   onClick={() => setAnswer(key, false)}
-                  className={`flex-1 py-3 rounded-xl font-semibold text-sm border transition-colors ${
+                  className={`flex-1 py-3.5 rounded-xl font-semibold text-sm border transition-colors ${
                     current === false
                       ? 'bg-gray-700 text-white border-gray-700'
                       : 'bg-white text-gray-700 border-gray-200 hover:border-gray-400'
