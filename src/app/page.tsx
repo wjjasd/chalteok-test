@@ -1,6 +1,12 @@
-import Link from 'next/link'
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function LandingPage() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 bg-gradient-to-b from-rose-50 to-white">
       <div className="w-full max-w-lg text-center">
@@ -23,12 +29,15 @@ export default function LandingPage() {
           총 45문항 · 약 10분 소요 · 서버 저장 없음
         </p>
 
-        <Link
-          href="/terms"
-          className="inline-block w-full max-w-xs bg-rose-500 hover:bg-rose-600 text-white font-semibold py-4 px-8 rounded-2xl transition-colors duration-200 shadow-md shadow-rose-200"
+        <button
+          onClick={() => { setLoading(true); router.push('/terms') }}
+          disabled={loading}
+          className="w-full max-w-xs bg-rose-500 hover:bg-rose-600 disabled:opacity-70 text-white font-semibold py-4 px-8 rounded-2xl transition-colors duration-200 shadow-md shadow-rose-200"
         >
-          시작하기
-        </Link>
+          {loading ? (
+            <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          ) : '시작하기'}
+        </button>
 
         <div className="mt-10 grid grid-cols-3 gap-4 text-center text-sm text-gray-500">
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
