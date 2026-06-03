@@ -8,10 +8,10 @@ export default function LandingPage() {
   const [loading, setLoading] = useState(false)
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 py-12 bg-gradient-to-b from-rose-50 to-white">
+    <main className="min-h-screen flex flex-col items-center justify-center px-4 py-12 bg-gradient-to-b from-rose-50 to-white">
       <div className="w-full max-w-lg text-center">
         <div className="mb-6">
-          <span className="inline-block bg-rose-100 text-rose-600 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">
+          <span className="inline-block bg-rose-100 text-rose-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">
             관계 적합도 테스트
           </span>
         </div>
@@ -32,7 +32,7 @@ export default function LandingPage() {
         <button
           onClick={() => { setLoading(true); router.push('/terms') }}
           disabled={loading}
-          className="w-full max-w-xs bg-rose-500 hover:bg-rose-600 disabled:opacity-70 text-white font-semibold py-4 px-8 rounded-2xl transition-colors duration-200 shadow-md shadow-rose-200"
+          className="w-full max-w-xs bg-rose-500 hover:bg-rose-600 disabled:opacity-100 disabled:bg-rose-300 disabled:text-white text-white font-semibold py-4 px-8 rounded-2xl transition-colors duration-200 shadow-md shadow-rose-200"
         >
           {loading ? (
             <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
@@ -58,6 +58,6 @@ export default function LandingPage() {
           본 서비스는 성찰 보조 도구이며, 전문적 심리 진단이 아닙니다.
         </p>
       </div>
-    </div>
+    </main>
   )
 }
