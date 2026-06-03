@@ -10,10 +10,12 @@ export default function TermsPage() {
   const setTermsAgreed = useQuizStore((s) => s.setTermsAgreed)
   const [check1, setCheck1] = useState(false)
   const [check2, setCheck2] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   const canProceed = check1 && check2
 
   const handleNext = () => {
+    setLoading(true)
     setTermsAgreed(true)
     router.push('/profile')
   }
@@ -72,10 +74,12 @@ export default function TermsPage() {
 
       <button
         onClick={handleNext}
-        disabled={!canProceed}
+        disabled={!canProceed || loading}
         className="w-full py-4 rounded-2xl font-semibold transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed bg-rose-500 hover:bg-rose-600 text-white"
       >
-        동의하고 계속하기
+        {loading ? (
+          <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+        ) : '동의하고 계속하기'}
       </button>
     </StepLayout>
   )
