@@ -56,7 +56,7 @@ export default function AttachmentLandingPage() {
           </div>
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="text-2xl mb-1">🌊</div>
-            <div>4가지<br />유형</div>
+            <div>5가지<br />유형</div>
           </div>
         </div>
 
