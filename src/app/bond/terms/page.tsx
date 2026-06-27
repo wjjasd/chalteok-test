@@ -17,7 +17,7 @@ export default function TermsPage() {
   const handleNext = () => {
     setLoading(true)
     setTermsAgreed(true)
-    router.push('/profile')
+    router.push('/bond/profile')
   }
 
   return (

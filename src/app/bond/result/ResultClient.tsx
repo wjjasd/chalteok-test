@@ -22,7 +22,6 @@ const SECTION_TITLES: Record<SectionId, string> = {
   H: '자기 상태 변화',
 }
 
-// [0]=≥85, [1]=≥70, [2]=≥55, [3]=≥40, [4]<40
 const SECTION_COMMENTS: Record<SectionId, [string, string, string, string, string]> = {
   A: [
     '강한 끌림과 설렘이 두 분 사이에 뚜렷하게 느껴지는 상태예요. 신체적·감정적 매력이 잘 형성되어 있어 관계의 동력이 되고 있어요.',
@@ -125,7 +124,6 @@ export default function ResultClient() {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search)
 
-    // ?s=<score>&g=<grade>[&p=<section base64>&a=<active hex>&c=<cutoff>] 방식 (카카오 공유 URL)
     const sParam = searchParams.get('s')
     const gParam = searchParams.get('g')
     if (sParam && gParam && ['S', 'A', 'B', 'C', 'D'].includes(gParam)) {
@@ -162,7 +160,6 @@ export default function ResultClient() {
       }
     }
 
-    // ?d= 쿼리 파라미터 방식 (신규)
     const d = searchParams.get('d')
     if (d) {
       const shared: SharePayload | null = decodeShare(d)
@@ -180,7 +177,6 @@ export default function ResultClient() {
       }
     }
 
-    // #fragment 방식 (하위 호환)
     if (window.location.hash) {
       const shared: SharePayload | null = decodeShare(window.location.hash)
       if (shared) {
@@ -197,9 +193,8 @@ export default function ResultClient() {
       }
     }
 
-    // 스토어 기반 계산
     if (!storeStage) {
-      router.replace('/')
+      router.replace('/bond')
       return
     }
     const r = calcResult(storeAnswers, storeWeights, storeStage)
@@ -210,7 +205,7 @@ export default function ResultClient() {
 
   const buildShareUrl = (payload: SharePayload): string => {
     const encoded = encodeShare(payload)
-    return `${window.location.origin}/result?d=${encodeURIComponent(encoded)}`
+    return `${window.location.origin}/bond/result?d=${encodeURIComponent(encoded)}`
   }
 
   const handleKakaoShare = async () => {
@@ -244,7 +239,7 @@ export default function ResultClient() {
     const p = btoa(JSON.stringify(percentsArr))
     const a = activeMask.toString(16).padStart(2, '0')
     const c = result.cutoffCount
-    const compactUrl = `${window.location.origin}/result?s=${score}&g=${grade}&p=${encodeURIComponent(p)}&a=${a}&c=${c}`
+    const compactUrl = `${window.location.origin}/bond/result?s=${score}&g=${grade}&p=${encodeURIComponent(p)}&a=${a}&c=${c}`
     const imageUrl = `${window.location.origin}/og/${grade}.png`
     window.Kakao.Share.sendDefault({
       objectType: 'feed',
@@ -266,7 +261,6 @@ export default function ResultClient() {
       const P = 36
       const dpr = Math.min(window.devicePixelRatio || 2, 3)
 
-      // wrapText: maxWidth에 맞춰 줄 배열 반환
       function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
         const words = text.split(' ')
         const lines: string[] = []
@@ -297,7 +291,6 @@ export default function ResultClient() {
       const gc = GRADE_COLORS[safeResult.grade] ?? { bg: '#f3f4f6', fg: '#111827' }
       const gradeConfig = GRADE_CONFIG[safeResult.grade]
 
-      // --- 1-pass: 충분히 큰 canvas에 그리며 최종 y 추적 ---
       const LARGE_H = 4000
       const measureCanvas = document.createElement('canvas')
       measureCanvas.width = W * dpr
@@ -308,30 +301,24 @@ export default function ResultClient() {
       function drawAll(ctx: CanvasRenderingContext2D, totalH: number): number {
         ctx.textBaseline = 'middle'
 
-        // A. 배경
         ctx.fillStyle = '#fff8f8'
         ctx.fillRect(0, 0, W, totalH)
 
-        // A-1. 헤더 영역 배경
         ctx.fillStyle = '#fff1f2'
         ctx.fillRect(0, 0, W, 80)
 
         let y = 0
 
-        // B. 헤더 (height=80)
-        // "찰떡" 좌측
         ctx.font = 'bold 18px system-ui, sans-serif'
         ctx.textAlign = 'left'
         ctx.fillStyle = '#e11d48'
         ctx.fillText('찰떡', P, 40)
 
-        // "궁합 점수" 우측
         ctx.font = '12px system-ui, sans-serif'
         ctx.textAlign = 'right'
         ctx.fillStyle = '#9ca3af'
         ctx.fillText('궁합 점수', W - P, 40)
 
-        // "상대방과 나의 적합도" 하단 중앙
         ctx.font = 'bold 20px system-ui, sans-serif'
         ctx.textAlign = 'center'
         ctx.fillStyle = '#111827'
@@ -339,14 +326,12 @@ export default function ResultClient() {
 
         y = 80
 
-        // C. 반원 게이지
         const gaugeRadius = 110
         const gaugeThickness = 14
         const gaugeCenterX = W / 2
         const gaugeCenterY = y + gaugeRadius + 16
-        const gaugeHeight = gaugeRadius + 16 + 48 // 반지름 + 위 여백 + 점수 텍스트 공간
+        const gaugeHeight = gaugeRadius + 16 + 48
 
-        // 배경 arc (π ~ 2π)
         ctx.beginPath()
         ctx.arc(gaugeCenterX, gaugeCenterY, gaugeRadius, Math.PI, 2 * Math.PI)
         ctx.strokeStyle = '#e5e7eb'
@@ -354,7 +339,6 @@ export default function ResultClient() {
         ctx.lineCap = 'round'
         ctx.stroke()
 
-        // 점수 arc
         const scoreRatio = Math.min(score / 100, 1)
         const scoreArcEnd = Math.PI + scoreRatio * Math.PI
         let arcColor = '#f87171'
@@ -372,7 +356,6 @@ export default function ResultClient() {
           ctx.stroke()
         }
 
-        // 점수 텍스트 (게이지 중앙 하단)
         const scoreText = `${score}`
         ctx.font = 'bold 56px system-ui, sans-serif'
         ctx.textAlign = 'right'
@@ -397,7 +380,6 @@ export default function ResultClient() {
 
         y += gaugeHeight
 
-        // D. 등급 배지
         const gradeLabel = gradeConfig?.label ?? ''
         const gradeText = `${safeResult.grade}등급 — ${gradeLabel}`
         ctx.font = 'bold 15px system-ui, sans-serif'
@@ -411,7 +393,6 @@ export default function ResultClient() {
         ctx.fillText(gradeText, W / 2, y + 18)
         y += 44
 
-        // 등급 설명 (wrapText, 14px, #6b7280, 중앙 정렬)
         ctx.font = '14px system-ui, sans-serif'
         ctx.fillStyle = '#6b7280'
         ctx.textAlign = 'center'
@@ -422,7 +403,6 @@ export default function ResultClient() {
         }
         y += 12
 
-        // E. 컷오프 경고 박스
         if (safeResult.cutoffCount > 0) {
           const isSevereCutoff = safeResult.cutoffCount >= 3
           const warnBg = isSevereCutoff ? '#fee2e2' : '#fef9c3'
@@ -446,7 +426,6 @@ export default function ResultClient() {
           y += 44
         }
 
-        // F. 구분선 + "영역별 점수" 헤딩
         ctx.fillStyle = '#e5e7eb'
         ctx.fillRect(P, y, W - P * 2, 1)
         y += 16
@@ -457,14 +436,12 @@ export default function ResultClient() {
         ctx.fillText('영역별 점수', P, y + 8)
         y += 28
 
-        // G. 섹션 반복
         for (let i = 0; i < sections.length; i++) {
           const id = sections[i]
           const pct = Math.round(safeResult.sectionPercents[id])
           const barColor = pct >= 70 ? '#4ade80' : pct >= 55 ? '#facc15' : '#f87171'
           const barMaxW = W - P * 2
 
-          // 섹션명 + 퍼센트
           ctx.font = '13px system-ui, sans-serif'
           ctx.textAlign = 'left'
           ctx.fillStyle = '#374151'
@@ -476,7 +453,6 @@ export default function ResultClient() {
           ctx.fillText(`${pct}%`, W - P, y + 8)
           y += 24
 
-          // 바 차트 (높이 12px)
           ctx.fillStyle = '#e5e7eb'
           ctx.beginPath()
           ctx.roundRect(P, y, barMaxW, 12, 6)
@@ -491,7 +467,6 @@ export default function ResultClient() {
           }
           y += 18
 
-          // 코멘트 (wrapText, 12px, 줄 간격 17px)
           ctx.font = '12px system-ui, sans-serif'
           ctx.textAlign = 'left'
           ctx.fillStyle = '#6b7280'
@@ -503,7 +478,6 @@ export default function ResultClient() {
           }
           y += 12
 
-          // 섹션 사이 구분선 (마지막 제외)
           if (i < sections.length - 1) {
             ctx.fillStyle = '#f3f4f6'
             ctx.fillRect(P, y, W - P * 2, 1)
@@ -511,7 +485,6 @@ export default function ResultClient() {
           }
         }
 
-        // H. 푸터
         y += 20
         ctx.font = '11px system-ui, sans-serif'
         ctx.textAlign = 'center'
@@ -526,10 +499,8 @@ export default function ResultClient() {
         return y + P
       }
 
-      // 1-pass: 최종 높이 측정
       const measuredH = drawAll(mctx, LARGE_H)
 
-      // 2-pass: 정확한 높이로 최종 canvas 생성
       const canvas = document.createElement('canvas')
       canvas.width = W * dpr
       canvas.height = measuredH * dpr
@@ -583,7 +554,6 @@ export default function ResultClient() {
   return (
     <main className="min-h-screen bg-gray-50 pb-16">
       <div ref={captureRef} className="max-w-lg mx-auto px-4 pt-8 space-y-6">
-        {/* 헤더 */}
         <div className="text-center">
           <span className="inline-block bg-rose-100 text-rose-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide mb-3">
             궁합 점수
@@ -591,7 +561,6 @@ export default function ResultClient() {
           <h1 className="text-2xl font-bold text-gray-900">상대방과 나의 적합도</h1>
         </div>
 
-        {/* 컷오프 심각 경고 */}
         {isSevere && (
           <div className="bg-red-50 border border-red-300 rounded-2xl p-4">
             <p className="text-red-700 font-semibold text-sm">
@@ -603,7 +572,6 @@ export default function ResultClient() {
           </div>
         )}
 
-        {/* 점수 게이지 */}
         <div className="bg-white rounded-2xl border border-gray-100 p-6">
           <ScoreGauge score={result.finalScore} />
           <div className="mt-4 text-center">
@@ -616,7 +584,6 @@ export default function ResultClient() {
           </p>
         </div>
 
-        {/* 컷오프 배지 */}
         {cutoffBadge && !isSevere && (
           <div className={`rounded-2xl border p-4 ${cutoffBadge.bg} ${cutoffBadge.border}`}>
             <p className={`font-semibold text-sm ${cutoffBadge.text_color}`}>{cutoffBadge.text}</p>
@@ -636,7 +603,6 @@ export default function ResultClient() {
           </div>
         )}
 
-        {/* 레이더 차트 */}
         <div className="bg-white rounded-2xl border border-gray-100 p-5">
           <h2 className="font-semibold text-gray-800 mb-3">영역별 분포</h2>
           <RadarChart
@@ -645,7 +611,6 @@ export default function ResultClient() {
           />
         </div>
 
-        {/* 섹션별 바 차트 */}
         <div className="bg-white rounded-2xl border border-gray-100 p-5">
           <h2 className="font-semibold text-gray-800 mb-4">영역별 점수</h2>
           <div className="space-y-3">
@@ -675,7 +640,6 @@ export default function ResultClient() {
           </div>
         </div>
 
-        {/* 해석 가이드 */}
         <div className="bg-gray-100 rounded-2xl p-4 text-sm text-gray-600 leading-relaxed">
           <p>
             이 결과는 전문적인 관계 진단이 아닌, 자기 성찰을 위한 참고 자료입니다.
@@ -686,7 +650,6 @@ export default function ResultClient() {
           </p>
         </div>
 
-        {/* 액션 버튼 */}
         <div className="grid grid-cols-2 gap-3">
           <button
             onClick={handleShare}
@@ -710,7 +673,7 @@ export default function ResultClient() {
           <button
             onClick={() => {
               useQuizStore.getState().reset()
-              router.push('/')
+              router.push('/bond')
             }}
             className="py-3.5 rounded-2xl font-semibold border border-gray-200 text-gray-600 bg-white hover:bg-gray-50 transition-colors text-sm"
           >

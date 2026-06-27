@@ -17,18 +17,15 @@ function sectionToStep(sectionId: SectionId): number {
   return SECTION_ORDER.indexOf(sectionId) + 4
 }
 
-function nextRoute(
-  currentId: SectionId,
-  activeSections: SectionId[],
-): string {
+function nextRoute(currentId: SectionId, activeSections: SectionId[]): string {
   const currentIdx = SECTION_ORDER.indexOf(currentId)
   for (let i = currentIdx + 1; i < SECTION_ORDER.length; i++) {
     const next = SECTION_ORDER[i]
     if (activeSections.includes(next)) {
-      return `/section/${next.toLowerCase()}`
+      return `/bond/section/${next.toLowerCase()}`
     }
   }
-  return '/flags'
+  return '/bond/flags'
 }
 
 export default function SectionPage() {
