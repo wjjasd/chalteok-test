@@ -10,14 +10,14 @@ const notoSansKr = Noto_Sans_KR({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://chalteok.kro.kr'),
-  title: '찰떡 궁합 테스트',
-  description: '두 사람의 관계 적합도를 구조화된 설문을 통해 성찰하는 도구입니다.',
+  title: '찰떡 — 자기 성찰 테스트',
+  description: '나와 관계를 더 잘 이해하기 위한 자기 성찰 테스트. 찰떡 궁합 테스트 · 애착유형 테스트.',
   openGraph: {
     url: 'https://chalteok.kro.kr',
     type: 'website',
-    siteName: '찰떡 궁합 테스트',
-    title: '찰떡 궁합 테스트',
-    description: '자기 성찰을 위한 찰떡 궁합 테스트',
+    siteName: '찰떡',
+    title: '찰떡 — 자기 성찰 테스트',
+    description: '나와 관계를 더 잘 이해하기 위한 자기 성찰 테스트',
     images: [{ url: '/og/root.png', width: 1200, height: 630 }],
   },
 }

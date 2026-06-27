@@ -218,7 +218,7 @@ export default function ProfilePage() {
       </div>
 
       <button
-        onClick={() => { setLoading(true); applyRecommendedWeights(); router.push('/section/a') }}
+        onClick={() => { setLoading(true); applyRecommendedWeights(); router.push('/bond/section/a') }}
         disabled={!canProceed || loading}
         className="mt-8 w-full py-4 rounded-2xl font-semibold transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed bg-rose-500 hover:bg-rose-600 text-white"
       >

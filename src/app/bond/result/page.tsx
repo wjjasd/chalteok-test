@@ -13,7 +13,6 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { d, s, g } = await searchParams
 
-  // ?s=<score>&g=<grade> 짧은 공유 URL
   if (s && g && ['S', 'A', 'B', 'C', 'D'].includes(g)) {
     const score = parseInt(s, 10)
     if (!isNaN(score)) {
@@ -21,7 +20,7 @@ export async function generateMetadata({
       return {
         title: `찰떡 궁합 테스트 — ${score}점 (${g}등급)`,
         openGraph: {
-          url: `${BASE_URL}/result?s=${score}&g=${g}`,
+          url: `${BASE_URL}/bond/result?s=${score}&g=${g}`,
           type: 'website',
           siteName: '찰떡 궁합 테스트',
           title: `내 찰떡 궁합 점수: ${score}점 (${g}등급 — ${gradeLabel})`,
@@ -32,13 +31,12 @@ export async function generateMetadata({
     }
   }
 
-  // ?d= 전체 데이터 URL
   const payload = d ? decodeShare(d) : null
   if (payload) {
     const score = Math.round(payload.finalScore)
     const gradeLabel = GRADE_CONFIG[payload.grade]?.label ?? ''
     const ogImageUrl = `${BASE_URL}/og/${payload.grade}.png`
-    const pageUrl = `${BASE_URL}/result?d=${encodeURIComponent(d!)}`
+    const pageUrl = `${BASE_URL}/bond/result?d=${encodeURIComponent(d!)}`
     return {
       title: `찰떡 궁합 테스트 — ${score}점 (${payload.grade}등급)`,
       openGraph: {
@@ -55,7 +53,7 @@ export async function generateMetadata({
   return {
     title: '찰떡 궁합 테스트 — 결과',
     openGraph: {
-      url: `${BASE_URL}/result`,
+      url: `${BASE_URL}/bond/result`,
       type: 'website',
       siteName: '찰떡 궁합 테스트',
       title: '찰떡 궁합 테스트',

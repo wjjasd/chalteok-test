@@ -67,7 +67,7 @@ export default function FlagsPage() {
       </div>
 
       <button
-        onClick={() => { setLoading(true); router.push('/result') }}
+        onClick={() => { setLoading(true); router.push('/bond/result') }}
         disabled={!allAnswered || loading}
         className="w-full py-4 rounded-2xl font-semibold transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed bg-rose-500 hover:bg-rose-600 text-white"
       >
