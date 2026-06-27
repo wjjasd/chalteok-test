@@ -22,6 +22,7 @@ export default function AttachmentResultPage() {
 
   const [result, setResult] = useState<AttachmentResult | null>(null)
   const [copied, setCopied] = useState(false)
+  const [kakaoLoading, setKakaoLoading] = useState(false)
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search)
@@ -59,6 +60,42 @@ export default function AttachmentResultPage() {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     })
+  }
+
+  const handleKakaoShare = async () => {
+    if (!result) return
+    setKakaoLoading(true)
+    try {
+      if (!window.Kakao) {
+        await new Promise<void>((resolve, reject) => {
+          const s = document.createElement('script')
+          s.src = 'https://developers.kakao.com/sdk/js/kakao.js'
+          s.onload = () => resolve()
+          s.onerror = () => reject()
+          document.head.appendChild(s)
+        })
+      }
+    } catch {
+      alert('카카오 SDK를 불러올 수 없습니다.\n광고 차단기가 활성화된 경우 비활성화 후 재시도하거나, 🔗 URL 공유를 이용해 주세요.')
+      setKakaoLoading(false)
+      return
+    }
+    if (!window.Kakao) { setKakaoLoading(false); return }
+    const key = process.env.NEXT_PUBLIC_KAKAO_JS_KEY
+    if (key && !window.Kakao.isInitialized()) window.Kakao.init(key)
+    const config = TYPE_CONFIG[result.type]
+    const encoded = encodeAttachmentShare(result.anxietyScore, result.avoidanceScore)
+    const shareUrl = `${window.location.origin}/attachment/result?r=${encoded}`
+    window.Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: `나는 ${config.name} ${config.emoji}`,
+        description: `${config.tagline} — 찰떡 애착유형 테스트`,
+        imageUrl: `${window.location.origin}/og/root.png`,
+        link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
+      },
+    })
+    setKakaoLoading(false)
   }
 
   if (!result) {
@@ -165,6 +202,14 @@ export default function AttachmentResultPage() {
 
         {/* 액션 버튼 */}
         <div className="grid grid-cols-2 gap-3">
+          <button
+            onClick={handleKakaoShare}
+            disabled={kakaoLoading}
+            className="col-span-2 py-3.5 rounded-2xl font-semibold text-sm transition-colors"
+            style={{ backgroundColor: '#FEE500', color: '#3C1E1E' }}
+          >
+            {kakaoLoading ? '불러오는 중...' : '💬 카카오톡 공유'}
+          </button>
           <button
             onClick={handleShare}
             className="py-3.5 rounded-2xl font-semibold border border-sky-200 text-sky-700 bg-sky-50 hover:bg-sky-100 transition-colors text-sm"
