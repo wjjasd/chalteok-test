@@ -91,7 +91,7 @@ export default function AttachmentResultPage() {
       content: {
         title: `나는 ${config.name} ${config.emoji}`,
         description: `${config.tagline} — 찰떡 애착유형 테스트`,
-        imageUrl: `${window.location.origin}/og/root.png`,
+        imageUrl: `${window.location.origin}/api/og/attachment?type=${result.type}`,
         link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
       },
     })
