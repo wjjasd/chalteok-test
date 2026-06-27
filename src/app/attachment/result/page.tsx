@@ -1,7 +1,7 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { Suspense, useEffect, useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { useAttachmentStore } from '@/store/attachment'
 import {
@@ -15,8 +15,10 @@ import {
 
 const AttachmentChart = dynamic(() => import('./AttachmentChart'), { ssr: false })
 
-export default function AttachmentResultPage() {
+function AttachmentResultContent() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const r = searchParams.get('r')
   const storeAnswers = useAttachmentStore((s) => s.answers)
   const termsAgreed = useAttachmentStore((s) => s.termsAgreed)
 
@@ -25,8 +27,7 @@ export default function AttachmentResultPage() {
   const [kakaoLoading, setKakaoLoading] = useState(false)
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search)
-    const r = searchParams.get('r')
+    setResult(null)
 
     if (r) {
       const decoded = decodeAttachmentShare(r)
@@ -50,7 +51,7 @@ export default function AttachmentResultPage() {
 
     const r2 = calcAttachmentResult(storeAnswers)
     setResult(r2)
-  }, [])
+  }, [r])
 
   const handleShare = () => {
     if (!result) return
@@ -234,5 +235,17 @@ export default function AttachmentResultPage() {
         </div>
       </div>
     </main>
+  )
+}
+
+export default function AttachmentResultPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center text-gray-400">
+        결과를 계산하고 있습니다...
+      </div>
+    }>
+      <AttachmentResultContent />
+    </Suspense>
   )
 }
