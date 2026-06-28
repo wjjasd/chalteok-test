@@ -1,6 +1,7 @@
 'use client'
 
 import { Suspense, useEffect, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { useRouter, useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { useAttachmentStore } from '@/store/attachment'
@@ -70,7 +71,7 @@ function AttachmentResultContent() {
 
   const handleKakaoShare = async () => {
     if (!result) return
-    setKakaoLoading(true)
+    flushSync(() => setKakaoLoading(true))
     try {
       await loadKakaoSdk()
       initKakao()
