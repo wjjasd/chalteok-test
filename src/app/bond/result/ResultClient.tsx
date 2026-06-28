@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { useQuizStore } from '@/store/quiz'
@@ -209,7 +210,7 @@ export default function ResultClient() {
 
   const handleKakaoShare = async () => {
     if (!result) return
-    setKakaoLoading(true)
+    flushSync(() => setKakaoLoading(true))
     try {
       await loadKakaoSdk()
       initKakao()
@@ -673,6 +674,12 @@ export default function ResultClient() {
             className="py-3.5 rounded-2xl font-semibold border border-gray-200 text-gray-600 bg-white hover:bg-gray-50 transition-colors text-sm"
           >
             다시 시작
+          </button>
+          <button
+            onClick={() => router.push('/')}
+            className="col-span-2 py-3.5 rounded-2xl font-semibold border border-gray-200 text-gray-500 bg-white hover:bg-gray-50 transition-colors text-sm"
+          >
+            다른 테스트 보기
           </button>
         </div>
       </div>
