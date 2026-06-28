@@ -210,41 +210,39 @@ export default function ResultClient() {
   const handleKakaoShare = () => {
     if (!result) return
     setKakaoLoading(true)
-    requestAnimationFrame(() => {
-      requestAnimationFrame(async () => {
-        try {
-          await loadKakaoSdk()
-          initKakao()
-        } catch {
-          alert('카카오 SDK를 불러올 수 없습니다.\n광고 차단기가 활성화된 경우 비활성화 후 재시도하거나, 🔗 URL 공유를 이용해 주세요.')
-          setKakaoLoading(false)
-          return
-        }
-        if (!window.Kakao) { setKakaoLoading(false); return }
-        const score = Math.round(result.finalScore)
-        const grade = result.grade
-        const SECTION_ORDER: SectionId[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-        const percentsArr = SECTION_ORDER.map((id) => Math.round(result.sectionPercents[id] ?? 0))
-        const activeMask = SECTION_ORDER.reduce(
-          (mask, id, i) => (result.activeSections.includes(id) ? mask | (1 << i) : mask), 0
-        )
-        const p = btoa(JSON.stringify(percentsArr))
-        const a = activeMask.toString(16).padStart(2, '0')
-        const c = result.cutoffCount
-        const compactUrl = `${window.location.origin}/bond/result?s=${score}&g=${grade}&p=${encodeURIComponent(p)}&a=${a}&c=${c}`
-        const imageUrl = `${window.location.origin}/og/${grade}.png`
-        window.Kakao.Share.sendDefault({
-          objectType: 'feed',
-          content: {
-            title: `내 찰떡 궁합 점수: ${score}점 (${grade}등급)`,
-            description: GRADE_CONFIG[grade].description,
-            imageUrl,
-            link: { mobileWebUrl: compactUrl, webUrl: compactUrl },
-          },
-        })
+    setTimeout(async () => {
+      try {
+        await loadKakaoSdk()
+        initKakao()
+      } catch {
+        alert('카카오 SDK를 불러올 수 없습니다.\n광고 차단기가 활성화된 경우 비활성화 후 재시도하거나, 🔗 URL 공유를 이용해 주세요.')
         setKakaoLoading(false)
+        return
+      }
+      if (!window.Kakao) { setKakaoLoading(false); return }
+      const score = Math.round(result.finalScore)
+      const grade = result.grade
+      const SECTION_ORDER: SectionId[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+      const percentsArr = SECTION_ORDER.map((id) => Math.round(result.sectionPercents[id] ?? 0))
+      const activeMask = SECTION_ORDER.reduce(
+        (mask, id, i) => (result.activeSections.includes(id) ? mask | (1 << i) : mask), 0
+      )
+      const p = btoa(JSON.stringify(percentsArr))
+      const a = activeMask.toString(16).padStart(2, '0')
+      const c = result.cutoffCount
+      const compactUrl = `${window.location.origin}/bond/result?s=${score}&g=${grade}&p=${encodeURIComponent(p)}&a=${a}&c=${c}`
+      const imageUrl = `${window.location.origin}/og/${grade}.png`
+      window.Kakao.Share.sendDefault({
+        objectType: 'feed',
+        content: {
+          title: `내 찰떡 궁합 점수: ${score}점 (${grade}등급)`,
+          description: GRADE_CONFIG[grade].description,
+          imageUrl,
+          link: { mobileWebUrl: compactUrl, webUrl: compactUrl },
+        },
       })
-    })
+      setKakaoLoading(false)
+    }, 50)
   }
 
   const handleDownload = () => {
