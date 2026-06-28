@@ -235,7 +235,7 @@ export default function ResultClient() {
       objectType: 'feed',
       content: {
         title: `내 찰떡 궁합 점수: ${score}점 (${grade}등급)`,
-        description: '찰떡 궁합 테스트는 자기 성찰 도구이며, 관계 진단이 아닙니다.',
+        description: GRADE_CONFIG[grade].description,
         imageUrl,
         link: { mobileWebUrl: compactUrl, webUrl: compactUrl },
       },
