@@ -205,12 +205,9 @@ function AttachmentResultContent() {
             className="col-span-2 py-3.5 rounded-2xl font-semibold text-sm transition-colors"
             style={{ backgroundColor: '#FEE500', color: '#3C1E1E' }}
           >
-            {kakaoLoading ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                불러오는 중...
-              </span>
-            ) : '💬 카카오톡 공유'}
+            {kakaoLoading
+              ? <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              : '💬 카카오톡 공유'}
           </button>
           <button
             onClick={handleShare}
