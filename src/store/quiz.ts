@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { persist, createJSONStorage } from 'zustand/middleware'
 import { SectionId } from '@/lib/questions'
 import { recommendWeights } from '@/lib/scoring'
 
@@ -42,40 +43,48 @@ const initialProfile: Profile = {
   conflictFrequency: '',
 }
 
-export const useQuizStore = create<QuizState>()((set, get) => ({
-  termsAgreed: false,
-  profile: initialProfile,
-  weights: { ...DEFAULT_WEIGHTS },
-  answers: {},
-
-  setTermsAgreed: (v) => set({ termsAgreed: v }),
-
-  setProfile: (p) =>
-    set((state) => ({ profile: { ...state.profile, ...p } })),
-
-  setWeight: (section, value) =>
-    set((state) => ({
-      weights: { ...state.weights, [section]: value },
-    })),
-
-  setWeights: (w) => set({ weights: w }),
-
-  resetWeights: () => set({ weights: { ...DEFAULT_WEIGHTS } }),
-
-  applyRecommendedWeights: () => {
-    const { profile } = get()
-    const recommended = recommendWeights(profile.importantValues)
-    set({ weights: recommended })
-  },
-
-  setAnswer: (key, value) =>
-    set((state) => ({ answers: { ...state.answers, [key]: value } })),
-
-  reset: () =>
-    set({
+export const useQuizStore = create<QuizState>()(
+  persist(
+    (set, get) => ({
       termsAgreed: false,
       profile: initialProfile,
       weights: { ...DEFAULT_WEIGHTS },
       answers: {},
+
+      setTermsAgreed: (v) => set({ termsAgreed: v }),
+
+      setProfile: (p) =>
+        set((state) => ({ profile: { ...state.profile, ...p } })),
+
+      setWeight: (section, value) =>
+        set((state) => ({
+          weights: { ...state.weights, [section]: value },
+        })),
+
+      setWeights: (w) => set({ weights: w }),
+
+      resetWeights: () => set({ weights: { ...DEFAULT_WEIGHTS } }),
+
+      applyRecommendedWeights: () => {
+        const { profile } = get()
+        const recommended = recommendWeights(profile.importantValues)
+        set({ weights: recommended })
+      },
+
+      setAnswer: (key, value) =>
+        set((state) => ({ answers: { ...state.answers, [key]: value } })),
+
+      reset: () =>
+        set({
+          termsAgreed: false,
+          profile: initialProfile,
+          weights: { ...DEFAULT_WEIGHTS },
+          answers: {},
+        }),
     }),
-}))
+    {
+      name: 'chalteok-bond-quiz',
+      storage: createJSONStorage(() => sessionStorage),
+    }
+  )
+)
