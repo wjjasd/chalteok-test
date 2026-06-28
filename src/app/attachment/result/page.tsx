@@ -12,6 +12,7 @@ import {
   AttachmentResult,
   AttachmentType,
 } from '@/lib/attachmentScoring'
+import { loadKakaoSdk, initKakao } from '@/lib/kakaoSdk'
 
 const AttachmentChart = dynamic(() => import('./AttachmentChart'), { ssr: false })
 
@@ -27,17 +28,7 @@ function AttachmentResultContent() {
   const [kakaoLoading, setKakaoLoading] = useState(false)
 
   useEffect(() => {
-    const key = process.env.NEXT_PUBLIC_KAKAO_JS_KEY
-    if (!window.Kakao) {
-      const s = document.createElement('script')
-      s.src = 'https://developers.kakao.com/sdk/js/kakao.js'
-      s.onload = () => {
-        if (key && window.Kakao && !window.Kakao.isInitialized()) window.Kakao.init(key)
-      }
-      document.head.appendChild(s)
-    } else if (key && !window.Kakao.isInitialized()) {
-      window.Kakao.init(key)
-    }
+    loadKakaoSdk().then(initKakao).catch(() => {})
   }, [])
 
   useEffect(() => {
@@ -81,23 +72,14 @@ function AttachmentResultContent() {
     if (!result) return
     setKakaoLoading(true)
     try {
-      if (!window.Kakao) {
-        await new Promise<void>((resolve, reject) => {
-          const s = document.createElement('script')
-          s.src = 'https://developers.kakao.com/sdk/js/kakao.js'
-          s.onload = () => resolve()
-          s.onerror = () => reject()
-          document.head.appendChild(s)
-        })
-      }
+      await loadKakaoSdk()
+      initKakao()
     } catch {
       alert('카카오 SDK를 불러올 수 없습니다.\n광고 차단기가 활성화된 경우 비활성화 후 재시도하거나, 🔗 URL 공유를 이용해 주세요.')
       setKakaoLoading(false)
       return
     }
     if (!window.Kakao) { setKakaoLoading(false); return }
-    const key = process.env.NEXT_PUBLIC_KAKAO_JS_KEY
-    if (key && !window.Kakao.isInitialized()) window.Kakao.init(key)
     const config = TYPE_CONFIG[result.type]
     const encoded = encodeAttachmentShare(result.anxietyScore, result.avoidanceScore)
     const shareUrl = `${window.location.origin}/attachment/result?r=${encoded}`

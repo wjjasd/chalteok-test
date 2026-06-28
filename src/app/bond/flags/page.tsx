@@ -1,14 +1,19 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { CUTOFF_QUESTIONS } from '@/lib/questions'
 import { useQuizStore } from '@/store/quiz'
 import StepLayout from '@/components/StepLayout'
+import { loadKakaoSdk, initKakao } from '@/lib/kakaoSdk'
 
 export default function FlagsPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    loadKakaoSdk().then(initKakao).catch(() => {})
+  }, [])
   const answers = useQuizStore((s) => s.answers)
   const setAnswer = useQuizStore((s) => s.setAnswer)
 
