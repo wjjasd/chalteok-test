@@ -654,12 +654,9 @@ export default function ResultClient() {
             className="py-3.5 rounded-2xl font-semibold transition-colors text-sm disabled:opacity-60 disabled:cursor-not-allowed"
             style={{ backgroundColor: '#FEE500', color: '#3C1E1E' }}
           >
-            {kakaoLoading ? (
-              <span className="flex items-center justify-center gap-2">
-                <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-                불러오는 중...
-              </span>
-            ) : '💬 카카오 공유'}
+            {kakaoLoading
+              ? <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              : '💬 카카오 공유'}
           </button>
           <button
             onClick={handleDownload}
