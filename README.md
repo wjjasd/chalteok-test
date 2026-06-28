@@ -2,7 +2,7 @@
 
 관계 적합도를 구조화된 설문으로 정량 시각화하는 성찰 보조 도구.
 
-- **URL**: https://chalteok.kro.kr
+- **URL**: https://chalteok.com
 - **상태**: 구현 착수 전 (기획서 v1.0 완료)
 - **작업 기록·의사결정**: brain vault `10_projects/chalteok/` 참조
 

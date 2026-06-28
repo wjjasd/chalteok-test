@@ -85,7 +85,7 @@ function makeElement(key, cfg) {
           type: 'div',
           props: {
             style: { display: 'flex', fontSize: 22, color: '#9ca3af', marginTop: 44 },
-            children: 'chalteok.kro.kr',
+            children: 'chalteok.com',
           },
         },
       ],

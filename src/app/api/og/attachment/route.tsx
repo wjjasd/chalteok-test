@@ -73,7 +73,7 @@ export async function GET(request: Request) {
           <div style={{ fontSize: 22, color: '#6b7280' }}>{cfg.tagline}</div>
         </div>
 
-        <div style={{ color: '#9ca3af', fontSize: 18, marginTop: 32 }}>chalteok.kro.kr</div>
+        <div style={{ color: '#9ca3af', fontSize: 18, marginTop: 32 }}>chalteok.com</div>
       </div>
     ),
     {

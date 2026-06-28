@@ -493,7 +493,7 @@ export default function ResultClient() {
         y += 24
 
         ctx.fillStyle = '#e11d48'
-        ctx.fillText('chalteok.kro.kr', W / 2, y + 8)
+        ctx.fillText('chalteok.com', W / 2, y + 8)
         y += 24
 
         return y + P

@@ -9,11 +9,11 @@ const notoSansKr = Noto_Sans_KR({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://chalteok.kro.kr'),
+  metadataBase: new URL('https://chalteok.com'),
   title: '찰떡 — 자기 성찰 테스트',
   description: '나와 관계를 더 잘 이해하기 위한 자기 성찰 테스트. 찰떡 궁합 테스트 · 애착유형 테스트.',
   openGraph: {
-    url: 'https://chalteok.kro.kr',
+    url: 'https://chalteok.com',
     type: 'website',
     siteName: '찰떡',
     title: '찰떡 — 자기 성찰 테스트',
