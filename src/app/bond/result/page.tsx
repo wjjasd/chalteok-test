@@ -4,7 +4,7 @@ import ResultClient from './ResultClient'
 import { decodeShare } from '@/lib/share'
 import { GRADE_CONFIG } from '@/lib/scoring'
 
-const BASE_URL = 'https://chalteok.kro.kr'
+const BASE_URL = 'https://chalteok.com'
 
 export async function generateMetadata({
   searchParams,
