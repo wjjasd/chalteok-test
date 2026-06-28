@@ -116,7 +116,14 @@ export default function ResultClient() {
 
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_KAKAO_JS_KEY
-    if (key && window.Kakao && !window.Kakao.isInitialized()) {
+    if (!window.Kakao) {
+      const s = document.createElement('script')
+      s.src = 'https://developers.kakao.com/sdk/js/kakao.js'
+      s.onload = () => {
+        if (key && window.Kakao && !window.Kakao.isInitialized()) window.Kakao.init(key)
+      }
+      document.head.appendChild(s)
+    } else if (key && !window.Kakao.isInitialized()) {
       window.Kakao.init(key)
     }
   }, [])
