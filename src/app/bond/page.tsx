@@ -39,6 +39,13 @@ export default function BondLandingPage() {
           ) : '시작하기'}
         </button>
 
+        <button
+          onClick={() => router.push('/')}
+          className="mt-3 w-full max-w-xs py-3.5 px-8 rounded-2xl font-semibold border border-gray-200 text-gray-500 bg-white hover:bg-gray-50 transition-colors text-sm"
+        >
+          다른 테스트 보기
+        </button>
+
         <div className="mt-10 grid grid-cols-3 gap-4 text-center text-sm text-gray-500">
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="text-2xl mb-1">🔒</div>
