@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAttachmentStore } from '@/store/attachment'
 import { ATTACHMENT_QUESTIONS } from '@/data/attachmentQuestions'
+import { loadKakaoSdk, initKakao } from '@/lib/kakaoSdk'
 
 const TOTAL = ATTACHMENT_QUESTIONS.length
 
@@ -30,6 +31,10 @@ export default function AttachmentQuizPage() {
       router.replace('/attachment/terms')
     }
   }, [termsAgreed, router])
+
+  useEffect(() => {
+    loadKakaoSdk().then(initKakao).catch(() => {})
+  }, [])
 
   const question = ATTACHMENT_QUESTIONS[currentIndex]
   const currentAnswer = answers[question?.id]

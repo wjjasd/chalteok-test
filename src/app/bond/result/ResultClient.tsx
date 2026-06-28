@@ -8,6 +8,7 @@ import { calcResult, GRADE_CONFIG, ScoreResult } from '@/lib/scoring'
 import { SectionId, CUTOFF_QUESTIONS } from '@/lib/questions'
 import { encodeShare, decodeShare, SharePayload } from '@/lib/share'
 import ScoreGauge from '@/components/ScoreGauge'
+import { loadKakaoSdk, initKakao } from '@/lib/kakaoSdk'
 
 const RadarChart = dynamic(() => import('@/components/RadarChart'), { ssr: false })
 
@@ -113,19 +114,10 @@ export default function ResultClient() {
   const [cutoffYesIds, setCutoffYesIds] = useState<number[]>([])
   const [copied, setCopied] = useState(false)
   const [capturing, setCapturing] = useState(false)
+  const [kakaoLoading, setKakaoLoading] = useState(false)
 
   useEffect(() => {
-    const key = process.env.NEXT_PUBLIC_KAKAO_JS_KEY
-    if (!window.Kakao) {
-      const s = document.createElement('script')
-      s.src = 'https://developers.kakao.com/sdk/js/kakao.js'
-      s.onload = () => {
-        if (key && window.Kakao && !window.Kakao.isInitialized()) window.Kakao.init(key)
-      }
-      document.head.appendChild(s)
-    } else if (key && !window.Kakao.isInitialized()) {
-      window.Kakao.init(key)
-    }
+    loadKakaoSdk().then(initKakao).catch(() => {})
   }, [])
 
   useEffect(() => {
@@ -217,25 +209,16 @@ export default function ResultClient() {
 
   const handleKakaoShare = async () => {
     if (!result) return
-    if (!window.Kakao) {
-      try {
-        await new Promise<void>((resolve, reject) => {
-          const s = document.createElement('script')
-          s.src = 'https://developers.kakao.com/sdk/js/kakao.js'
-          s.onload = () => resolve()
-          s.onerror = () => reject()
-          document.head.appendChild(s)
-        })
-      } catch {
-        alert('카카오 SDK를 불러올 수 없습니다.\n광고 차단기가 활성화된 경우 비활성화 후 재시도하거나, 🔗 URL 공유를 이용해 주세요.')
-        return
-      }
+    setKakaoLoading(true)
+    try {
+      await loadKakaoSdk()
+      initKakao()
+    } catch {
+      alert('카카오 SDK를 불러올 수 없습니다.\n광고 차단기가 활성화된 경우 비활성화 후 재시도하거나, 🔗 URL 공유를 이용해 주세요.')
+      setKakaoLoading(false)
+      return
     }
-    if (!window.Kakao) return
-    const key = process.env.NEXT_PUBLIC_KAKAO_JS_KEY
-    if (key && !window.Kakao.isInitialized()) {
-      window.Kakao.init(key)
-    }
+    if (!window.Kakao) { setKakaoLoading(false); return }
     const score = Math.round(result.finalScore)
     const grade = result.grade
     const SECTION_ORDER: SectionId[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
@@ -257,6 +240,7 @@ export default function ResultClient() {
         link: { mobileWebUrl: compactUrl, webUrl: compactUrl },
       },
     })
+    setKakaoLoading(false)
   }
 
   const handleDownload = () => {
@@ -666,9 +650,11 @@ export default function ResultClient() {
           </button>
           <button
             onClick={handleKakaoShare}
-            className="py-3.5 rounded-2xl font-semibold border border-yellow-300 text-yellow-800 bg-yellow-50 hover:bg-yellow-100 transition-colors text-sm"
+            disabled={kakaoLoading}
+            className="py-3.5 rounded-2xl font-semibold transition-colors text-sm disabled:opacity-60 disabled:cursor-not-allowed"
+            style={{ backgroundColor: '#FEE500', color: '#3C1E1E' }}
           >
-            💬 카카오 공유
+            {kakaoLoading ? '불러오는 중...' : '💬 카카오 공유'}
           </button>
           <button
             onClick={handleDownload}
