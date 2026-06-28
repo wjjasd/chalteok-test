@@ -66,9 +66,9 @@ export default function AttachmentLandingPage() {
 
         <button
           onClick={() => router.push('/')}
-          className="mt-6 text-sm text-gray-400 hover:text-gray-600 transition-colors"
+          className="mt-3 w-full max-w-xs py-3.5 px-8 rounded-2xl font-semibold border border-gray-200 text-gray-500 bg-white hover:bg-gray-50 transition-colors text-sm"
         >
-          ← 다른 테스트 보기
+          다른 테스트 보기
         </button>
       </div>
     </main>
