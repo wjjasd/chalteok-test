@@ -12,6 +12,9 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://chalteok.com'),
   title: '찰떡 — 자기 성찰 테스트',
   description: '나와 관계를 더 잘 이해하기 위한 자기 성찰 테스트. 찰떡 궁합 테스트 · 애착유형 테스트.',
+  verification: {
+    google: 'qi_yQVNsvaYzB1jVzibqfu4wEWg3JnrEaxFX2whw4B0',
+  },
   openGraph: {
     url: 'https://chalteok.com',
     type: 'website',
