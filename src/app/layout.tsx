@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Noto_Sans_KR } from 'next/font/google'
+import Script from 'next/script'
 import './globals.css'
 
 const notoSansKr = Noto_Sans_KR({
@@ -54,6 +55,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             }),
           }}
         />
+        <Script src="https://www.googletagmanager.com/gtag/js?id=G-GM9GL28QFG" strategy="afterInteractive" />
+        <Script id="ga4" strategy="afterInteractive">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-GM9GL28QFG');`}
+        </Script>
         {children}
       </body>
     </html>
