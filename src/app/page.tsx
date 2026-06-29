@@ -31,7 +31,7 @@ export default function HubPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <h2 className="text-lg font-bold text-gray-900">찰떡 궁합 테스트</h2>
-                  <span className="text-xs bg-rose-100 text-rose-600 px-2 py-0.5 rounded-full font-medium">인기</span>
+                  <span className="text-xs bg-rose-100 text-rose-700 px-2 py-0.5 rounded-full font-medium">인기</span>
                 </div>
                 <p className="text-sm text-gray-500 leading-relaxed">
                   두 사람의 관계를 8개 영역에서 구조적으로 살펴봅니다.
@@ -55,7 +55,7 @@ export default function HubPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <h2 className="text-lg font-bold text-gray-900">애착유형 테스트</h2>
-                  <span className="text-xs bg-sky-100 text-sky-600 px-2 py-0.5 rounded-full font-medium">신규</span>
+                  <span className="text-xs bg-sky-100 text-sky-700 px-2 py-0.5 rounded-full font-medium">신규</span>
                 </div>
                 <p className="text-sm text-gray-500 leading-relaxed">
                   나의 연애 애착 패턴을 불안·회피 2축으로 살펴봅니다.
