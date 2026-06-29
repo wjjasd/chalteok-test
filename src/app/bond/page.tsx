@@ -32,7 +32,7 @@ export default function BondLandingPage() {
         <button
           onClick={() => { setLoading(true); router.push('/bond/terms') }}
           disabled={loading}
-          className="w-full max-w-xs bg-rose-500 hover:bg-rose-600 disabled:opacity-100 disabled:bg-rose-300 disabled:text-white text-white font-semibold py-4 px-8 rounded-2xl transition-colors duration-200 shadow-md shadow-rose-200"
+          className="w-full max-w-xs bg-rose-600 hover:bg-rose-700 disabled:opacity-100 disabled:bg-rose-300 disabled:text-white text-white font-semibold py-4 px-8 rounded-2xl transition-colors duration-200 shadow-md shadow-rose-200"
         >
           {loading ? (
             <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
