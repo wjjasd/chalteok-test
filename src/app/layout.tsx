@@ -20,6 +20,9 @@ export const metadata: Metadata = {
   other: {
     'application-name': '찰떡 테스트',
   },
+  alternates: {
+    canonical: 'https://chalteok.com',
+  },
   openGraph: {
     url: 'https://chalteok.com',
     type: 'website',
