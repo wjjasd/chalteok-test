@@ -40,9 +40,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               '@context': 'https://schema.org',
-              '@type': 'WebSite',
+              '@type': 'WebApplication',
               name: '찰떡 테스트',
               url: 'https://chalteok.com',
+              applicationCategory: 'LifestyleApplication',
+              operatingSystem: 'All',
+              offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
+              description:
+                '내 연애 스타일과 관계 적합도, 한 곳에서 확인하세요. 찰떡궁합 테스트(45문항)·애착유형 테스트 무료 제공.',
             }),
           }}
         />
