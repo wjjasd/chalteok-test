@@ -24,7 +24,7 @@ export async function generateMetadata({
           type: 'website',
           siteName: '찰떡 궁합 테스트',
           title: `내 찰떡 궁합 점수: ${score}점 (${g}등급 — ${gradeLabel})`,
-          description: '찰떡 궁합 테스트는 자기 성찰 도구이며, 관계 진단이 아닙니다.',
+          description: '관계 적합도 자기 성찰 도구',
           images: [{ url: `${BASE_URL}/og/${g}.png`, width: 1200, height: 630 }],
         },
       }
@@ -44,7 +44,7 @@ export async function generateMetadata({
         type: 'website',
         siteName: '찰떡 궁합 테스트',
         title: `내 찰떡 궁합 점수: ${score}점 (${payload.grade}등급 — ${gradeLabel})`,
-        description: '찰떡 궁합 테스트는 자기 성찰 도구이며, 관계 진단이 아닙니다.',
+        description: '관계 적합도 자기 성찰 도구',
         images: [{ url: ogImageUrl, width: 1200, height: 630 }],
       },
     }
@@ -57,7 +57,7 @@ export async function generateMetadata({
       type: 'website',
       siteName: '찰떡 궁합 테스트',
       title: '찰떡 궁합 테스트',
-      description: '나와 그 사람, 찰떡일까? 관계 적합도 자기 성찰 도구',
+      description: '관계 적합도 자기 성찰 도구',
       images: [{ url: `${BASE_URL}/og/root.png`, width: 1200, height: 630 }],
     },
   }

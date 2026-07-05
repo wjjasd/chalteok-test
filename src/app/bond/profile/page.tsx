@@ -1,9 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQuizStore } from '@/store/quiz'
 import StepLayout from '@/components/StepLayout'
+import { loadKakaoSdk, initKakao } from '@/lib/kakaoSdk'
 
 const AGE_GROUPS = [
   { value: 'teens', label: '10대' },
@@ -112,6 +113,10 @@ export default function ProfilePage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const profile = useQuizStore((s) => s.profile)
+
+  useEffect(() => {
+    loadKakaoSdk().then(initKakao).catch(() => {})
+  }, [])
   const setProfile = useQuizStore((s) => s.setProfile)
   const applyRecommendedWeights = useQuizStore((s) => s.applyRecommendedWeights)
 

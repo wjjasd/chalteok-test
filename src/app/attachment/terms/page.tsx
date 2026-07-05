@@ -1,5 +1,28 @@
 'use client'
 
+// [DISABLED] 면책 고지 화면 — 2026-07-03 비활성화
+// 법률 검토 결과, 개인정보 미수집 무료 서비스에서 별도 페이지 강제 동의는 법적 의무가 아님.
+// UX 마찰(진입 장벽) 제거 목적으로 비활성화. 랜딩 또는 시작 버튼 근처 짧은 고지로 대체 예정.
+// 재활성화 방법: 아래 주석 해제 후 이 파일 상단 redirect 블록 삭제.
+// 주의: quiz/result 페이지에 termsAgreed 가드가 있으므로 재활성화 시 이 파일이 반드시 경유되어야 함.
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useAttachmentStore } from '@/store/attachment'
+
+export default function AttachmentTermsPage() {
+  const router = useRouter()
+  const setTermsAgreed = useAttachmentStore((s) => s.setTermsAgreed)
+
+  useEffect(() => {
+    setTermsAgreed(true)
+    router.replace('/attachment/quiz')
+  }, [router, setTermsAgreed])
+
+  return null
+}
+
+/*
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAttachmentStore } from '@/store/attachment'
@@ -92,3 +115,4 @@ export default function AttachmentTermsPage() {
     </div>
   )
 }
+*/
