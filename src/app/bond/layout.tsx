@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 
 export const metadata: Metadata = {
   alternates: { canonical: 'https://chalteok.com/bond' },
@@ -13,5 +14,11 @@ export const metadata: Metadata = {
 }
 
 export default function BondLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+  return (
+    <>
+      {/* 공유 링크로 /bond/result 직접 진입 시에도 카카오 SDK 즉시 로드되도록 layout에서 선제 로드 */}
+      <Script src="https://developers.kakao.com/sdk/js/kakao.js" strategy="afterInteractive" />
+      {children}
+    </>
+  )
 }

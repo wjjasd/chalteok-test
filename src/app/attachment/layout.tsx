@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Script from 'next/script'
 
 export const metadata: Metadata = {
   alternates: { canonical: 'https://chalteok.com/attachment' },
@@ -13,5 +14,11 @@ export const metadata: Metadata = {
 }
 
 export default function AttachmentLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>
+  return (
+    <>
+      {/* /attachment 진입 즉시 카카오 SDK 로드 시작 — 12문항이라 quiz→result 이동이 빨라 useEffect 사전 로드만으론 부족 */}
+      <Script src="https://developers.kakao.com/sdk/js/kakao.js" strategy="afterInteractive" />
+      {children}
+    </>
+  )
 }

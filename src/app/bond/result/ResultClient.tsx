@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import { useQuizStore } from '@/store/quiz'
@@ -123,9 +124,13 @@ export default function ResultClient() {
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search)
 
+    const hasStoreAnswers = Object.keys(storeAnswers).length > 0
+
     const sParam = searchParams.get('s')
     const gParam = searchParams.get('g')
-    if (sParam && gParam && ['S', 'A', 'B', 'C', 'D'].includes(gParam)) {
+    // 스토어에 답변이 있으면 quiz를 직접 완료한 것 → URL 파라미터 무시하고 스토어 우선
+    // (공유 링크 접속 후 다시하기 → quiz 완료 시 이전 ?s=&g=... 파라미터가 URL에 남는 Next.js 라우팅 버그 방어)
+    if (!hasStoreAnswers && sParam && gParam && ['S', 'A', 'B', 'C', 'D'].includes(gParam)) {
       const score = parseInt(sParam, 10)
       if (!isNaN(score)) {
         const SECTION_ORDER: SectionId[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
@@ -160,7 +165,7 @@ export default function ResultClient() {
     }
 
     const d = searchParams.get('d')
-    if (d) {
+    if (!hasStoreAnswers && d) {
       const shared: SharePayload | null = decodeShare(d)
       if (shared) {
         setResult({
@@ -176,7 +181,7 @@ export default function ResultClient() {
       }
     }
 
-    if (window.location.hash) {
+    if (!hasStoreAnswers && window.location.hash) {
       const shared: SharePayload | null = decodeShare(window.location.hash)
       if (shared) {
         setResult({
@@ -207,42 +212,40 @@ export default function ResultClient() {
     return `${window.location.origin}/bond/result?d=${encodeURIComponent(encoded)}`
   }
 
-  const handleKakaoShare = () => {
+  const handleKakaoShare = async () => {
     if (!result) return
-    setKakaoLoading(true)
-    setTimeout(async () => {
-      try {
-        await loadKakaoSdk()
-        initKakao()
-      } catch {
-        alert('카카오 SDK를 불러올 수 없습니다.\n광고 차단기가 활성화된 경우 비활성화 후 재시도하거나, 🔗 URL 공유를 이용해 주세요.')
-        setKakaoLoading(false)
-        return
-      }
-      if (!window.Kakao) { setKakaoLoading(false); return }
-      const score = Math.round(result.finalScore)
-      const grade = result.grade
-      const SECTION_ORDER: SectionId[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-      const percentsArr = SECTION_ORDER.map((id) => Math.round(result.sectionPercents[id] ?? 0))
-      const activeMask = SECTION_ORDER.reduce(
-        (mask, id, i) => (result.activeSections.includes(id) ? mask | (1 << i) : mask), 0
-      )
-      const p = btoa(JSON.stringify(percentsArr))
-      const a = activeMask.toString(16).padStart(2, '0')
-      const c = result.cutoffCount
-      const compactUrl = `${window.location.origin}/bond/result?s=${score}&g=${grade}&p=${encodeURIComponent(p)}&a=${a}&c=${c}`
-      const imageUrl = `${window.location.origin}/og/${grade}.png`
-      window.Kakao.Share.sendDefault({
-        objectType: 'feed',
-        content: {
-          title: `내 찰떡 궁합 점수: ${score}점 (${grade}등급)`,
-          description: GRADE_CONFIG[grade].description,
-          imageUrl,
-          link: { mobileWebUrl: compactUrl, webUrl: compactUrl },
-        },
-      })
+    flushSync(() => setKakaoLoading(true))
+    try {
+      await loadKakaoSdk()
+      initKakao()
+    } catch {
+      alert('카카오 SDK를 불러올 수 없습니다.\n광고 차단기가 활성화된 경우 비활성화 후 재시도하거나, 🔗 URL 공유를 이용해 주세요.')
       setKakaoLoading(false)
-    }, 50)
+      return
+    }
+    if (!window.Kakao) { setKakaoLoading(false); return }
+    const score = Math.round(result.finalScore)
+    const grade = result.grade
+    const SECTION_ORDER: SectionId[] = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
+    const percentsArr = SECTION_ORDER.map((id) => Math.round(result.sectionPercents[id] ?? 0))
+    const activeMask = SECTION_ORDER.reduce(
+      (mask, id, i) => (result.activeSections.includes(id) ? mask | (1 << i) : mask), 0
+    )
+    const p = btoa(JSON.stringify(percentsArr))
+    const a = activeMask.toString(16).padStart(2, '0')
+    const c = result.cutoffCount
+    const compactUrl = `${window.location.origin}/bond/result?s=${score}&g=${grade}&p=${encodeURIComponent(p)}&a=${a}&c=${c}`
+    const imageUrl = `${window.location.origin}/og/${grade}.png`
+    window.Kakao.Share.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: `내가 본 우리 궁합 점수: ${score}점 (${grade}등급)`,
+        description: GRADE_CONFIG[grade].description,
+        imageUrl,
+        link: { mobileWebUrl: compactUrl, webUrl: compactUrl },
+      },
+    })
+    setKakaoLoading(false)
   }
 
   const handleDownload = () => {
@@ -482,7 +485,7 @@ export default function ResultClient() {
         ctx.font = '11px system-ui, sans-serif'
         ctx.textAlign = 'center'
         ctx.fillStyle = '#9ca3af'
-        ctx.fillText('찰떡 궁합 테스트는 자기 성찰 도구이며, 관계 진단이 아닙니다.', W / 2, y + 8)
+        ctx.fillText('결과는 참고용, 대화는 진심으로.', W / 2, y + 8)
         y += 24
 
         ctx.fillStyle = '#e11d48'
@@ -575,6 +578,16 @@ export default function ResultClient() {
           <p className="mt-3 text-sm text-gray-500 text-center leading-relaxed">
             {gradeConfig.description}
           </p>
+          <button
+            onClick={handleKakaoShare}
+            disabled={kakaoLoading}
+            className="mt-4 w-full py-3.5 rounded-2xl font-semibold transition-colors text-sm disabled:opacity-60 disabled:cursor-not-allowed"
+            style={{ backgroundColor: '#FEE500', color: '#3C1E1E' }}
+          >
+            {kakaoLoading
+              ? <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              : '💬 카카오 공유'}
+          </button>
         </div>
 
         {cutoffBadge && !isSevere && (
@@ -633,32 +646,12 @@ export default function ResultClient() {
           </div>
         </div>
 
-        <div className="bg-gray-100 rounded-2xl p-4 text-sm text-gray-600 leading-relaxed">
-          <p>
-            이 결과는 전문적인 관계 진단이 아닌, 자기 성찰을 위한 참고 자료입니다.
-            관계에 대한 중요한 결정은 신뢰할 수 있는 주변인 또는 전문 상담사와 상의하시기 바랍니다.
-          </p>
-          <p className="mt-2 text-xs text-gray-500">
-            찰떡 궁합 테스트는 자기 성찰 도구이며, 관계 진단이 아닙니다.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-3 gap-3">
           <button
             onClick={handleShare}
             className="py-3.5 rounded-2xl font-semibold border border-rose-200 text-rose-700 bg-rose-50 hover:bg-rose-100 transition-colors text-sm"
           >
             {copied ? '복사됨!' : '🔗 URL 공유'}
-          </button>
-          <button
-            onClick={handleKakaoShare}
-            disabled={kakaoLoading}
-            className="py-3.5 rounded-2xl font-semibold transition-colors text-sm disabled:opacity-60 disabled:cursor-not-allowed"
-            style={{ backgroundColor: '#FEE500', color: '#3C1E1E' }}
-          >
-            {kakaoLoading
-              ? <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-              : '💬 카카오 공유'}
           </button>
           <button
             onClick={handleDownload}
@@ -678,7 +671,7 @@ export default function ResultClient() {
           </button>
           <button
             onClick={() => router.push('/')}
-            className="col-span-2 py-3.5 rounded-2xl font-semibold border border-gray-200 text-gray-500 bg-white hover:bg-gray-50 transition-colors text-sm"
+            className="col-span-3 py-3.5 rounded-2xl font-semibold border border-gray-200 text-gray-500 bg-white hover:bg-gray-50 transition-colors text-sm"
           >
             다른 테스트 보기
           </button>

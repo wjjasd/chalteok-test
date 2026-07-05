@@ -1,13 +1,18 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useAttachmentStore } from '@/store/attachment'
+import { loadKakaoSdk, initKakao } from '@/lib/kakaoSdk'
 
 export default function AttachmentLandingPage() {
   const router = useRouter()
   const reset = useAttachmentStore((s) => s.reset)
   const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    loadKakaoSdk().then(initKakao).catch(() => {})
+  }, [])
 
   const handleStart = () => {
     reset()

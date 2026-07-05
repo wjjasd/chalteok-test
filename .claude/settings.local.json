@@ -2,7 +2,20 @@
   "permissions": {
     "allow": [
       "PowerShell(node --version)",
-      "PowerShell(npm --version)"
+      "PowerShell(npm --version)",
+      "Bash(npm run *)",
+      "Bash(cat C:\\\\\\\\Users\\\\\\\\wjjas\\\\\\\\AppData\\\\\\\\Local\\\\\\\\Temp\\\\\\\\claude\\\\\\\\C--Users-wjjas-work-chalteok\\\\\\\\e28a9757-d8a5-4aee-af61-a9a59232a565\\\\\\\\tasks\\\\\\\\b7b2njo6x.output)",
+      "Read(//tmp/**)",
+      "PowerShell(cd \"C:\\\\Users\\\\wjjas\\\\work\\\\chalteok\"; $job = Start-Job -ScriptBlock { Set-Location \"C:\\\\Users\\\\wjjas\\\\work\\\\chalteok\"; & \"C:\\\\Program Files\\\\nodejs\\\\npm.cmd\" run dev 2>&1 }; Start-Sleep 8; Receive-Job $job -Keep | Select-Object -First 20)",
+      "mcp__Claude_in_Chrome__tabs_context_mcp",
+      "PowerShell(cd \"C:\\\\Users\\\\wjjas\\\\work\\\\chalteok\"; Start-Job -Name \"devserver\" -ScriptBlock { cd \"C:\\\\Users\\\\wjjas\\\\work\\\\chalteok\"; & \"C:\\\\Program Files\\\\nodejs\\\\npm.cmd\" run dev 2>&1 | Tee-Object -FilePath \"C:\\\\Users\\\\wjjas\\\\work\\\\chalteok\\\\dev.log\" } | Out-Null; Start-Sleep 8; Get-Content \"C:\\\\Users\\\\wjjas\\\\work\\\\chalteok\\\\dev.log\" -ErrorAction SilentlyContinue)",
+      "Bash(npx tsc *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(Test-Path \"c:\\\\Users\\\\wjjas\\\\work\\\\chalteok\\\\.env.local\")",
+      "Bash(npm install *)",
+      "Bash(git commit *)"
     ]
   }
 }

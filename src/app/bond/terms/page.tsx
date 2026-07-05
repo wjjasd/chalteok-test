@@ -1,5 +1,27 @@
 'use client'
 
+// [DISABLED] 면책 고지 화면 — 2026-07-03 비활성화
+// 법률 검토 결과, 개인정보 미수집 무료 서비스에서 별도 페이지 강제 동의는 법적 의무가 아님.
+// UX 마찰(진입 장벽) 제거 목적으로 비활성화. 랜딩 또는 시작 버튼 근처 짧은 고지로 대체 예정.
+// 재활성화 방법: 아래 주석 해제 후 이 파일 상단 redirect 블록 삭제.
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { useQuizStore } from '@/store/quiz'
+
+export default function TermsPage() {
+  const router = useRouter()
+  const setTermsAgreed = useQuizStore((s) => s.setTermsAgreed)
+
+  useEffect(() => {
+    setTermsAgreed(true)
+    router.replace('/bond/profile')
+  }, [router, setTermsAgreed])
+
+  return null
+}
+
+/*
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useQuizStore } from '@/store/quiz'
@@ -84,3 +106,4 @@ export default function TermsPage() {
     </StepLayout>
   )
 }
+*/
