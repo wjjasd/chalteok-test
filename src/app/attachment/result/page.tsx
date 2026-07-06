@@ -17,6 +17,8 @@ import { loadKakaoSdk, initKakao } from '@/lib/kakaoSdk'
 
 const AttachmentChart = dynamic(() => import('./AttachmentChart'), { ssr: false })
 
+const BASE_URL = 'https://chalteok.com'
+
 const TYPE_HEX: Record<AttachmentType, { bg: string; text: string; border: string }> = {
   'calm-sea':    { bg: '#f0f9ff', text: '#0369a1', border: '#bae6fd' },
   'wavy-sea':    { bg: '#fffbeb', text: '#b45309', border: '#fde68a' },
@@ -75,7 +77,7 @@ function AttachmentResultContent() {
   const handleShare = () => {
     if (!result) return
     const encoded = encodeAttachmentShare(result.anxietyScore, result.avoidanceScore)
-    const url = `${window.location.origin}/attachment/result?r=${encoded}`
+    const url = `${BASE_URL}/attachment/result?r=${encoded}`
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
@@ -96,13 +98,13 @@ function AttachmentResultContent() {
     if (!window.Kakao) { setKakaoLoading(false); return }
     const config = TYPE_CONFIG[result.type]
     const encoded = encodeAttachmentShare(result.anxietyScore, result.avoidanceScore)
-    const shareUrl = `${window.location.origin}/attachment/result?r=${encoded}`
+    const shareUrl = `${BASE_URL}/attachment/result?r=${encoded}`
     window.Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
         title: `나는 ${config.name} ${config.emoji}`,
         description: `${config.tagline} — 찰떡 애착유형 테스트`,
-        imageUrl: `${window.location.origin}/api/og/attachment?type=${result.type}`,
+        imageUrl: `${BASE_URL}/api/og/attachment?type=${result.type}`,
         link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
       },
     })

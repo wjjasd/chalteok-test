@@ -13,6 +13,8 @@ import { loadKakaoSdk, initKakao } from '@/lib/kakaoSdk'
 
 const RadarChart = dynamic(() => import('@/components/RadarChart'), { ssr: false })
 
+const BASE_URL = 'https://chalteok.com'
+
 const SECTION_TITLES: Record<SectionId, string> = {
   A: '초기 끌림',
   B: '대화 적합도',
@@ -209,7 +211,7 @@ export default function ResultClient() {
 
   const buildShareUrl = (payload: SharePayload): string => {
     const encoded = encodeShare(payload)
-    return `${window.location.origin}/bond/result?d=${encodeURIComponent(encoded)}`
+    return `${BASE_URL}/bond/result?d=${encodeURIComponent(encoded)}`
   }
 
   const handleKakaoShare = async () => {
@@ -234,8 +236,8 @@ export default function ResultClient() {
     const p = btoa(JSON.stringify(percentsArr))
     const a = activeMask.toString(16).padStart(2, '0')
     const c = result.cutoffCount
-    const compactUrl = `${window.location.origin}/bond/result?s=${score}&g=${grade}&p=${encodeURIComponent(p)}&a=${a}&c=${c}`
-    const imageUrl = `${window.location.origin}/og/${grade}.png`
+    const compactUrl = `${BASE_URL}/bond/result?s=${score}&g=${grade}&p=${encodeURIComponent(p)}&a=${a}&c=${c}`
+    const imageUrl = `${BASE_URL}/og/${grade}.png`
     window.Kakao.Share.sendDefault({
       objectType: 'feed',
       content: {
