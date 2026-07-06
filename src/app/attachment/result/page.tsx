@@ -287,9 +287,9 @@ function AttachmentResultContent() {
         ctx.fillText('파도치는 바다형', gridX + gridSize - pad, gridY + gridSize - pad)
         ctx.globalAlpha = 1.0
 
-        // 현재 위치 마커
-        const dotX = gridX + (safeResult.anxietyScore / 30) * gridSize
-        const dotY = gridY + (1 - safeResult.avoidanceScore / 30) * gridSize
+        // 현재 위치 마커 (점수 범위 6~30을 화면 차트와 동일한 도메인으로 매핑)
+        const dotX = gridX + ((safeResult.anxietyScore - 6) / 24) * gridSize
+        const dotY = gridY + (1 - (safeResult.avoidanceScore - 6) / 24) * gridSize
 
         ctx.fillStyle = tc.text
         ctx.beginPath()

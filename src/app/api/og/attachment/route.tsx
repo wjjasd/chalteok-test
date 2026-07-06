@@ -10,11 +10,11 @@ const TYPE_MAP: Record<AttachmentType, {
   bg: string; cardBg: string; labelColor: string; nameColor: string
 }> = {
   'calm-sea': {
-    name: '고요한 바다형', emoji: '🌊', tagline: '안정적이고 신뢰하는 관계 패턴',
+    name: '고요한 바다형', emoji: '🌅', tagline: '안정적이고 신뢰하는 관계 패턴',
     bg: '#e0f2fe', cardBg: '#f0f9ff', labelColor: '#0284c7', nameColor: '#0369a1',
   },
   'wavy-sea': {
-    name: '파도치는 바다형', emoji: '🌪️', tagline: '강렬하고 밀착적인 관계 패턴',
+    name: '파도치는 바다형', emoji: '🌊', tagline: '강렬하고 밀착적인 관계 패턴',
     bg: '#fef3c7', cardBg: '#fffbeb', labelColor: '#d97706', nameColor: '#b45309',
   },
   'lone-island': {
