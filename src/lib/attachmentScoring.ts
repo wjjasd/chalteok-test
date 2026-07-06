@@ -21,7 +21,7 @@ export interface AttachmentTypeConfig {
 export const TYPE_CONFIG: Record<AttachmentType, AttachmentTypeConfig> = {
   'calm-sea': {
     name: '고요한 바다형',
-    emoji: '🌊',
+    emoji: '🌅',
     tagline: '안정적이고 신뢰하는 관계 패턴',
     description:
       '연인과의 관계에서 대체로 안정감을 느끼는 경향이 있어요. 혼자만의 시간과 함께하는 시간 사이에서 균형을 잘 잡고, 연인을 크게 의심하거나 지나치게 거리를 두지 않는 편이에요. 갈등이 생겨도 차분하게 대화로 풀어나가려는 태도를 보이는 경우가 많아요.',
@@ -31,7 +31,7 @@ export const TYPE_CONFIG: Record<AttachmentType, AttachmentTypeConfig> = {
   },
   'wavy-sea': {
     name: '파도치는 바다형',
-    emoji: '🌪️',
+    emoji: '🌊',
     tagline: '강렬하고 밀착적인 관계 패턴',
     description:
       '연인에 대한 감정이 크고 깊은 만큼, 관계에서 불안을 느끼는 순간도 많은 경향이 있어요. 연인의 반응 하나하나에 민감하게 반응하거나, 관계가 흔들릴까 봐 걱정되는 때가 있을 수 있어요. 이런 패턴은 깊이 사랑하는 사람의 특성이기도 해요. 자신의 감정을 있는 그대로 인식하고 천천히 살펴보는 것이 도움이 될 수 있어요.',

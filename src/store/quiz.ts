@@ -1,3 +1,4 @@
+import { useSyncExternalStore } from 'react'
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import { SectionId } from '@/lib/questions'
@@ -88,3 +89,14 @@ export const useQuizStore = create<QuizState>()(
     }
   )
 )
+
+// sessionStorage 복원(rehydrate)은 비동기라, 마운트 직후 스토어를 읽으면
+// 아직 기본값(빈 answers/profile)일 수 있다. 결과 화면처럼 복원 완료 여부에
+// 따라 리다이렉트 등 분기를 타는 곳에서 이 훅으로 완료 시점을 기다린다.
+export function useQuizStoreHydrated(): boolean {
+  return useSyncExternalStore(
+    (onChange) => useQuizStore.persist.onFinishHydration(onChange),
+    () => useQuizStore.persist.hasHydrated(),
+    () => false,
+  )
+}

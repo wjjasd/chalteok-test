@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
-import { useQuizStore } from '@/store/quiz'
+import { useQuizStore, useQuizStoreHydrated } from '@/store/quiz'
 import { calcResult, GRADE_CONFIG, ScoreResult } from '@/lib/scoring'
 import { SectionId, CUTOFF_QUESTIONS } from '@/lib/questions'
 import { encodeShare, decodeShare, SharePayload } from '@/lib/share'
@@ -110,6 +110,7 @@ export default function ResultClient() {
   const storeAnswers = useQuizStore((s) => s.answers)
   const storeWeights = useQuizStore((s) => s.weights)
   const storeStage = useQuizStore((s) => s.profile.relationshipStage)
+  const hydrated = useQuizStoreHydrated()
 
   const captureRef = useRef<HTMLDivElement>(null)
   const [result, setResult] = useState<ScoreResult | null>(null)
@@ -124,6 +125,10 @@ export default function ResultClient() {
   }, [])
 
   useEffect(() => {
+    // sessionStorage 복원(rehydrate)이 비동기라, 복원 전에 아래 로직이
+    // 스토어를 빈 값으로 읽고 잘못 리다이렉트하는 것을 방지
+    if (!hydrated) return
+
     const searchParams = new URLSearchParams(window.location.search)
 
     const hasStoreAnswers = Object.keys(storeAnswers).length > 0
@@ -207,7 +212,7 @@ export default function ResultClient() {
     setResult(r)
     setWeights(storeWeights)
     setCutoffYesIds([41, 42, 43, 44, 45].filter((id) => storeAnswers[`Q${id}`] === true))
-  }, [])
+  }, [hydrated])
 
   const buildShareUrl = (payload: SharePayload): string => {
     const encoded = encodeShare(payload)
