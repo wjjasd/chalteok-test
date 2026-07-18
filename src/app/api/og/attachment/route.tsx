@@ -1,37 +1,23 @@
 import { ImageResponse } from 'next/og'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import type { AttachmentType } from '@/lib/attachmentScoring'
+import { TYPE_CONFIG, type AttachmentType } from '@/lib/attachmentScoring'
 
 export const dynamic = 'force-dynamic'
 
-const TYPE_MAP: Record<AttachmentType, {
-  name: string; emoji: string; tagline: string
+// satori(ImageResponse)는 Tailwind 클래스를 렌더링할 수 없어 TYPE_CONFIG의 색상 값을 재사용할 수 없다.
+// name/emoji/tagline은 TYPE_CONFIG에서 가져오고, hex 색상만 OG 전용으로 별도 유지한다.
+const OG_COLORS: Record<AttachmentType, {
   bg: string; cardBg: string; labelColor: string; nameColor: string
 }> = {
-  'calm-sea': {
-    name: '고요한 바다형', emoji: '🌅', tagline: '안정적이고 신뢰하는 관계 패턴',
-    bg: '#e0f2fe', cardBg: '#f0f9ff', labelColor: '#0284c7', nameColor: '#0369a1',
-  },
-  'wavy-sea': {
-    name: '파도치는 바다형', emoji: '🌊', tagline: '강렬하고 밀착적인 관계 패턴',
-    bg: '#fef3c7', cardBg: '#fffbeb', labelColor: '#d97706', nameColor: '#b45309',
-  },
-  'lone-island': {
-    name: '나만의 섬형', emoji: '🏝️', tagline: '독립적이고 거리감 있는 관계 패턴',
-    bg: '#ccfbf1', cardBg: '#f0fdfa', labelColor: '#0d9488', nameColor: '#0f766e',
-  },
-  'stormy-sea': {
-    name: '폭풍 속 바다형', emoji: '⛈️', tagline: '복잡하고 혼란스러운 관계 패턴',
-    bg: '#f3e8ff', cardBg: '#faf5ff', labelColor: '#9333ea', nameColor: '#7e22ce',
-  },
-  'mirror-sea': {
-    name: '거울 같은 바다형', emoji: '🪞', tagline: '상황에 따라 달라지는 유연한 관계 패턴',
-    bg: '#e2e8f0', cardBg: '#f8fafc', labelColor: '#64748b', nameColor: '#334155',
-  },
+  'calm-sea': { bg: '#e0f2fe', cardBg: '#f0f9ff', labelColor: '#0284c7', nameColor: '#0369a1' },
+  'wavy-sea': { bg: '#fef3c7', cardBg: '#fffbeb', labelColor: '#d97706', nameColor: '#b45309' },
+  'lone-island': { bg: '#ccfbf1', cardBg: '#f0fdfa', labelColor: '#0d9488', nameColor: '#0f766e' },
+  'stormy-sea': { bg: '#f3e8ff', cardBg: '#faf5ff', labelColor: '#9333ea', nameColor: '#7e22ce' },
+  'mirror-sea': { bg: '#e2e8f0', cardBg: '#f8fafc', labelColor: '#64748b', nameColor: '#334155' },
 }
 
-const VALID_TYPES = Object.keys(TYPE_MAP) as AttachmentType[]
+const VALID_TYPES = Object.keys(TYPE_CONFIG) as AttachmentType[]
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
@@ -40,7 +26,7 @@ export async function GET(request: Request) {
     ? (typeParam as AttachmentType)
     : 'calm-sea'
 
-  const cfg = TYPE_MAP[type]
+  const cfg = { ...TYPE_CONFIG[type], ...OG_COLORS[type] }
   const font = await readFile(join(process.cwd(), 'public/fonts/NotoSansKR-Bold.otf'))
 
   return new ImageResponse(
