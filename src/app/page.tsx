@@ -72,6 +72,9 @@ export default function HubPage() {
         <p className="mt-10 text-xs text-gray-400">
           모든 테스트는 성찰 보조 도구이며, 전문적 심리 진단이 아닙니다.
         </p>
+        <p className="mt-2 text-xs text-gray-300">
+          <Link href="/privacy" className="hover:text-gray-400 transition-colors">개인정보처리방침</Link>
+        </p>
       </div>
     </main>
   )
