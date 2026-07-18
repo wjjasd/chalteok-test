@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react'
 import { flushSync } from 'react-dom'
 import { useRouter } from 'next/navigation'
 import dynamic from 'next/dynamic'
+import Script from 'next/script'
 import { useQuizStore, useQuizStoreHydrated } from '@/store/quiz'
 import { calcResult, GRADE_CONFIG, ScoreResult } from '@/lib/scoring'
 import { SectionId, CUTOFF_QUESTIONS } from '@/lib/questions'
@@ -653,10 +654,17 @@ export default function ResultClient() {
           </div>
         </div>
 
-        {/* 광고 영역 (플레이스홀더) */}
-        <div className="bg-gray-100 border border-dashed border-gray-300 rounded-2xl flex items-center justify-center text-xs text-gray-400" style={{ minHeight: 100 }}>
-          광고 영역
+        {/* 카카오 애드핏 */}
+        <div className="flex items-center justify-center" style={{ minHeight: 100 }}>
+          <ins
+            className="kakao_ad_area"
+            style={{ display: 'none' }}
+            data-ad-unit="DAN-3v7FG7ynKycb5hKF"
+            data-ad-width="320"
+            data-ad-height="100"
+          />
         </div>
+        <Script src="//t1.kakaocdn.net/kas/static/ba.min.js" strategy="afterInteractive" async />
 
         <div className="grid grid-cols-3 gap-3">
           <button
