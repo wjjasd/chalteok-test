@@ -653,6 +653,11 @@ export default function ResultClient() {
           </div>
         </div>
 
+        {/* 광고 영역 (플레이스홀더) */}
+        <div className="bg-gray-100 border border-dashed border-gray-300 rounded-2xl flex items-center justify-center text-xs text-gray-400" style={{ minHeight: 100 }}>
+          광고 영역
+        </div>
+
         <div className="grid grid-cols-3 gap-3">
           <button
             onClick={handleShare}
