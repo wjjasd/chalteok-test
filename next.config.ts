@@ -4,7 +4,8 @@ const isDev = process.env.NODE_ENV === "development";
 
 // 외부 출처 근거
 // - GA4: src/app/layout.tsx (googletagmanager.com gtag.js)
-// - Kakao JS SDK: src/app/{attachment,bond}/layout.tsx, src/lib/kakaoSdk.ts (developers.kakao.com)
+// - Kakao JS SDK: src/app/{attachment,bond}/layout.tsx, src/lib/kakaoSdk.ts (developers.kakao.com → t1.kakaocdn.net 리다이렉트)
+// - Kakao 공유 팝업: sharer.kakao.com (form-action)
 // - Kakao AdFit: src/app/attachment/result/page.tsx, src/app/bond/result/ResultClient.tsx (t1.kakaocdn.net, 광고 iframe은 daum/kakao 도메인)
 const cspDirectives = [
   "default-src 'self'",
@@ -45,7 +46,9 @@ const cspDirectives = [
   "object-src 'none'",
   "base-uri 'self'",
   "frame-ancestors 'none'",
-  "form-action 'self'",
+  // 카카오톡 공유(Kakao.Share.sendDefault)는 팝업 창으로 sharer.kakao.com에 폼을 POST하고,
+  // 로그인 필요 시 accounts.kakao.com 등으로 리다이렉트된다 (form-action은 리다이렉트 대상까지 검사)
+  "form-action 'self' https://*.kakao.com",
   "upgrade-insecure-requests",
 ];
 
