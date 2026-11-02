@@ -1,9 +1,11 @@
 import type { TestDefinition } from '@/lib/tests/types'
 // 새 테스트 등록: 아래 두 마커 위치에 한 줄씩 추가한다 (/new-test 스킬이 자동으로 처리).
 // @new-test:imports
+import quitTiming from './quit-timing'
 
 export const TESTS: TestDefinition[] = [
   // @new-test:list
+  quitTiming,
 ]
 
 export function getTest(slug: string): TestDefinition | undefined {
