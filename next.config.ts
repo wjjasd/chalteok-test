@@ -7,6 +7,8 @@ const isDev = process.env.NODE_ENV === "development";
 // - Kakao JS SDK: src/app/{attachment,bond}/layout.tsx, src/lib/kakaoSdk.ts (developers.kakao.com → t1.kakaocdn.net 리다이렉트)
 // - Kakao 공유 팝업: sharer.kakao.com (form-action)
 // - Kakao AdFit: src/app/attachment/result/page.tsx, src/app/bond/result/ResultClient.tsx (t1.kakaocdn.net, 광고 iframe은 daum/kakao 도메인)
+// ⚠ CSP를 바꾼 뒤에는 반드시 운영/로컬에서 `npm run smoke -- <baseUrl> <slug>` 로 필수 출처 검사를 돌리고,
+//   카톡 공유 버튼을 실제로 눌러 확인할 것 (2026-11-02 form-action 사고: 공유 팝업이 빈 화면으로 뜸)
 const cspDirectives = [
   "default-src 'self'",
   [
