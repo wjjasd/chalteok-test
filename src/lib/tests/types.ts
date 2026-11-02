@@ -63,6 +63,8 @@ export interface TestDefinition {
   scoring: ScoringModel
   /** YYYY-MM-DD. 홈 정렬·신규 배지에 사용 */
   publishedAt: string
+  /** YYYY-MM-DD. 문항·결과·SEO 본문을 고친 날. sitemap lastmod에 사용 (없으면 publishedAt) */
+  updatedAt?: string
   seo: {
     /** <title>. 노릴 검색어로 시작. '… | 찰떡 테스트'까지 포함, 60자 이내 권장 */
     title: string

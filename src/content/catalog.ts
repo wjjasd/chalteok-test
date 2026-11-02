@@ -14,6 +14,8 @@ export interface CatalogItem {
   questions: number
   minutes: number
   publishedAt: string
+  /** 실제 내용 수정일 (sitemap lastmod) */
+  updatedAt: string
   badge?: '인기' | '신규'
 }
 
@@ -59,6 +61,7 @@ const LEGACY: CatalogItem[] = [
     questions: 45,
     minutes: 10,
     publishedAt: '2026-05-22',
+    updatedAt: '2026-11-02', // og:image·canonical 수정
     badge: '인기',
   },
   {
@@ -71,6 +74,7 @@ const LEGACY: CatalogItem[] = [
     questions: 12,
     minutes: 3,
     publishedAt: '2026-06-15',
+    updatedAt: '2026-11-02', // og:image·canonical 수정
   },
 ]
 
@@ -86,6 +90,7 @@ export function getCatalog(): CatalogItem[] {
     questions: t.questions.length,
     minutes: estimatedMinutes(t),
     publishedAt: t.publishedAt,
+    updatedAt: t.updatedAt ?? t.publishedAt,
     badge: isNewTest(t) ? '신규' : undefined,
   }))
   return [...engine, ...LEGACY].sort((a, b) => {

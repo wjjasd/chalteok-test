@@ -18,6 +18,7 @@ const test: TestDefinition = {
   category: 'love',                    // love personality friend life
   scoring: 'type',                     // type | score
   publishedAt: '2026-11-02',
+  updatedAt: '2026-11-02',             // 문항·결과·SEO 본문을 고칠 때마다 그날로 갱신 (sitemap lastmod)
   seo: {
     title: '연애 온도 테스트 — 나의 연애 스타일 온도 측정 | 찰떡 테스트',   // 60자 이내
     description: '…',                  // 50~160자, 검색 키워드 자연스럽게 포함
@@ -108,4 +109,5 @@ npm run smoke -- <baseUrl> <slug>     # 실행 중인 서버 실제 요청 (로�
 - `guide`: 해설 섹션 2~3개, 합계 **500자 이상**. 테스트 활용법 + 그 주제에서 실제로 도움이 되는 정보. 키워드 반복 나열 금지, 사실 정보는 확실한 일반 원칙만 (법·의료 단정 금지).
 - `faq`: 3~5개. 실제로 궁금해할 질문. FAQPage 구조화 데이터로 자동 출력.
 - 엔진이 자동으로 붙이는 것: 결과 유형 목록(본문 텍스트), 경로 탐색(BreadcrumbList), 카테고리 내부 링크.
+- **기존 테스트 내용을 고치면 `updatedAt`을 그날로 바꾼다.** sitemap lastmod가 이 값을 쓴다 (배포 시각을 쓰면 검색엔진이 lastmod를 무시하게 됨). 홈·카테고리 화면 자체를 고치면 `src/app/sitemap.ts`의 `SITE_SHELL_UPDATED`, 개인정보처리방침은 `PRIVACY_UPDATED`를 갱신.
 - 출시 후 사람 손이 필요한 것: 구글 서치콘솔 URL 색인 요청, 네이버 서치어드바이저 웹페이지 수집 요청, 커뮤니티·블로그 소개 글(백링크).

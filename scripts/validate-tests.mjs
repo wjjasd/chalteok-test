@@ -55,6 +55,10 @@ for (const file of targets) {
   if (!CATEGORIES.includes(test.category)) err(`category '${test.category}' 은 ${CATEGORIES.join('/')} 중 하나여야 함`)
   if (!['type', 'score'].includes(test.scoring)) err(`scoring은 type/score 중 하나`)
   if (!/^\d{4}-\d{2}-\d{2}$/.test(test.publishedAt ?? '')) err('publishedAt은 YYYY-MM-DD')
+  if (test.updatedAt !== undefined) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(test.updatedAt)) err('updatedAt은 YYYY-MM-DD')
+    else if (test.updatedAt < test.publishedAt) err('updatedAt이 publishedAt보다 이름')
+  }
   if (!test.shareTitle?.includes('{name}')) err('shareTitle에 {name} 치환자가 없음')
   if (!test.seo?.title || !test.seo?.description) err('seo.title / seo.description 필요')
   else {

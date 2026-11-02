@@ -10,6 +10,7 @@ const test: TestDefinition = {
   category: 'life',
   scoring: 'type',
   publishedAt: '2026-11-02',
+  updatedAt: '2026-11-02',
   seo: {
     title: '퇴사 테스트 — 퇴사할까 말까? 1분 만에 보는 내 이직 타이밍 | 찰떡 테스트',
     description:
