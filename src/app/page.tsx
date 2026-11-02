@@ -1,8 +1,10 @@
-'use client'
-
 import Link from 'next/link'
+import { listTests, isNewTest } from '@/content/tests'
+import { THEMES } from '@/lib/tests/themes'
+import { estimatedMinutes } from '@/lib/tests/scoring'
 
 export default function HubPage() {
+  const tests = listTests()
   return (
     <main className="min-h-screen flex flex-col items-center justify-center px-4 py-12 bg-gradient-to-b from-slate-50 to-white">
       <div className="w-full max-w-lg text-center">
@@ -67,6 +69,35 @@ export default function HubPage() {
               </svg>
             </div>
           </Link>
+
+          {tests.map((t) => {
+            const theme = THEMES[t.theme]
+            const isNew = isNewTest(t)
+            return (
+              <Link
+                key={t.slug}
+                href={`/t/${t.slug}`}
+                className="group bg-white rounded-2xl border border-gray-200 p-6 text-left hover:shadow-md transition-all duration-200"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 rounded-xl bg-gray-50 flex items-center justify-center text-2xl flex-shrink-0">
+                    {t.emoji}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h2 className="text-lg font-bold text-gray-900">{t.title}</h2>
+                      {isNew && <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${theme.badge}`}>신규</span>}
+                    </div>
+                    <p className="text-sm text-gray-500 leading-relaxed">
+                      {t.subtitle}
+                      <br />
+                      {t.questions.length}문항 · 약 {estimatedMinutes(t)}분
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            )
+          })}
         </div>
 
         <p className="mt-10 text-xs text-gray-400">

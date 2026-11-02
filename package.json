@@ -6,7 +6,11 @@
     "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "validate:tests": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/validate-tests.mjs",
+    "check": "npm run validate:tests && tsc --noEmit && npm run lint:engine && next build",
+    "lint:engine": "eslint src/app/t src/app/api/og/t src/lib/tests src/lib/analytics.ts src/content src/app/page.tsx src/app/sitemap.ts scripts/validate-tests.mjs",
+    "smoke": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/smoke-tests.mjs"
   },
   "dependencies": {
     "html-to-image": "^1.11.13",
