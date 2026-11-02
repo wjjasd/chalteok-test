@@ -80,6 +80,11 @@ for (const file of targets) {
   const guideChars = (test.guide ?? []).flatMap((g) => g.body).join('').length
   if (guideChars < 500) warn(`guide 본문 ${guideChars}자 (검색 노출용 해설 500자 이상 권장)`)
   if ((test.faq?.length ?? 0) < 3) warn(`faq ${test.faq?.length ?? 0}개 (3~5개 권장)`)
+  if (!test.promo) warn('promo 없음 — 인스타 카드 표지 문구(headline·hook·hashtags) 권장')
+  else {
+    if (test.promo.headline.split('\n').length > 2) warn('promo.headline은 2줄 이내 권장 (표지 넘침)')
+    if ((test.promo.hashtags?.length ?? 0) < 5) warn('promo.hashtags 5개 이상 권장')
+  }
   if (/진단/.test(JSON.stringify(test))) warn("'진단' 단어 사용 (2026-07-03 결정: UI·공유 문구에 쓰지 않음)")
 
   // ── 결과 ──

@@ -61,6 +61,11 @@ const test: TestDefinition = {
     },
   ],
   shareTitle: '내 퇴사 타이밍: {name} {emoji}',
+  promo: {
+    hook: '일요일 밤 9시, 내일 출근 생각에…',
+    headline: '나의\n퇴사 유형은?',
+    hashtags: ['퇴사', '퇴사고민', '직장인', '이직', '심리테스트', '퇴사테스트', '직장인공감', '월요병'],
+  },
   questions: [
     {
       id: 'q1',

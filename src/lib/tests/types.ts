@@ -79,6 +79,15 @@ export interface TestDefinition {
   guide?: { heading: string; body: string[] }[]
   /** 자주 묻는 질문 3~5개. FAQPage 구조화 데이터로도 출력 */
   faq?: { q: string; a: string }[]
+  /** 인스타 카드·캡션 (npm run insta-cards -- <slug>) */
+  promo?: {
+    /** 표지 첫 줄 훅 (예: '일요일 밤 9시, 내일 출근 생각에…'). 없으면 subtitle */
+    hook?: string
+    /** 표지 큰 제목. \n으로 줄바꿈, 2줄·줄당 7자 안팎 (예: '나의\n퇴사 유형은?') */
+    headline: string
+    /** 해시태그 6~10개 ('#' 없이) */
+    hashtags: string[]
+  }
   /** 카카오 공유 제목 템플릿. {name} {emoji} 치환 (예: '나는 {name} {emoji}') */
   shareTitle: string
   questions: TestQuestion[]

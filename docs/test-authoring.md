@@ -111,3 +111,19 @@ npm run smoke -- <baseUrl> <slug>     # 실행 중인 서버 실제 요청 (로�
 - 엔진이 자동으로 붙이는 것: 결과 유형 목록(본문 텍스트), 경로 탐색(BreadcrumbList), 카테고리 내부 링크.
 - **기존 테스트 내용을 고치면 `updatedAt`을 그날로 바꾼다.** sitemap lastmod가 이 값을 쓴다 (배포 시각을 쓰면 검색엔진이 lastmod를 무시하게 됨). 홈·카테고리 화면 자체를 고치면 `src/app/sitemap.ts`의 `SITE_SHELL_UPDATED`, 개인정보처리방침은 `PRIVACY_UPDATED`를 갱신.
 - 출시 후 사람 손이 필요한 것: 구글 서치콘솔 URL 색인 요청, 네이버 서치어드바이저 웹페이지 수집 요청, 커뮤니티·블로그 소개 글(백링크).
+
+## 8. 인스타 카드
+
+`promo` 필드를 채우면 `npm run insta-cards -- <slug>` 로 인스타 카드(1080×1350)와 캡션이 만들어진다.
+
+```ts
+promo: {
+  hook: '일요일 밤 9시, 내일 출근 생각에…',   // 표지 첫 줄 (없으면 subtitle)
+  headline: '나의\n퇴사 유형은?',             // 표지 큰 제목, 2줄·줄당 7자 안팎
+  hashtags: ['퇴사', '직장인', '심리테스트'],  // 6~10개, '#' 없이
+},
+```
+
+- 출력: `~/Downloads/chalteok_insta_<slug>/` — `card01.png`(표지) · `card02~`(결과 유형별) · 마지막(테스트 유도) · `caption.txt`
+- 각 카드의 내용 넘침을 자동 검사한다. 넘치면 실패 → 결과의 traits(앞 3개)·advice·tagline을 줄이거나 headline을 줄인다.
+- 로컬 Chrome이 필요하다 (`CHROME_PATH` 로 경로 지정 가능).
