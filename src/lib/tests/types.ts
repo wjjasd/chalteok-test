@@ -64,11 +64,19 @@ export interface TestDefinition {
   /** YYYY-MM-DD. 홈 정렬·신규 배지에 사용 */
   publishedAt: string
   seo: {
-    /** <title>. '… | 찰떡 테스트'까지 포함, 60자 이내 권장 */
+    /** <title>. 노릴 검색어로 시작. '… | 찰떡 테스트'까지 포함, 60자 이내 권장 */
     title: string
-    /** meta description. 80~150자 */
+    /** meta description. 노릴 검색어를 앞쪽에. 80~150자 */
     description: string
+    /** 소개 화면 <h1>. 노릴 검색어를 그대로 포함 (없으면 title 사용) */
+    h1?: string
+    /** meta keywords. 노릴 검색어 + 변형 3~8개 */
+    keywords?: string[]
   }
+  /** 소개 화면 하단 해설 섹션 (검색엔진이 읽는 본문). 섹션 2~3개 권장 */
+  guide?: { heading: string; body: string[] }[]
+  /** 자주 묻는 질문 3~5개. FAQPage 구조화 데이터로도 출력 */
+  faq?: { q: string; a: string }[]
   /** 카카오 공유 제목 템플릿. {name} {emoji} 치환 (예: '나는 {name} {emoji}') */
   shareTitle: string
   questions: TestQuestion[]

@@ -64,6 +64,19 @@ for (const file of targets) {
   }
   if (!registry.includes(`'./${slug}'`)) err(`src/content/tests/index.ts에 등록되지 않음`)
 
+  // ── 검색 노출 (SEO) ──
+  const kw = test.seo?.keywords?.[0]
+  if (!kw) warn('seo.keywords 없음 — 첫 번째 값이 노릴 핵심 검색어')
+  else {
+    if (!test.seo.title?.startsWith(kw)) warn(`seo.title이 핵심 검색어 '${kw}'로 시작하지 않음`)
+    if (!(test.seo.h1 ?? test.title).includes(kw)) warn(`h1에 핵심 검색어 '${kw}' 없음 (seo.h1 지정 권장)`)
+    if (!test.seo.description?.slice(0, 40).includes(kw)) warn(`seo.description 앞부분(40자)에 '${kw}' 없음`)
+  }
+  const guideChars = (test.guide ?? []).flatMap((g) => g.body).join('').length
+  if (guideChars < 500) warn(`guide 본문 ${guideChars}자 (검색 노출용 해설 500자 이상 권장)`)
+  if ((test.faq?.length ?? 0) < 3) warn(`faq ${test.faq?.length ?? 0}개 (3~5개 권장)`)
+  if (/진단/.test(JSON.stringify(test))) warn("'진단' 단어 사용 (2026-07-03 결정: UI·공유 문구에 쓰지 않음)")
+
   // ── 결과 ──
   const results = test.results ?? []
   const ids = new Set(results.map((r) => r.id))
