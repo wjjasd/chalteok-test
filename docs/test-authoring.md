@@ -21,7 +21,7 @@ const test: TestDefinition = {
   updatedAt: '2026-11-02',             // 문항·결과·SEO 본문을 고칠 때마다 그날로 갱신 (sitemap lastmod)
   seo: {
     title: '연애 온도 테스트 — 나의 연애 스타일 온도 측정 | 찰떡 테스트',   // 60자 이내
-    description: '…',                  // 50~160자, 검색 키워드 자연스럽게 포함
+    description: '…',                  // 40~80자 (네이버 기준 80자 초과 시 경고), 핵심 검색어를 앞쪽에
   },
   shareTitle: '내 연애 온도는 {name} {emoji}',   // {name} 필수
   questions: [

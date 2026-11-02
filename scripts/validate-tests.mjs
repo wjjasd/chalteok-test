@@ -63,8 +63,9 @@ for (const file of targets) {
   if (!test.seo?.title || !test.seo?.description) err('seo.title / seo.description 필요')
   else {
     if (test.seo.title.length > 60) warn(`seo.title ${test.seo.title.length}자 (60자 이내 권장)`)
-    if (test.seo.description.length < 50 || test.seo.description.length > 160)
-      warn(`seo.description ${test.seo.description.length}자 (50~160자 권장)`)
+    // 네이버 서치어드바이저: 설명 80자 이내 권장 (초과 시 진단 경고)
+    if (test.seo.description.length > 80) err(`seo.description ${test.seo.description.length}자 — 80자 이내 (네이버 기준)`)
+    else if (test.seo.description.length < 40) warn(`seo.description ${test.seo.description.length}자 (40~80자 권장)`)
   }
   if (!registry.includes(`'./${slug}'`)) err(`src/content/tests/index.ts에 등록되지 않음`)
 
@@ -92,6 +93,9 @@ for (const file of targets) {
     for (const k of ['name', 'emoji', 'tagline', 'description', 'advice']) if (!r[k]?.trim?.()) err(`${at}: ${k} 비어 있음`)
     if ((r.description?.length ?? 0) < 60) warn(`${at}: description이 짧음 (${r.description?.length ?? 0}자)`)
     if (!Array.isArray(r.traits) || r.traits.length < 3 || r.traits.length > 5) err(`${at}: traits 3~5개`)
+    // 결과 페이지 meta description = `${title} 결과 '${name}' — ${tagline}. 나도 1분 만에 해보기` (80자 이내)
+    const resultDesc = `${test.title} 결과 '${r.name}' — ${r.tagline}. 나도 1분 만에 해보기`
+    if (resultDesc.length > 80) err(`${at}: 결과 페이지 설명 ${resultDesc.length}자 — 80자 이내가 되도록 tagline·name을 줄일 것 (네이버 기준)`)
     for (const k of ['bestMatch', 'worstMatch']) {
       if (r[k] !== undefined && (!ids.has(r[k]) || r[k] === r.id)) err(`${at}: ${k} '${r[k]}' 가 유효한 다른 결과 id가 아님`)
     }

@@ -68,7 +68,7 @@ export interface TestDefinition {
   seo: {
     /** <title>. 노릴 검색어로 시작. '… | 찰떡 테스트'까지 포함, 60자 이내 권장 */
     title: string
-    /** meta description. 노릴 검색어를 앞쪽에. 80~150자 */
+    /** meta description. 노릴 검색어를 앞쪽에. 40~80자 (네이버 서치어드바이저 기준 80자 이내) */
     description: string
     /** 소개 화면 <h1>. 노릴 검색어를 그대로 포함 (없으면 title 사용) */
     h1?: string

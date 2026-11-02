@@ -28,15 +28,17 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   if (!data) return {}
   const { test, result } = data
   const title = `${result.emoji} ${result.name} — ${test.title} | 찰떡 테스트`
+  // 네이버 권장 80자 이내 (validate-tests가 길이 검사)
+  const resultDescription = `${test.title} 결과 '${result.name}' — ${result.tagline}. 나도 1분 만에 해보기`
   return {
     title,
-    description: `${result.tagline}. ${test.seo.description}`,
+    description: resultDescription,
     alternates: { canonical: `${SITE_URL}/t/${test.slug}` },
     openGraph: {
       ...SITE_OG,
       url: `${SITE_URL}/t/${test.slug}/r/${result.id}`,
       title,
-      description: result.tagline,
+      description: resultDescription,
       images: [{ url: `${SITE_URL}/api/og/t/${test.slug}?r=${result.id}`, width: 1200, height: 630 }],
     },
   }

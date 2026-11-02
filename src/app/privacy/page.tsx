@@ -1,9 +1,16 @@
 import type { Metadata } from 'next'
+import { SITE_OG } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: '개인정보처리방침 | 찰떡 테스트',
   alternates: { canonical: 'https://chalteok.com/privacy' },
   description: '찰떡 테스트(chalteok.com)의 개인정보처리방침입니다.',
+  openGraph: {
+    ...SITE_OG,
+    url: 'https://chalteok.com/privacy',
+    title: '개인정보처리방침 | 찰떡 테스트',
+    description: '찰떡 테스트(chalteok.com)의 개인정보처리방침입니다.',
+  },
 }
 
 export default function PrivacyPage() {
