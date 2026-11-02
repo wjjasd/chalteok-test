@@ -142,7 +142,9 @@ export default async function ResultPage({ params }: { params: Params }) {
           </div>
         </section>
 
-        <p className="text-center text-xs text-gray-400">재미로 보는 성찰 테스트이며 전문적 심리 진단이 아닙니다.</p>
+        <p className="text-center text-xs text-gray-300">
+          <Link href="/privacy" className="hover:text-gray-400">개인정보처리방침</Link>
+        </p>
       </div>
     </main>
   )

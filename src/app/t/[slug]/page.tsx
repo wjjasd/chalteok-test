@@ -61,7 +61,7 @@ export default async function TestIntroPage({ params }: { params: Promise<{ slug
         </div>
 
         <p className="mt-10 text-xs text-gray-400">
-          재미로 보는 성찰 테스트이며 전문적 심리 진단이 아닙니다. 응답은 기기 밖으로 전송되지 않습니다.
+          응답은 기기 밖으로 전송되지 않습니다.
         </p>
         <Link href="/" className="inline-block mt-3 text-xs text-gray-400 hover:text-gray-600">
           ← 다른 테스트 보기
