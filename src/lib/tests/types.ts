@@ -85,7 +85,7 @@ export interface TestDefinition {
     hook?: string
     /** 표지 큰 제목. \n으로 줄바꿈, 2줄·줄당 7자 안팎 (예: '나의\n퇴사 유형은?') */
     headline: string
-    /** 해시태그 6~10개 ('#' 없이) */
+    /** 해시태그 최대 5개 (인스타그램 게시물 제한), '#' 없이. 주제 직결 2~3개 + 넓은 유입 1~2개 */
     hashtags: string[]
   }
   /** 카카오 공유 제목 템플릿. {name} {emoji} 치환 (예: '나는 {name} {emoji}') */

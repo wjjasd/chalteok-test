@@ -83,7 +83,11 @@ for (const file of targets) {
   if (!test.promo) warn('promo 없음 — 인스타 카드 표지 문구(headline·hook·hashtags) 권장')
   else {
     if (test.promo.headline.split('\n').length > 2) warn('promo.headline은 2줄 이내 권장 (표지 넘침)')
-    if ((test.promo.hashtags?.length ?? 0) < 5) warn('promo.hashtags 5개 이상 권장')
+    // 인스타그램 게시물 해시태그 최대 5개
+    const tags = test.promo.hashtags ?? []
+    if (tags.length > 5) err(`promo.hashtags ${tags.length}개 — 인스타그램 최대 5개`)
+    else if (tags.length < 3) warn('promo.hashtags 3~5개 권장')
+    if (new Set(tags.map((t) => t.replace(/^#/, ''))).size !== tags.length) err('promo.hashtags 중복')
   }
   if (/진단/.test(JSON.stringify(test))) warn("'진단' 단어 사용 (2026-07-03 결정: UI·공유 문구에 쓰지 않음)")
 

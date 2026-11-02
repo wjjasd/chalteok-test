@@ -125,7 +125,7 @@ const caption = [
   `헷갈리면 프로필 링크에서 1분 테스트 🍡`,
   `친구 태그해서 같이 해보기 👥`,
   '',
-  promo.hashtags.map((h) => `#${h.replace(/^#/, '')}`).join(' '),
+  promo.hashtags.slice(0, 5).map((h) => `#${h.replace(/^#/, '')}`).join(' '), // 인스타 최대 5개
 ].join('\n')
 writeFileSync(join(outDir, 'caption.txt'), caption + '\n', 'utf8')
 rmSync(work, { recursive: true, force: true })
