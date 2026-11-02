@@ -2,8 +2,10 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Script from 'next/script'
 import { notFound } from 'next/navigation'
-import { getTest, listTests, TESTS, SITE_URL } from '@/content/tests'
+import { getTest, TESTS, SITE_URL } from '@/content/tests'
 import { THEMES } from '@/lib/tests/themes'
+import { SITE_OG } from '@/lib/site'
+import { getCatalog } from '@/content/catalog'
 import ResultActions from './ResultActions'
 
 export const dynamicParams = false
@@ -31,6 +33,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
     description: `${result.tagline}. ${test.seo.description}`,
     alternates: { canonical: `${SITE_URL}/t/${test.slug}` },
     openGraph: {
+      ...SITE_OG,
       url: `${SITE_URL}/t/${test.slug}/r/${result.id}`,
       title,
       description: result.tagline,
@@ -47,7 +50,9 @@ export default async function ResultPage({ params }: { params: Params }) {
   const byId = (id?: string) => test.results.find((r) => r.id === id)
   const best = byId(result.bestMatch)
   const worst = byId(result.worstMatch)
-  const others = listTests().filter((t) => t.slug !== test.slug).slice(0, 4)
+  const others = getCatalog()
+    .filter((i) => i.href !== `/t/${test.slug}`)
+    .slice(0, 6)
 
   return (
     <main className={`min-h-screen pb-16 ${theme.pageBg}`}>
@@ -126,19 +131,11 @@ export default async function ResultPage({ params }: { params: Params }) {
           <h2 className="font-semibold text-gray-800 mb-3">다른 테스트도 해보세요</h2>
           <div className="grid gap-2">
             {others.map((t) => (
-              <Link key={t.slug} href={`/t/${t.slug}`} className="flex items-center gap-3 rounded-xl p-3 bg-gray-50 hover:bg-gray-100">
+              <Link key={t.href} href={t.href} className="flex items-center gap-3 rounded-xl p-3 bg-gray-50 hover:bg-gray-100">
                 <span className="text-2xl">{t.emoji}</span>
                 <span className="text-sm font-medium text-gray-700">{t.title}</span>
               </Link>
             ))}
-            <Link href="/bond" className="flex items-center gap-3 rounded-xl p-3 bg-gray-50 hover:bg-gray-100">
-              <span className="text-2xl">💑</span>
-              <span className="text-sm font-medium text-gray-700">찰떡 궁합 테스트</span>
-            </Link>
-            <Link href="/attachment" className="flex items-center gap-3 rounded-xl p-3 bg-gray-50 hover:bg-gray-100">
-              <span className="text-2xl">🌊</span>
-              <span className="text-sm font-medium text-gray-700">애착유형 테스트</span>
-            </Link>
           </div>
         </section>
 

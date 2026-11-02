@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: '개인정보처리방침 | 찰떡 테스트',
+  alternates: { canonical: 'https://chalteok.com/privacy' },
   description: '찰떡 테스트(chalteok.com)의 개인정보처리방침입니다.',
 }
 

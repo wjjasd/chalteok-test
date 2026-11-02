@@ -88,7 +88,7 @@ import loveTemperature from './love-temperature'
 ## 5. 자동으로 붙는 것
 
 소개 `/t/<slug>` · 문항 `/t/<slug>/quiz` · 결과 `/t/<slug>/r/<id>` (전부 정적 생성) · OG 이미지 `/api/og/t/<slug>[?r=<id>]` ·
-홈 목록(14일간 '신규' 배지) · sitemap · 카카오 공유/링크 복사/이미지 저장 · 애드핏 · GA 이벤트
+홈 목록(14일간 '신규' 배지) · 카테고리 모음 페이지 `/c/<category>`(테스트가 생기면 자동 생성) · sitemap · 카카오 공유/링크 복사/이미지 저장 · 애드핏 · GA 이벤트
 (`test_start`, `test_complete`, `share_kakao`, `share_link`, `save_image`, `retake`, `try_from_share` — 파라미터 `test_slug`, `result_id`)
 
 ## 6. 검사 명령

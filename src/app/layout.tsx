@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Noto_Sans_KR } from 'next/font/google'
 import Script from 'next/script'
 import './globals.css'
+import { SITE_TITLE, SITE_DESC, SITE_OG } from '@/lib/site'
 
 const notoSansKr = Noto_Sans_KR({
   subsets: ['latin'],
@@ -11,28 +12,17 @@ const notoSansKr = Noto_Sans_KR({
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://chalteok.com'),
-  title: '찰떡 테스트 | 찰떡궁합 테스트 · 애착유형 테스트',
-  description:
-    '내 연애 스타일과 관계 적합도, 한 곳에서 확인하세요. 찰떡궁합 테스트(45문항)·애착유형 테스트 무료 제공. 개인정보는 기기 밖으로 나가지 않습니다.',
+  title: SITE_TITLE,
+  description: SITE_DESC,
+  applicationName: '찰떡 테스트',
+  keywords: ['심리테스트', '무료 심리테스트', '심리테스트 모음', '성격 테스트', '연애 테스트', '궁합 테스트', '애착유형 테스트', '퇴사 테스트', '찰떡 테스트'],
   verification: {
     google: 'qi_yQVNsvaYzB1jVzibqfu4wEWg3JnrEaxFX2whw4B0',
     other: { 'naver-site-verification': ['e560414ddddef4627dd234b801ea6bade0bc6a4d'] },
   },
-  other: {
-    'application-name': '찰떡 테스트',
-  },
-  alternates: {
-    canonical: 'https://chalteok.com',
-  },
-  openGraph: {
-    url: 'https://chalteok.com',
-    type: 'website',
-    siteName: '찰떡 테스트',
-    title: '찰떡 테스트 | 찰떡궁합 테스트 · 애착유형 테스트',
-    description:
-      '내 연애 스타일과 관계 적합도, 한 곳에서 확인하세요. 찰떡궁합 테스트(45문항)·애착유형 테스트 무료 제공.',
-    images: [{ url: '/og/root.png', width: 1200, height: 630 }],
-  },
+  // canonical은 페이지별로 지정한다 (루트에 두면 canonical 없는 하위 페이지가 전부 홈을 가리키게 됨)
+  openGraph: SITE_OG,
+  twitter: { card: 'summary_large_image' },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -44,14 +34,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               '@context': 'https://schema.org',
-              '@type': 'WebApplication',
+              '@type': 'WebSite',
               name: '찰떡 테스트',
+              alternateName: ['찰떡테스트', 'chalteok'],
               url: 'https://chalteok.com',
-              applicationCategory: 'LifestyleApplication',
-              operatingSystem: 'All',
-              offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
-              description:
-                '내 연애 스타일과 관계 적합도, 한 곳에서 확인하세요. 찰떡궁합 테스트(45문항)·애착유형 테스트 무료 제공.',
+              inLanguage: 'ko-KR',
+              description: SITE_DESC,
             }),
           }}
         />

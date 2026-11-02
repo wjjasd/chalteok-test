@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { getTest, TESTS, SITE_URL } from '@/content/tests'
 import { THEMES } from '@/lib/tests/themes'
 import { estimatedMinutes } from '@/lib/tests/scoring'
+import { SITE_OG } from '@/lib/site'
 import StartButton from './StartButton'
 
 export const dynamicParams = false
@@ -22,6 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: test.seo.description,
     alternates: { canonical: url },
     openGraph: {
+      ...SITE_OG,
       url,
       title: test.seo.title,
       description: test.seo.description,
