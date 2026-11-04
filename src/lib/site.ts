@@ -11,5 +11,5 @@ export const SITE_OG = {
   siteName: '찰떡 테스트',
   title: SITE_TITLE,
   description: SITE_DESC,
-  images: [{ url: '/api/og/site', width: 1200, height: 630 }],
+  images: [{ url: '/og/site.png', width: 1200, height: 630 }],
 }

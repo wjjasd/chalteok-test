@@ -1,18 +1,29 @@
 import { ImageResponse } from 'next/og'
 import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
-import { getTest } from '@/content/tests'
+import { getTest, TESTS } from '@/content/tests'
 import { THEMES } from '@/lib/tests/themes'
 
-// /api/og/t/<slug>          → 테스트 표지
-// /api/og/t/<slug>?r=<id>   → 결과 카드 (카카오 공유·이미지 저장·OG에 공통 사용)
-export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params
-  const test = getTest(slug)
-  if (!test) return new Response('Not found', { status: 404 })
+export const dynamic = 'force-static'
+export const dynamicParams = false
 
-  const resultId = new URL(request.url).searchParams.get('r')
-  const result = test.results.find((r) => r.id === resultId)
+const COVER = 'cover'
+
+// 빌드 시 전수 생성 (정적 export)
+// /og/t/<slug>/cover.png   → 테스트 표지
+// /og/t/<slug>/<id>.png    → 결과 카드 (카카오 공유·이미지 저장·OG에 공통 사용). 결과 id 'cover'는 예약어
+export function generateStaticParams() {
+  return TESTS.flatMap((t) => [COVER, ...t.results.map((r) => r.id)].map((id) => ({ slug: t.slug, image: `${id}.png` })))
+}
+
+export async function GET(_request: Request, { params }: { params: Promise<{ slug: string; image: string }> }) {
+  const { slug, image } = await params
+  const test = getTest(slug)
+  if (!test || !image.endsWith('.png')) return new Response('Not found', { status: 404 })
+
+  const resultId = image.slice(0, -'.png'.length)
+  const result = resultId === COVER ? undefined : test.results.find((r) => r.id === resultId)
+  if (resultId !== COVER && !result) return new Response('Not found', { status: 404 })
   const hex = THEMES[test.theme].hex
   const font = await readFile(join(process.cwd(), 'public/fonts/NotoSansKR-Bold.otf'))
 
@@ -60,7 +71,6 @@ export async function GET(request: Request, { params }: { params: Promise<{ slug
       width: 1200,
       height: 630,
       fonts: [{ name: 'NotoSansKR', data: font, style: 'normal', weight: 700 }],
-      headers: { 'Cache-Control': 'public, max-age=86400, s-maxage=604800' },
     }
   )
 }

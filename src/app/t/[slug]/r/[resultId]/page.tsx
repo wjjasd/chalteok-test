@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
       url: `${SITE_URL}/t/${test.slug}/r/${result.id}`,
       title,
       description: resultDescription,
-      images: [{ url: `${SITE_URL}/api/og/t/${test.slug}?r=${result.id}`, width: 1200, height: 630 }],
+      images: [{ url: `${SITE_URL}/og/t/${test.slug}/${result.id}.png`, width: 1200, height: 630 }],
     },
   }
 }

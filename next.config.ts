@@ -1,80 +1,9 @@
 import type { NextConfig } from "next";
 
-const isDev = process.env.NODE_ENV === "development";
-
-// 외부 출처 근거
-// - GA4: src/app/layout.tsx (googletagmanager.com gtag.js)
-// - Kakao JS SDK: src/app/{attachment,bond}/layout.tsx, src/lib/kakaoSdk.ts (developers.kakao.com → t1.kakaocdn.net 리다이렉트)
-// - Kakao 공유 팝업: sharer.kakao.com (form-action)
-// - Kakao AdFit: src/app/attachment/result/page.tsx, src/app/bond/result/ResultClient.tsx (t1.kakaocdn.net, 광고 iframe은 daum/kakao 도메인)
-// ⚠ CSP를 바꾼 뒤에는 반드시 운영/로컬에서 `npm run smoke -- <baseUrl> <slug>` 로 필수 출처 검사를 돌리고,
-//   카톡 공유 버튼을 실제로 눌러 확인할 것 (2026-11-02 form-action 사고: 공유 팝업이 빈 화면으로 뜸)
-const cspDirectives = [
-  "default-src 'self'",
-  [
-    "script-src 'self' 'unsafe-inline'",
-    isDev ? "'unsafe-eval'" : "",
-    "https://www.googletagmanager.com",
-    "https://developers.kakao.com",
-    "https://t1.kakaocdn.net",
-    "https://*.kakaocdn.net",
-    "https://*.daumcdn.net",
-  ]
-    .filter(Boolean)
-    .join(" "),
-  "style-src 'self' 'unsafe-inline'",
-  // 광고 이미지·GA 픽셀·결과 이미지(canvas toDataURL) 대응
-  "img-src 'self' data: blob: https:",
-  "font-src 'self' data:",
-  [
-    "connect-src 'self'",
-    "https://*.google-analytics.com",
-    "https://*.analytics.google.com",
-    "https://*.googletagmanager.com",
-    "https://*.g.doubleclick.net",
-    "https://*.google.com",
-    "https://*.kakao.com",
-    "https://*.kakaocdn.net",
-    "https://*.daum.net",
-    "https://*.daumcdn.net",
-  ].join(" "),
-  [
-    "frame-src 'self'",
-    "https://*.kakao.com",
-    "https://*.kakaocdn.net",
-    "https://*.daum.net",
-    "https://*.daumcdn.net",
-  ].join(" "),
-  "object-src 'none'",
-  "base-uri 'self'",
-  "frame-ancestors 'none'",
-  // 카카오톡 공유(Kakao.Share.sendDefault)는 팝업 창으로 sharer.kakao.com에 폼을 POST하고,
-  // 로그인 필요 시 accounts.kakao.com 등으로 리다이렉트된다 (form-action은 리다이렉트 대상까지 검사)
-  "form-action 'self' https://*.kakao.com",
-  "upgrade-insecure-requests",
-];
-
-const securityHeaders = [
-  { key: "Content-Security-Policy", value: cspDirectives.join("; ") },
-  { key: "X-Frame-Options", value: "DENY" },
-  { key: "X-Content-Type-Options", value: "nosniff" },
-  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
-  {
-    key: "Permissions-Policy",
-    value: "camera=(), microphone=(), geolocation=(), browsing-topics=()",
-  },
-];
-
+// 정적 export (Cloudflare Pages). 보안 헤더(CSP 등)는 public/_headers, 옛 URL 리다이렉트는 public/_redirects
 const nextConfig: NextConfig = {
+  output: "export",
   poweredByHeader: false,
-  async headers() {
-    return [
-      {
-        source: "/:path*",
-        headers: securityHeaders,
-      },
-    ];
-  },
 };
 
 export default nextConfig;

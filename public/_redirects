@@ -1,0 +1,6 @@
+# 옛 런타임 OG 경로(Vercel) -> 빌드 시 생성한 정적 PNG. 이미 공유된 카톡·SNS 카드 호환용
+# 쿼리(?r=, ?type=)는 경로 매칭에 쓰이지 않아 결과별 카드로 보낼 수 없다 -> 표지/대표 이미지로 보냄
+# 고정 경로 규칙을 :placeholder 규칙보다 위에 둔다 (Cloudflare 권장, 처리 효율)
+/api/og/site            /og/site.png              301
+/api/og/attachment      /og/site.png              301
+/api/og/t/:slug         /og/t/:slug/cover.png     301

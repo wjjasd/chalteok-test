@@ -10,7 +10,7 @@ export const metadata: Metadata = {
   openGraph: {
     ...SITE_OG,
     url: 'https://chalteok.com/attachment',
-    images: [{ url: '/api/og/site', width: 1200, height: 630 }],
+    images: [{ url: '/og/site.png', width: 1200, height: 630 }],
     title: '애착유형 테스트 — 내 연애 패턴 파악하기 | 찰떡 테스트',
     description:
       '나는 고요한 바다형? 파도치는 바다형? 애착유형 테스트로 내 연애 패턴을 파악해보세요. 서버 저장 없이 무료 제공.',

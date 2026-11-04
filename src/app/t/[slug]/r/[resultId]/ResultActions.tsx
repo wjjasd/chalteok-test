@@ -22,7 +22,7 @@ export default function ResultActions({ slug, resultId, shareTitle, shareDescrip
   const [busy, setBusy] = useState(false)
 
   const shareUrl = `${SITE_URL}/t/${slug}/r/${resultId}`
-  const ogUrl = `/api/og/t/${slug}?r=${resultId}`
+  const ogUrl = `/og/t/${slug}/${resultId}.png`
   const params = { test_slug: slug, result_id: resultId }
 
   useEffect(() => {

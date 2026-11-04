@@ -47,3 +47,6 @@ next-env.d.ts
 *.log
 test_log.md
 lh-*.json
+
+# wrangler pages dev local state
+/.wrangler/

@@ -99,6 +99,8 @@ for (const file of targets) {
   for (const r of results) {
     const at = `결과 '${r.id}'`
     if (!ID_RE.test(r.id ?? '')) err(`${at}: id는 영문 소문자·숫자·하이픈만`)
+    // OG 이미지 경로 /og/t/<slug>/cover.png 가 테스트 표지라 결과 id로 쓸 수 없음
+    if (r.id === 'cover') err(`${at}: 'cover'는 예약어 (표지 OG 이미지 경로와 충돌)`)
     for (const k of ['name', 'emoji', 'tagline', 'description', 'advice']) if (!r[k]?.trim?.()) err(`${at}: ${k} 비어 있음`)
     if ((r.description?.length ?? 0) < 60) warn(`${at}: description이 짧음 (${r.description?.length ?? 0}자)`)
     if (!Array.isArray(r.traits) || r.traits.length < 3 || r.traits.length > 5) err(`${at}: traits 3~5개`)

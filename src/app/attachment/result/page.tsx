@@ -105,7 +105,7 @@ function AttachmentResultContent() {
       content: {
         title: `나는 ${config.name} ${config.emoji}`,
         description: `${config.tagline} — 찰떡 애착유형 테스트`,
-        imageUrl: `${BASE_URL}/api/og/attachment?type=${result.type}`,
+        imageUrl: `${BASE_URL}/og/attachment/${result.type}.png`,
         link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
       },
     })

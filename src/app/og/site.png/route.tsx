@@ -3,7 +3,9 @@ import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { getCatalog } from '@/content/catalog'
 
-// 사이트 대표 OG 이미지 (홈·카테고리·약관 등 개별 이미지가 없는 페이지 공용)
+export const dynamic = 'force-static'
+
+// 사이트 대표 OG 이미지 (홈·카테고리·약관 등 개별 이미지가 없는 페이지 공용). 빌드 시 out/og/site.png로 생성
 export async function GET() {
   const font = await readFile(join(process.cwd(), 'public/fonts/NotoSansKR-Bold.otf'))
   const emojis = getCatalog()
@@ -52,7 +54,6 @@ export async function GET() {
       width: 1200,
       height: 630,
       fonts: [{ name: 'NotoSansKR', data: font, style: 'normal', weight: 700 }],
-      headers: { 'Cache-Control': 'public, max-age=86400, s-maxage=604800' },
     }
   )
 }

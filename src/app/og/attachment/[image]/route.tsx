@@ -3,7 +3,8 @@ import { readFile } from 'node:fs/promises'
 import { join } from 'node:path'
 import { TYPE_CONFIG, type AttachmentType } from '@/lib/attachmentScoring'
 
-export const dynamic = 'force-dynamic'
+export const dynamic = 'force-static'
+export const dynamicParams = false
 
 // satori(ImageResponse)는 Tailwind 클래스를 렌더링할 수 없어 TYPE_CONFIG의 색상 값을 재사용할 수 없다.
 // name/emoji/tagline은 TYPE_CONFIG에서 가져오고, hex 색상만 OG 전용으로 별도 유지한다.
@@ -19,12 +20,15 @@ const OG_COLORS: Record<AttachmentType, {
 
 const VALID_TYPES = Object.keys(TYPE_CONFIG) as AttachmentType[]
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url)
-  const typeParam = searchParams.get('type') ?? 'calm-sea'
-  const type: AttachmentType = VALID_TYPES.includes(typeParam as AttachmentType)
-    ? (typeParam as AttachmentType)
-    : 'calm-sea'
+// 빌드 시 /og/attachment/<type>.png 로 전수 생성 (정적 export)
+export function generateStaticParams() {
+  return VALID_TYPES.map((type) => ({ image: `${type}.png` }))
+}
+
+export async function GET(_request: Request, { params }: { params: Promise<{ image: string }> }) {
+  const { image } = await params
+  const type = image.replace(/\.png$/, '') as AttachmentType
+  if (!VALID_TYPES.includes(type)) return new Response('Not found', { status: 404 })
 
   const cfg = { ...TYPE_CONFIG[type], ...OG_COLORS[type] }
   const font = await readFile(join(process.cwd(), 'public/fonts/NotoSansKR-Bold.otf'))
