@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import { SITE_OG } from '@/lib/site'
+import { KAKAO_SDK_SRC, KAKAO_SDK_INTEGRITY } from '@/lib/kakaoSdk'
 
 export const metadata: Metadata = {
   alternates: { canonical: 'https://chalteok.com/attachment' },
@@ -21,7 +22,7 @@ export default function AttachmentLayout({ children }: { children: React.ReactNo
   return (
     <>
       {/* /attachment 진입 즉시 카카오 SDK 로드 시작 — 12문항이라 quiz→result 이동이 빨라 useEffect 사전 로드만으론 부족 */}
-      <Script src="https://developers.kakao.com/sdk/js/kakao.js" strategy="afterInteractive" />
+      <Script src={KAKAO_SDK_SRC} integrity={KAKAO_SDK_INTEGRITY} crossOrigin="anonymous" strategy="afterInteractive" />
       {children}
     </>
   )

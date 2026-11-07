@@ -74,7 +74,7 @@ await checkRedirect('/api/og/attachment', '/og/site.png')
 // 2026-11-02 사고: form-action 'self'가 카카오 공유 팝업의 sharer.kakao.com POST를 막아 공유 창이 빈 화면으로 뜸.
 const CSP_REQUIRED = {
   'form-action': ['https://*.kakao.com'],
-  'script-src': ['https://developers.kakao.com', 'https://t1.kakaocdn.net', 'https://www.googletagmanager.com'],
+  'script-src': ['https://t1.kakaocdn.net', 'https://www.googletagmanager.com'],
   'connect-src': ['https://*.kakao.com', 'https://*.google-analytics.com'],
   'frame-src': ['https://*.kakao.com'],
 }

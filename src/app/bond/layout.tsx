@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Script from 'next/script'
 import { SITE_OG } from '@/lib/site'
+import { KAKAO_SDK_SRC, KAKAO_SDK_INTEGRITY } from '@/lib/kakaoSdk'
 
 export const metadata: Metadata = {
   alternates: { canonical: 'https://chalteok.com/bond' },
@@ -21,7 +22,7 @@ export default function BondLayout({ children }: { children: React.ReactNode }) 
   return (
     <>
       {/* 공유 링크로 /bond/result 직접 진입 시에도 카카오 SDK 즉시 로드되도록 layout에서 선제 로드 */}
-      <Script src="https://developers.kakao.com/sdk/js/kakao.js" strategy="afterInteractive" />
+      <Script src={KAKAO_SDK_SRC} integrity={KAKAO_SDK_INTEGRITY} crossOrigin="anonymous" strategy="afterInteractive" />
       {children}
     </>
   )
