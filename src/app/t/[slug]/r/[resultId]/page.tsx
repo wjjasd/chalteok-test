@@ -6,7 +6,8 @@ import { getTest, TESTS, SITE_URL } from '@/content/tests'
 import { THEMES } from '@/lib/tests/themes'
 import { SITE_OG } from '@/lib/site'
 import { getCatalog } from '@/content/catalog'
-import ResultActions from './ResultActions'
+import ResultShare, { RetakeButton } from './ResultActions'
+import TestHeader from '@/components/TestHeader'
 
 export const dynamicParams = false
 
@@ -58,7 +59,8 @@ export default async function ResultPage({ params }: { params: Params }) {
 
   return (
     <main className={`min-h-screen pb-16 ${theme.pageBg}`}>
-      <div className="max-w-lg mx-auto px-4 pt-8 space-y-5">
+      <TestHeader title={test.title} />
+      <div className="max-w-lg mx-auto px-4 pt-20 space-y-5">
         <div className="text-center">
           <span className={`inline-block text-xs font-semibold px-3 py-1 rounded-full mb-3 ${theme.badge}`}>
             {test.title} 결과
@@ -73,6 +75,14 @@ export default async function ResultPage({ params }: { params: Params }) {
           </div>
           <p className="text-sm text-gray-700 leading-relaxed">{result.description}</p>
         </section>
+
+        <ResultShare
+          slug={test.slug}
+          resultId={result.id}
+          shareTitle={test.shareTitle.replace('{name}', result.name).replace('{emoji}', result.emoji)}
+          shareDescription={`${result.tagline} — 찰떡 ${test.title}`}
+          softBtn={theme.softBtn}
+        />
 
         <section className="bg-white rounded-2xl border border-gray-100 p-5">
           <h2 className="font-semibold text-gray-800 mb-3">이런 특징이 있어요</h2>
@@ -108,14 +118,7 @@ export default async function ResultPage({ params }: { params: Params }) {
           </section>
         )}
 
-        <ResultActions
-          slug={test.slug}
-          resultId={result.id}
-          shareTitle={test.shareTitle.replace('{name}', result.name).replace('{emoji}', result.emoji)}
-          shareDescription={`${result.tagline} — 찰떡 ${test.title}`}
-          primaryBtn={theme.primaryBtn}
-          softBtn={theme.softBtn}
-        />
+        <RetakeButton slug={test.slug} resultId={result.id} primaryBtn={theme.primaryBtn} />
 
         {/* 카카오 애드핏 */}
         <div className="flex items-center justify-center" style={{ minHeight: 100 }}>

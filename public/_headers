@@ -2,12 +2,12 @@
 #
 # CSP 외부 출처 근거
 # - GA4: src/app/layout.tsx (googletagmanager.com gtag.js)
-# - Kakao JS SDK v2: src/lib/kakaoSdk.ts(KAKAO_SDK_SRC), src/app/{attachment,bond}/layout.tsx — t1.kakaocdn.net/kakao_js_sdk/<버전>/kakao.min.js 직접 로드(SRI)
+# - Kakao JS SDK v2: src/lib/kakaoSdk.ts(KAKAO_SDK_SRC, loadKakaoSdk 단일 주입) ← src/components/KakaoSdkPreload.tsx(테스트 layout) — t1.kakaocdn.net/kakao_js_sdk/<버전>/kakao.min.js 직접 로드(SRI)
 #   앱 공유 경로: kapi.kakao.com 템플릿 검증(connect-src) 후 숨은 iframe/intent로 카카오톡 실행(frame-src)
 # - Kakao 공유 팝업: sharer.kakao.com (form-action). SDK가 앱 공유 대상으로 보지 않는 환경(PC·안드로이드 태블릿 등)에서
 #   Kakao.Share.sendDefault는 팝업 창으로 sharer.kakao.com/picker/link에 폼을 POST하고,
 #   로그인 필요 시 accounts.kakao.com 등으로 리다이렉트된다 (form-action은 리다이렉트 대상까지 검사)
-# - Kakao AdFit: src/app/attachment/result/page.tsx, src/app/bond/result/ResultClient.tsx (t1.kakaocdn.net, 광고 iframe은 daum/kakao 도메인)
+# - Kakao AdFit: 세 테스트 결과 페이지 (t1.kakaocdn.net, 광고 iframe은 daum/kakao 도메인)
 # - img-src https: data: blob: — 광고 이미지·GA 픽셀·결과 이미지(canvas toDataURL) 대응
 # - Strict-Transport-Security — Vercel이 기본으로 붙이던 값을 그대로 유지
 #

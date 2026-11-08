@@ -2,6 +2,7 @@
 export const KAKAO_SDK_SRC = 'https://t1.kakaocdn.net/kakao_js_sdk/2.8.4/kakao.min.js'
 export const KAKAO_SDK_INTEGRITY = 'sha384-BGX7Wb16GmRFagri4bLJV2DgipVZaU2AI812GZtHtHzzDQJnfHasDXN5houxv45w'
 
+// SDK script 태그는 이 함수만 붙인다 (next/script 병행 금지 — 같은 SDK가 두 번 주입되는 원인이었음)
 let sdkPromise: Promise<void> | null = null
 
 export function loadKakaoSdk(): Promise<void> {
@@ -17,6 +18,7 @@ export function loadKakaoSdk(): Promise<void> {
     s.onload = () => resolve()
     s.onerror = () => {
       sdkPromise = null
+      s.remove()
       reject(new Error('kakao sdk load failed'))
     }
     document.head.appendChild(s)
@@ -29,4 +31,8 @@ export function initKakao() {
   if (key && window.Kakao && !window.Kakao.isInitialized()) {
     window.Kakao.init(key)
   }
+}
+
+export function preloadKakaoSdk() {
+  loadKakaoSdk().then(initKakao).catch(() => {})
 }

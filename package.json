@@ -9,7 +9,7 @@
     "lint": "eslint",
     "validate:tests": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/validate-tests.mjs",
     "check": "npm run validate:tests && tsc --noEmit && npm run lint:engine && next build",
-    "lint:engine": "eslint src/app/t src/app/c src/app/og src/lib/tests src/lib/site.ts src/lib/analytics.ts src/content src/components/TestGrid.tsx src/app/page.tsx src/app/layout.tsx src/app/sitemap.ts scripts/validate-tests.mjs scripts/smoke-tests.mjs scripts/make-insta-cards.mjs",
+    "lint:engine": "eslint src/app/t src/app/c src/app/og src/lib/tests src/lib/site.ts src/lib/analytics.ts src/content src/components/TestGrid.tsx src/components/ShareActions.tsx src/components/TestHeader.tsx src/components/KakaoSdkPreload.tsx src/components/StepLayout.tsx src/lib/kakaoSdk.ts src/lib/kakaoShare.ts src/app/page.tsx src/app/layout.tsx src/app/sitemap.ts scripts/validate-tests.mjs scripts/smoke-tests.mjs scripts/make-insta-cards.mjs",
     "smoke": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/smoke-tests.mjs",
     "insta-cards": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/make-insta-cards.mjs"
   },

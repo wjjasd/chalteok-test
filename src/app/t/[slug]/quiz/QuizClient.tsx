@@ -6,6 +6,7 @@ import type { TestDefinition } from '@/lib/tests/types'
 import { THEMES } from '@/lib/tests/themes'
 import { scoreTest } from '@/lib/tests/scoring'
 import { track } from '@/lib/analytics'
+import TestHeader from '@/components/TestHeader'
 
 import { mineKey } from '@/lib/tests/mine'
 
@@ -52,33 +53,25 @@ export default function QuizClient({ test }: { test: TestDefinition }) {
 
   return (
     <div className={`min-h-screen flex flex-col ${theme.pageBg}`}>
-      <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
-        <div className="max-w-lg mx-auto px-4 py-3">
-          <div className="flex items-center justify-between text-xs text-gray-400 mb-1.5">
-            <button
-              type="button"
-              onClick={back}
-              disabled={index === 0}
-              className="disabled:invisible hover:text-gray-600"
-              aria-label="이전 문항"
-            >
-              ← 이전
-            </button>
-            <span>{test.title}</span>
-            <span>
-              {index + 1} / {total}
-            </span>
-          </div>
-          <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-            <div
-              className={`h-full rounded-full transition-all duration-500 ${theme.progress}`}
-              style={{ width: `${(index / total) * 100}%` }}
-            />
-          </div>
-        </div>
-      </div>
+      {/* 답변은 이 컴포넌트 state에만 있어 페이지를 떠나면 사라짐 → 한 문항이라도 답했으면 홈 이동 전 확인 */}
+      <TestHeader
+        title={test.title}
+        progress={{ value: index / total, label: `${index + 1} / ${total}`, barClass: theme.progress }}
+        confirmLeave={answers.length > 0}
+        extra={
+          <button
+            type="button"
+            onClick={back}
+            disabled={index === 0}
+            className="min-w-11 min-h-11 px-2 rounded-xl text-xs font-semibold text-gray-500 hover:bg-gray-100 hover:text-gray-700 disabled:invisible"
+            aria-label="이전 문항"
+          >
+            ← 이전
+          </button>
+        }
+      />
 
-      <div className="flex-1 flex flex-col items-center justify-center px-4 pt-20 pb-8">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 pt-24 pb-8">
         <div
           className="w-full max-w-lg transition-all duration-300"
           style={{ opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(12px)' }}

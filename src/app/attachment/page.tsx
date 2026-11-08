@@ -1,18 +1,14 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useAttachmentStore } from '@/store/attachment'
-import { loadKakaoSdk, initKakao } from '@/lib/kakaoSdk'
+import TestHeader from '@/components/TestHeader'
 
 export default function AttachmentLandingPage() {
   const router = useRouter()
   const reset = useAttachmentStore((s) => s.reset)
   const [loading, setLoading] = useState(false)
-
-  useEffect(() => {
-    loadKakaoSdk().then(initKakao).catch(() => {})
-  }, [])
 
   const handleStart = () => {
     reset()
@@ -21,7 +17,8 @@ export default function AttachmentLandingPage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-4 py-12 bg-gradient-to-b from-sky-50 to-white">
+    <main className="min-h-screen flex flex-col items-center justify-center px-4 pt-20 pb-12 bg-gradient-to-b from-sky-50 to-white">
+      <TestHeader title="애착유형 테스트" />
       <div className="w-full max-w-lg text-center">
         <div className="mb-6">
           <span className="inline-block bg-sky-100 text-sky-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">

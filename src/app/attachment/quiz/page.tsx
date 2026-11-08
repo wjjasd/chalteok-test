@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAttachmentStore } from '@/store/attachment'
 import { ATTACHMENT_QUESTIONS } from '@/data/attachmentQuestions'
-import { loadKakaoSdk, initKakao } from '@/lib/kakaoSdk'
+import TestHeader from '@/components/TestHeader'
 
 const TOTAL = ATTACHMENT_QUESTIONS.length
 
@@ -32,10 +32,6 @@ export default function AttachmentQuizPage() {
     }
   }, [termsAgreed, router])
 
-  useEffect(() => {
-    loadKakaoSdk().then(initKakao).catch(() => {})
-  }, [])
-
   const question = ATTACHMENT_QUESTIONS[currentIndex]
   const currentAnswer = answers[question?.id]
   const progress = currentIndex / TOTAL
@@ -62,23 +58,14 @@ export default function AttachmentQuizPage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-sky-50 to-white">
-      {/* 진행률 바 */}
-      <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100">
-        <div className="max-w-lg mx-auto px-4 py-3">
-          <div className="flex items-center justify-between text-xs text-gray-400 mb-1.5">
-            <span>애착유형 테스트</span>
-            <span>{currentIndex + 1} / {TOTAL}</span>
-          </div>
-          <div className="h-1.5 bg-gray-100 rounded-full overflow-hidden">
-            <div
-              className="h-full bg-sky-400 rounded-full transition-all duration-500"
-              style={{ width: `${progress * 100}%` }}
-            />
-          </div>
-        </div>
-      </div>
+      {/* 답변은 메모리 store라 다시 들어오면 1번부터 → 한 문항이라도 답했으면 홈 이동 전 확인 */}
+      <TestHeader
+        title="애착유형 테스트"
+        progress={{ value: progress, label: `${currentIndex + 1} / ${TOTAL}`, barClass: 'bg-sky-400' }}
+        confirmLeave={Object.keys(answers).length > 0}
+      />
 
-      <div className="flex-1 flex flex-col items-center justify-center px-4 pt-20 pb-8">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 pt-24 pb-8">
         <div className="w-full max-w-lg">
           {/* 문항 카드 */}
           <div

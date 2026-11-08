@@ -2,13 +2,15 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import TestHeader from '@/components/TestHeader'
 
 export default function BondLandingPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-4 py-12 bg-gradient-to-b from-rose-50 to-white">
+    <main className="min-h-screen flex flex-col items-center justify-center px-4 pt-20 pb-12 bg-gradient-to-b from-rose-50 to-white">
+      <TestHeader title="찰떡 궁합 테스트" />
       <div className="w-full max-w-lg text-center">
         <div className="mb-6">
           <span className="inline-block bg-rose-100 text-rose-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">

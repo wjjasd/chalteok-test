@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
-import Script from 'next/script'
+import KakaoSdkPreload from '@/components/KakaoSdkPreload'
 import { SITE_OG } from '@/lib/site'
-import { KAKAO_SDK_SRC, KAKAO_SDK_INTEGRITY } from '@/lib/kakaoSdk'
 
 export const metadata: Metadata = {
   alternates: { canonical: 'https://chalteok.com/attachment' },
@@ -21,8 +20,8 @@ export const metadata: Metadata = {
 export default function AttachmentLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      {/* /attachment 진입 즉시 카카오 SDK 로드 시작 — 12문항이라 quiz→result 이동이 빨라 useEffect 사전 로드만으론 부족 */}
-      <Script src={KAKAO_SDK_SRC} integrity={KAKAO_SDK_INTEGRITY} crossOrigin="anonymous" strategy="afterInteractive" />
+      {/* /attachment 진입 즉시 카카오 SDK 로드 시작 — 12문항이라 quiz→result 이동이 빨라 결과 화면에서 받기 시작하면 늦음 */}
+      <KakaoSdkPreload />
       {children}
     </>
   )

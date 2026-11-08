@@ -7,6 +7,7 @@ import { THEMES } from '@/lib/tests/themes'
 import { estimatedMinutes } from '@/lib/tests/scoring'
 import { SITE_OG } from '@/lib/site'
 import StartButton from './StartButton'
+import TestHeader from '@/components/TestHeader'
 
 export const dynamicParams = false
 
@@ -68,7 +69,8 @@ export default async function TestIntroPage({ params }: { params: Promise<{ slug
   ]
 
   return (
-    <main className={`min-h-screen px-4 py-12 ${theme.pageBg}`}>
+    <main className={`min-h-screen px-4 pt-20 pb-12 ${theme.pageBg}`}>
+      <TestHeader title={test.title} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="mx-auto w-full max-w-lg">
         <nav aria-label="경로" className="mb-8 text-xs text-gray-400">

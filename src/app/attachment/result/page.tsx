@@ -1,7 +1,6 @@
 'use client'
 
 import { Suspense, useEffect, useState } from 'react'
-import { flushSync } from 'react-dom'
 import { useRouter, useSearchParams } from 'next/navigation'
 import dynamic from 'next/dynamic'
 import Script from 'next/script'
@@ -14,7 +13,9 @@ import {
   AttachmentResult,
   AttachmentType,
 } from '@/lib/attachmentScoring'
-import { loadKakaoSdk, initKakao } from '@/lib/kakaoSdk'
+import ShareActions from '@/components/ShareActions'
+import TestHeader from '@/components/TestHeader'
+import { THEMES } from '@/lib/tests/themes'
 
 const AttachmentChart = dynamic(() => import('./AttachmentChart'), { ssr: false })
 
@@ -36,13 +37,6 @@ function AttachmentResultContent() {
   const termsAgreed = useAttachmentStore((s) => s.termsAgreed)
 
   const [result, setResult] = useState<AttachmentResult | null>(null)
-  const [copied, setCopied] = useState(false)
-  const [kakaoLoading, setKakaoLoading] = useState(false)
-  const [capturing, setCapturing] = useState(false)
-
-  useEffect(() => {
-    loadKakaoSdk().then(initKakao).catch(() => {})
-  }, [])
 
   useEffect(() => {
     setResult(null)
@@ -75,269 +69,227 @@ function AttachmentResultContent() {
     setResult(r2)
   }, [r])
 
-  const handleShare = () => {
-    if (!result) return
-    const encoded = encodeAttachmentShare(result.anxietyScore, result.avoidanceScore)
-    const url = `${BASE_URL}/attachment/result?r=${encoded}`
-    navigator.clipboard.writeText(url).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 2000)
-    })
-  }
-
-  const handleKakaoShare = async () => {
-    if (!result) return
-    flushSync(() => setKakaoLoading(true))
-    try {
-      await loadKakaoSdk()
-      initKakao()
-    } catch {
-      alert('카카오 SDK를 불러올 수 없습니다.\n광고 차단기가 활성화된 경우 비활성화 후 재시도하거나, 🔗 URL 공유를 이용해 주세요.')
-      setKakaoLoading(false)
-      return
-    }
-    if (!window.Kakao) { setKakaoLoading(false); return }
-    const config = TYPE_CONFIG[result.type]
-    const encoded = encodeAttachmentShare(result.anxietyScore, result.avoidanceScore)
-    const shareUrl = `${BASE_URL}/attachment/result?r=${encoded}`
-    window.Kakao.Share.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: `나는 ${config.name} ${config.emoji}`,
-        description: `${config.tagline} — 찰떡 애착유형 테스트`,
-        imageUrl: `${BASE_URL}/og/attachment/${result.type}.png`,
-        link: { mobileWebUrl: shareUrl, webUrl: shareUrl },
-      },
-    })
-    setKakaoLoading(false)
-  }
-
   const handleDownload = () => {
     if (!result) return
     const safeResult = result
-    setCapturing(true)
-    try {
-      const W = 600
-      const P = 40
-      const dpr = Math.min(window.devicePixelRatio || 2, 3)
-      const tc = TYPE_HEX[safeResult.type]
-      const typeConfig = TYPE_CONFIG[safeResult.type]
+    const W = 600
+    const P = 40
+    const dpr = Math.min(window.devicePixelRatio || 2, 3)
+    const tc = TYPE_HEX[safeResult.type]
+    const typeConfig = TYPE_CONFIG[safeResult.type]
 
-      function drawAll(ctx: CanvasRenderingContext2D, totalH: number): number {
-        ctx.textBaseline = 'middle'
+    function drawAll(ctx: CanvasRenderingContext2D, totalH: number): number {
+      ctx.textBaseline = 'middle'
 
-        // 전체 배경
-        ctx.fillStyle = tc.bg
-        ctx.fillRect(0, 0, W, totalH)
+      // 전체 배경
+      ctx.fillStyle = tc.bg
+      ctx.fillRect(0, 0, W, totalH)
 
-        let y = 40
+      let y = 40
 
-        // 1. 브랜드 태그
-        ctx.font = '12px system-ui, sans-serif'
-        ctx.textAlign = 'center'
-        ctx.fillStyle = tc.text
-        ctx.fillText('찰떡 애착유형 테스트', W / 2, y)
+      // 1. 브랜드 태그
+      ctx.font = '12px system-ui, sans-serif'
+      ctx.textAlign = 'center'
+      ctx.fillStyle = tc.text
+      ctx.fillText('찰떡 애착유형 테스트', W / 2, y)
 
-        y += 56
+      y += 56
 
-        // 2. 이모지
-        ctx.font = '72px system-ui, sans-serif'
-        ctx.textAlign = 'center'
-        ctx.fillStyle = '#000000'
-        ctx.fillText(typeConfig.emoji, W / 2, y)
+      // 2. 이모지
+      ctx.font = '72px system-ui, sans-serif'
+      ctx.textAlign = 'center'
+      ctx.fillStyle = '#000000'
+      ctx.fillText(typeConfig.emoji, W / 2, y)
 
-        y += 60
+      y += 60
 
-        // 3. 유형명
-        ctx.font = 'bold 40px system-ui, sans-serif'
-        ctx.textAlign = 'center'
-        ctx.fillStyle = tc.text
-        ctx.fillText(typeConfig.name, W / 2, y)
+      // 3. 유형명
+      ctx.font = 'bold 40px system-ui, sans-serif'
+      ctx.textAlign = 'center'
+      ctx.fillStyle = tc.text
+      ctx.fillText(typeConfig.name, W / 2, y)
 
-        y += 40
+      y += 40
 
-        // 4. tagline
-        ctx.font = '16px system-ui, sans-serif'
-        ctx.textAlign = 'center'
-        ctx.fillStyle = '#6b7280'
-        ctx.fillText(typeConfig.tagline, W / 2, y)
+      // 4. tagline
+      ctx.font = '16px system-ui, sans-serif'
+      ctx.textAlign = 'center'
+      ctx.fillStyle = '#6b7280'
+      ctx.fillText(typeConfig.tagline, W / 2, y)
 
-        y += 22
+      y += 22
 
-        // 4-1. 한줄 설명 (description 첫 문장)
-        const firstSentence = typeConfig.description.split('어요.')[0] + '어요.'
-        ctx.font = '13px system-ui, sans-serif'
-        ctx.fillStyle = '#9ca3af'
-        ctx.textAlign = 'center'
-        const descMaxW = W - P * 2
-        let descLine = ''
-        const descLines: string[] = []
-        for (const ch of firstSentence) {
-          const test = descLine + ch
-          if (ctx.measureText(test).width > descMaxW && descLine) {
-            descLines.push(descLine)
-            descLine = ch
-          } else {
-            descLine = test
-          }
+      // 4-1. 한줄 설명 (description 첫 문장)
+      const firstSentence = typeConfig.description.split('어요.')[0] + '어요.'
+      ctx.font = '13px system-ui, sans-serif'
+      ctx.fillStyle = '#9ca3af'
+      ctx.textAlign = 'center'
+      const descMaxW = W - P * 2
+      let descLine = ''
+      const descLines: string[] = []
+      for (const ch of firstSentence) {
+        const test = descLine + ch
+        if (ctx.measureText(test).width > descMaxW && descLine) {
+          descLines.push(descLine)
+          descLine = ch
+        } else {
+          descLine = test
         }
-        if (descLine) descLines.push(descLine)
-        descLines.forEach((l, i) => ctx.fillText(l, W / 2, y + i * 18))
-        y += descLines.length * 18 + 20
-
-        // 5. 구분선
-        ctx.globalAlpha = 0.2
-        ctx.strokeStyle = tc.text
-        ctx.lineWidth = 1
-        ctx.beginPath()
-        ctx.moveTo(P, y)
-        ctx.lineTo(W - P, y)
-        ctx.stroke()
-        ctx.globalAlpha = 1.0
-
-        y += 44
-
-        // 6. 점수 두 개 (가로 나란히)
-        const halfW = (W - P * 2) / 2
-        const leftCX = P + halfW / 2
-        const rightCX = P + halfW + halfW / 2
-        const anxStr = String(safeResult.anxietyScore)
-        const avoStr = String(safeResult.avoidanceScore)
-        const subText = '/30'
-
-        // 레이블 행
-        ctx.font = '12px system-ui, sans-serif'
-        ctx.textAlign = 'center'
-        ctx.fillStyle = '#6b7280'
-        ctx.fillText('불안', leftCX, y)
-        ctx.fillText('회피', rightCX, y)
-
-        y += 32
-
-        // 점수 폭 측정
-        ctx.font = 'bold 32px system-ui, sans-serif'
-        const anxW = ctx.measureText(anxStr).width
-        const avoW = ctx.measureText(avoStr).width
-        ctx.font = '14px system-ui, sans-serif'
-        const subW = ctx.measureText(subText).width
-
-        const startX1 = leftCX - (anxW + 6 + subW) / 2
-        const startX2 = rightCX - (avoW + 6 + subW) / 2
-
-        // 불안 점수
-        ctx.font = 'bold 32px system-ui, sans-serif'
-        ctx.textAlign = 'left'
-        ctx.fillStyle = tc.text
-        ctx.fillText(anxStr, startX1, y)
-        ctx.font = '14px system-ui, sans-serif'
-        ctx.fillStyle = '#9ca3af'
-        ctx.fillText(subText, startX1 + anxW + 6, y)
-
-        // 회피 점수
-        ctx.font = 'bold 32px system-ui, sans-serif'
-        ctx.textAlign = 'left'
-        ctx.fillStyle = tc.text
-        ctx.fillText(avoStr, startX2, y)
-        ctx.font = '14px system-ui, sans-serif'
-        ctx.fillStyle = '#9ca3af'
-        ctx.fillText(subText, startX2 + avoW + 6, y)
-
-        y += 52
-
-        // 7. 산점도 격자
-        const gridSize = 220
-        const gridX = (W - gridSize) / 2
-        const gridY = y
-
-        // 격자 외곽선
-        ctx.strokeStyle = tc.text
-        ctx.globalAlpha = 0.5
-        ctx.lineWidth = 1.5
-        ctx.strokeRect(gridX, gridY, gridSize, gridSize)
-        ctx.globalAlpha = 1.0
-
-        // 분기선 — 시각적으로 정중앙 4등분
-        const threshX = gridX + gridSize / 2
-        const threshY = gridY + gridSize / 2
-
-        ctx.strokeStyle = tc.text
-        ctx.globalAlpha = 0.5
-        ctx.lineWidth = 1.5
-        ctx.setLineDash([5, 4])
-        ctx.beginPath()
-        ctx.moveTo(threshX, gridY)
-        ctx.lineTo(threshX, gridY + gridSize)
-        ctx.stroke()
-        ctx.beginPath()
-        ctx.moveTo(gridX, threshY)
-        ctx.lineTo(gridX + gridSize, threshY)
-        ctx.stroke()
-        ctx.setLineDash([])
-        ctx.globalAlpha = 1.0
-
-        // 분면 레이블 — 각 사분면 바깥쪽 모서리(dot과 겹침 방지)
-        const pad = 8
-        ctx.font = '11px system-ui, sans-serif'
-        ctx.fillStyle = tc.text
-        ctx.globalAlpha = 0.7
-        ctx.textAlign = 'left'
-        ctx.fillText('나만의 섬형', gridX + pad, gridY + 14)
-        ctx.fillText('고요한 바다형', gridX + pad, gridY + gridSize - pad)
-        ctx.textAlign = 'right'
-        ctx.fillText('폭풍 속 바다형', gridX + gridSize - pad, gridY + 14)
-        ctx.fillText('파도치는 바다형', gridX + gridSize - pad, gridY + gridSize - pad)
-        ctx.globalAlpha = 1.0
-
-        // 현재 위치 마커 (점수 범위 6~30을 화면 차트와 동일한 도메인으로 매핑)
-        const dotX = gridX + ((safeResult.anxietyScore - 6) / 24) * gridSize
-        const dotY = gridY + (1 - (safeResult.avoidanceScore - 6) / 24) * gridSize
-
-        ctx.fillStyle = tc.text
-        ctx.beginPath()
-        ctx.arc(dotX, dotY, 10, 0, Math.PI * 2)
-        ctx.fill()
-
-        ctx.strokeStyle = '#ffffff'
-        ctx.lineWidth = 3
-        ctx.beginPath()
-        ctx.arc(dotX, dotY, 10, 0, Math.PI * 2)
-        ctx.stroke()
-
-        y += gridSize + 48
-
-        // 8. 하단 브랜딩
-        ctx.font = '14px system-ui, sans-serif'
-        ctx.textAlign = 'center'
-        ctx.fillStyle = tc.text
-        ctx.fillText('chalteok.com', W / 2, y)
-
-        y += P
-
-        return y
       }
+      if (descLine) descLines.push(descLine)
+      descLines.forEach((l, i) => ctx.fillText(l, W / 2, y + i * 18))
+      y += descLines.length * 18 + 20
 
-      const LARGE_H = 4000
-      const measureCanvas = document.createElement('canvas')
-      measureCanvas.width = W * dpr
-      measureCanvas.height = LARGE_H * dpr
-      const mctx = measureCanvas.getContext('2d')!
-      mctx.scale(dpr, dpr)
-      const measuredH = drawAll(mctx, LARGE_H)
+      // 5. 구분선
+      ctx.globalAlpha = 0.2
+      ctx.strokeStyle = tc.text
+      ctx.lineWidth = 1
+      ctx.beginPath()
+      ctx.moveTo(P, y)
+      ctx.lineTo(W - P, y)
+      ctx.stroke()
+      ctx.globalAlpha = 1.0
 
-      const canvas = document.createElement('canvas')
-      canvas.width = W * dpr
-      canvas.height = measuredH * dpr
-      const ctx = canvas.getContext('2d')!
-      ctx.scale(dpr, dpr)
-      drawAll(ctx, measuredH)
+      y += 44
 
-      const link = document.createElement('a')
-      link.download = `찰떡_애착유형_${typeConfig.name}.png`
-      link.href = canvas.toDataURL('image/png')
-      link.click()
-    } finally {
-      setCapturing(false)
+      // 6. 점수 두 개 (가로 나란히)
+      const halfW = (W - P * 2) / 2
+      const leftCX = P + halfW / 2
+      const rightCX = P + halfW + halfW / 2
+      const anxStr = String(safeResult.anxietyScore)
+      const avoStr = String(safeResult.avoidanceScore)
+      const subText = '/30'
+
+      // 레이블 행
+      ctx.font = '12px system-ui, sans-serif'
+      ctx.textAlign = 'center'
+      ctx.fillStyle = '#6b7280'
+      ctx.fillText('불안', leftCX, y)
+      ctx.fillText('회피', rightCX, y)
+
+      y += 32
+
+      // 점수 폭 측정
+      ctx.font = 'bold 32px system-ui, sans-serif'
+      const anxW = ctx.measureText(anxStr).width
+      const avoW = ctx.measureText(avoStr).width
+      ctx.font = '14px system-ui, sans-serif'
+      const subW = ctx.measureText(subText).width
+
+      const startX1 = leftCX - (anxW + 6 + subW) / 2
+      const startX2 = rightCX - (avoW + 6 + subW) / 2
+
+      // 불안 점수
+      ctx.font = 'bold 32px system-ui, sans-serif'
+      ctx.textAlign = 'left'
+      ctx.fillStyle = tc.text
+      ctx.fillText(anxStr, startX1, y)
+      ctx.font = '14px system-ui, sans-serif'
+      ctx.fillStyle = '#9ca3af'
+      ctx.fillText(subText, startX1 + anxW + 6, y)
+
+      // 회피 점수
+      ctx.font = 'bold 32px system-ui, sans-serif'
+      ctx.textAlign = 'left'
+      ctx.fillStyle = tc.text
+      ctx.fillText(avoStr, startX2, y)
+      ctx.font = '14px system-ui, sans-serif'
+      ctx.fillStyle = '#9ca3af'
+      ctx.fillText(subText, startX2 + avoW + 6, y)
+
+      y += 52
+
+      // 7. 산점도 격자
+      const gridSize = 220
+      const gridX = (W - gridSize) / 2
+      const gridY = y
+
+      // 격자 외곽선
+      ctx.strokeStyle = tc.text
+      ctx.globalAlpha = 0.5
+      ctx.lineWidth = 1.5
+      ctx.strokeRect(gridX, gridY, gridSize, gridSize)
+      ctx.globalAlpha = 1.0
+
+      // 분기선 — 시각적으로 정중앙 4등분
+      const threshX = gridX + gridSize / 2
+      const threshY = gridY + gridSize / 2
+
+      ctx.strokeStyle = tc.text
+      ctx.globalAlpha = 0.5
+      ctx.lineWidth = 1.5
+      ctx.setLineDash([5, 4])
+      ctx.beginPath()
+      ctx.moveTo(threshX, gridY)
+      ctx.lineTo(threshX, gridY + gridSize)
+      ctx.stroke()
+      ctx.beginPath()
+      ctx.moveTo(gridX, threshY)
+      ctx.lineTo(gridX + gridSize, threshY)
+      ctx.stroke()
+      ctx.setLineDash([])
+      ctx.globalAlpha = 1.0
+
+      // 분면 레이블 — 각 사분면 바깥쪽 모서리(dot과 겹침 방지)
+      const pad = 8
+      ctx.font = '11px system-ui, sans-serif'
+      ctx.fillStyle = tc.text
+      ctx.globalAlpha = 0.7
+      ctx.textAlign = 'left'
+      ctx.fillText('나만의 섬형', gridX + pad, gridY + 14)
+      ctx.fillText('고요한 바다형', gridX + pad, gridY + gridSize - pad)
+      ctx.textAlign = 'right'
+      ctx.fillText('폭풍 속 바다형', gridX + gridSize - pad, gridY + 14)
+      ctx.fillText('파도치는 바다형', gridX + gridSize - pad, gridY + gridSize - pad)
+      ctx.globalAlpha = 1.0
+
+      // 현재 위치 마커 (점수 범위 6~30을 화면 차트와 동일한 도메인으로 매핑)
+      const dotX = gridX + ((safeResult.anxietyScore - 6) / 24) * gridSize
+      const dotY = gridY + (1 - (safeResult.avoidanceScore - 6) / 24) * gridSize
+
+      ctx.fillStyle = tc.text
+      ctx.beginPath()
+      ctx.arc(dotX, dotY, 10, 0, Math.PI * 2)
+      ctx.fill()
+
+      ctx.strokeStyle = '#ffffff'
+      ctx.lineWidth = 3
+      ctx.beginPath()
+      ctx.arc(dotX, dotY, 10, 0, Math.PI * 2)
+      ctx.stroke()
+
+      y += gridSize + 48
+
+      // 8. 하단 브랜딩
+      ctx.font = '14px system-ui, sans-serif'
+      ctx.textAlign = 'center'
+      ctx.fillStyle = tc.text
+      ctx.fillText('chalteok.com', W / 2, y)
+
+      y += P
+
+      return y
     }
+
+    const LARGE_H = 4000
+    const measureCanvas = document.createElement('canvas')
+    measureCanvas.width = W * dpr
+    measureCanvas.height = LARGE_H * dpr
+    const mctx = measureCanvas.getContext('2d')!
+    mctx.scale(dpr, dpr)
+    const measuredH = drawAll(mctx, LARGE_H)
+
+    const canvas = document.createElement('canvas')
+    canvas.width = W * dpr
+    canvas.height = measuredH * dpr
+    const ctx = canvas.getContext('2d')!
+    ctx.scale(dpr, dpr)
+    drawAll(ctx, measuredH)
+
+    const link = document.createElement('a')
+    link.download = `찰떡_애착유형_${typeConfig.name}.png`
+    link.href = canvas.toDataURL('image/png')
+    link.click()
   }
 
   if (!result) {
@@ -349,10 +301,12 @@ function AttachmentResultContent() {
   }
 
   const config = TYPE_CONFIG[result.type]
+  const shareUrl = `${BASE_URL}/attachment/result?r=${encodeAttachmentShare(result.anxietyScore, result.avoidanceScore)}`
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-sky-50 to-white pb-16">
-      <div className="max-w-lg mx-auto px-4 pt-8 space-y-5">
+      <TestHeader title="애착유형 테스트" />
+      <div className="max-w-lg mx-auto px-4 pt-20 space-y-5">
         {/* 헤더 */}
         <div className="text-center">
           <span className="inline-block bg-sky-100 text-sky-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide mb-3">
@@ -371,17 +325,21 @@ function AttachmentResultContent() {
           <p className="text-sm text-gray-700 leading-relaxed">
             {config.description}
           </p>
-          <button
-            onClick={handleKakaoShare}
-            disabled={kakaoLoading}
-            className="mt-4 w-full py-3.5 rounded-2xl font-semibold text-sm transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
-            style={{ backgroundColor: '#FEE500', color: '#3C1E1E' }}
-          >
-            {kakaoLoading
-              ? <span className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
-              : '💬 카카오톡 공유'}
-          </button>
         </div>
+
+        <ShareActions
+          testSlug="attachment"
+          resultId={result.type}
+          kakao={{
+            title: `나는 ${config.name} ${config.emoji}`,
+            description: `${config.tagline} — 찰떡 애착유형 테스트`,
+            imageUrl: `${BASE_URL}/og/attachment/${result.type}.png`,
+            url: shareUrl,
+          }}
+          linkUrl={shareUrl}
+          onSaveImage={handleDownload}
+          softBtnClass={THEMES.sky.softBtn}
+        />
 
         {/* 2축 산점도 */}
         <div className="bg-white rounded-2xl border border-gray-100 p-5">
@@ -461,20 +419,7 @@ function AttachmentResultContent() {
         <Script src="//t1.kakaocdn.net/kas/static/ba.min.js" strategy="afterInteractive" async />
 
         {/* 액션 버튼 */}
-        <div className="grid grid-cols-3 gap-3">
-          <button
-            onClick={handleShare}
-            className="py-3.5 rounded-2xl font-semibold border border-sky-200 text-sky-700 bg-sky-50 hover:bg-sky-100 transition-colors text-sm"
-          >
-            {copied ? '복사됨!' : '🔗 URL 공유'}
-          </button>
-          <button
-            onClick={handleDownload}
-            disabled={capturing}
-            className="py-3.5 rounded-2xl font-semibold border border-sky-200 text-sky-700 bg-sky-50 hover:bg-sky-100 transition-colors text-sm disabled:opacity-50"
-          >
-            {capturing ? '저장 중...' : '📷 이미지 저장'}
-          </button>
+        <div className="grid grid-cols-2 gap-3">
           <button
             onClick={() => {
               useAttachmentStore.getState().reset()
@@ -486,7 +431,7 @@ function AttachmentResultContent() {
           </button>
           <button
             onClick={() => router.push('/')}
-            className="col-span-3 py-3.5 rounded-2xl font-semibold border border-gray-200 text-gray-500 bg-white hover:bg-gray-50 transition-colors text-sm"
+            className="py-3.5 rounded-2xl font-semibold border border-gray-200 text-gray-500 bg-white hover:bg-gray-50 transition-colors text-sm"
           >
             다른 테스트 보기
           </button>
