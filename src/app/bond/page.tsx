@@ -62,10 +62,6 @@ export default function BondLandingPage() {
             <div>맞춤형<br />가중치</div>
           </div>
         </div>
-
-        <p className="mt-8 text-xs text-gray-400">
-          본 서비스는 성찰 보조 도구이며, 전문적 심리 진단이 아닙니다.
-        </p>
       </div>
     </main>
   )

@@ -68,10 +68,6 @@ export default function AttachmentLandingPage() {
             <div>5가지<br />유형</div>
           </div>
         </div>
-
-        <p className="mt-8 text-xs text-gray-400">
-          본 서비스는 성찰 보조 도구이며, 전문적 심리 진단이 아닙니다.
-        </p>
       </div>
     </main>
   )
