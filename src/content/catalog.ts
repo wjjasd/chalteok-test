@@ -61,7 +61,7 @@ const LEGACY: CatalogItem[] = [
     questions: 45,
     minutes: 10,
     publishedAt: '2026-05-22',
-    updatedAt: '2026-11-02', // og:image·canonical 수정
+    updatedAt: '2026-11-26', // 소개 화면 배지·약관 개인정보 문구 정리
     badge: '인기',
   },
   {
@@ -74,7 +74,7 @@ const LEGACY: CatalogItem[] = [
     questions: 12,
     minutes: 3,
     publishedAt: '2026-06-15',
-    updatedAt: '2026-11-02', // og:image·canonical 수정
+    updatedAt: '2026-11-26', // 소개 화면 배지·약관 개인정보 문구 정리
   },
 ]
 

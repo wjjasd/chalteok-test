@@ -65,8 +65,6 @@ export function SiteFooter() {
     <footer className="mt-16 border-t border-gray-100 pt-8 text-center">
       <p className="text-xs leading-relaxed text-gray-400">
         찰떡 테스트는 회원가입 없이 바로 하는 무료 심리테스트 모음이에요.
-        <br />
-        응답은 기기 밖으로 전송되지 않아요.
       </p>
       <p className="mt-3 text-xs text-gray-300">
         <Link href="/privacy" className="hover:text-gray-500">

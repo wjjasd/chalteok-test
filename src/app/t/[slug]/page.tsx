@@ -93,7 +93,7 @@ export default async function TestIntroPage({ params }: { params: Promise<{ slug
           <p className="text-sm text-gray-500 leading-relaxed mb-8 whitespace-pre-line">{test.intro}</p>
 
           <StartButton slug={test.slug} className={theme.primaryBtn} />
-          <p className="mt-3 text-xs text-gray-400">회원가입 없이 바로 시작 · 응답은 기기 밖으로 전송되지 않아요</p>
+          <p className="mt-3 text-xs text-gray-400">회원가입 없이 바로 시작</p>
         </section>
 
         <section className="mt-12">

@@ -28,7 +28,7 @@ export default function BondLandingPage() {
         </p>
 
         <p className="text-sm text-gray-400 mb-10">
-          총 45문항 · 약 10분 소요 · 서버 저장 없음
+          총 45문항 · 약 10분 소요
         </p>
 
         <button
@@ -50,8 +50,8 @@ export default function BondLandingPage() {
 
         <div className="mt-10 grid grid-cols-3 gap-4 text-center text-sm text-gray-500">
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-            <div className="text-2xl mb-1">🔒</div>
-            <div>개인정보<br />미저장</div>
+            <div className="text-2xl mb-1">🙌</div>
+            <div>회원가입 없이<br />무료</div>
           </div>
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="text-2xl mb-1">🎯</div>

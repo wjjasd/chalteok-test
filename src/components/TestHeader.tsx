@@ -75,7 +75,7 @@ export default function TestHeader({ title, progress, confirmLeave = false, extr
             <h2 id="leave-title" className="text-base font-bold text-gray-900">
               테스트를 그만두고 홈으로 갈까요?
             </h2>
-            <p className="mt-2 text-sm text-gray-500 leading-relaxed">지금까지 고른 답은 저장되지 않아요.</p>
+            <p className="mt-2 text-sm text-gray-500 leading-relaxed">나가면 지금까지 고른 답이 사라져요.</p>
             <div className="mt-5 grid grid-cols-2 gap-2">
               <button
                 type="button"

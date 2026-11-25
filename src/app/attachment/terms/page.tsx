@@ -74,8 +74,7 @@ export default function AttachmentTermsPage() {
               <p className="font-semibold text-gray-700 mb-2">개인정보 처리 원칙</p>
               <ul className="space-y-1">
                 <li>· 이름, 연락처, 주소 등 개인정보는 일체 수집하지 않습니다.</li>
-                <li>· 응답 데이터는 브라우저 세션에서만 처리하며 서버에 저장되지 않습니다.</li>
-                <li>· 개인 식별 쿠키를 사용하지 않습니다.</li>
+                <li>· 이용 통계(결과 유형·공유 여부 등) 수집과 쿠키 사용은 개인정보처리방침을 따릅니다.</li>
               </ul>
             </div>
           </div>

@@ -6,8 +6,8 @@ export const dynamic = 'force-static'
 
 // lastmod는 실제 내용이 바뀐 날짜만 쓴다. 배포 시각(new Date())을 쓰면 매 배포마다 전 페이지가
 // '수정됨'이 되어 검색엔진이 사이트 전체의 lastmod를 신뢰하지 않게 된다.
-const PRIVACY_UPDATED = '2026-11-02' // 개인정보처리방침 내용·메타 수정 시 갱신
-const SITE_SHELL_UPDATED = '2026-11-02' // 홈·카테고리 페이지 자체 디자인/문구 수정 시 갱신
+const PRIVACY_UPDATED = '2026-11-26' // 개인정보처리방침 내용·메타 수정 시 갱신
+const SITE_SHELL_UPDATED = '2026-11-26' // 홈·카테고리 페이지 자체 디자인/문구 수정 시 갱신
 
 const latest = (dates: string[]) => dates.reduce((a, b) => (a > b ? a : b))
 
