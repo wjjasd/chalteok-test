@@ -1,11 +1,11 @@
 // 인스타그램 카드(1080×1350) + 캡션 생성: 표지 1장 + 결과 유형 N장 + 마무리 1장.
 // 사용: npm run insta-cards -- <slug> [출력폴더]
-//   기본 출력: ~/Downloads/chalteok_insta_<slug>/  (card01.png … , caption.txt)
+//   기본 출력: <레포>/promo/insta/<slug>/  (card01.png … , caption.txt) — git 미추적, 콘텐츠 파일에서 언제든 재생성
 // 렌더링은 로컬 Chrome 헤드리스로 한다 (CHROME_PATH로 경로 지정 가능).
 // 각 카드는 --dump-dom으로 내용 넘침(1350px 초과)을 검사하고, 넘치면 실패로 끝난다.
 import { execFileSync } from 'node:child_process'
 import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
-import { homedir, tmpdir } from 'node:os'
+import { tmpdir } from 'node:os'
 import { join, dirname } from 'node:path'
 import { fileURLToPath, pathToFileURL } from 'node:url'
 
@@ -101,7 +101,7 @@ cards.push(
 ${foot}`)
 )
 
-const outDir = outArg ?? join(homedir(), 'Downloads', `chalteok_insta_${slug}`)
+const outDir = outArg ?? join(root, 'promo', 'insta', slug)
 mkdirSync(outDir, { recursive: true })
 const work = mkdtempSync(join(tmpdir(), `chalteok-cards-${slug}-`))
 const chromeArgs = ['--headless=new', '--disable-gpu', '--hide-scrollbars', `--window-size=${W},${H}`, '--force-device-scale-factor=1']

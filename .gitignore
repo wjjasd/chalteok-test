@@ -50,3 +50,6 @@ lh-*.json
 
 # wrangler pages dev local state
 /.wrangler/
+
+# 인스타 카드 출력 (npm run insta-cards, 콘텐츠에서 재생성 가능)
+/promo/insta/

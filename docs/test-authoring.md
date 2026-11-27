@@ -125,6 +125,6 @@ promo: {
 },
 ```
 
-- 출력: `~/Downloads/chalteok_insta_<slug>/` — `card01.png`(표지) · `card02~`(결과 유형별) · 마지막(테스트 유도) · `caption.txt`
+- 출력: `promo/insta/<slug>/` (레포 안, git 미추적) — `card01.png`(표지) · `card02~`(결과 유형별) · 마지막(테스트 유도) · `caption.txt`
 - 각 카드의 내용 넘침을 자동 검사한다. 넘치면 실패 → 결과의 traits(앞 3개)·advice·tagline을 줄이거나 headline을 줄인다.
 - 로컬 Chrome이 필요하다 (`CHROME_PATH` 로 경로 지정 가능).
