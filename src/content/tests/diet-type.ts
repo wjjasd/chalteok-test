@@ -29,7 +29,7 @@ const test: TestDefinition = {
       heading: '어떤 유형이든 오래 가는 기본 습관',
       body: [
         '① 한 번에 다 바꾸지 않기: 식단, 운동, 수면을 동시에 바꾸면 금방 지쳐요. 이번 주에는 한 가지만 정해서 지켜 보세요.',
-        '② 잠과 걷기 챙기기: 잠이 부족하면 다음 날 식욕을 참기 어려워요. 특별한 운동이 아니어도 매일 조금씩 걷는 습관은 오래 가요.',
+        '② 잠과 걷기 챙기기: 잠이 부족한 날엔 식욕이 더 당기기 쉬워요. 특별한 운동이 아니어도 매일 조금씩 걷는 습관은 오래 가요.',
         '③ 기록은 가볍게: 매끼를 꼼꼼히 적기보다 "오늘 잘한 것 하나"만 적어도 흐름을 잃지 않아요.',
         '④ 무너져도 다음 끼니부터: 하루 많이 먹었다고 처음부터 다시 시작할 필요는 없어요. 다음 끼니에 평소대로 돌아오면 충분해요.',
       ],
@@ -96,7 +96,7 @@ const test: TestDefinition = {
       text: '다이어트 중인데 갑자기 회식이 잡혔다',
       options: [
         { label: '메뉴를 미리 보고 먹을 것을 정해 둔다', weights: { planner: 2 } },
-        { label: '오늘은 쉬는 날, 내일부터 다시', weights: { foodie: 2 } },
+        { label: '회식은 즐겨야지, 맛있는 메뉴부터 고른다', weights: { foodie: 2 } },
         { label: '옆자리 동료랑 "우리 적당히 먹자" 약속', weights: { mate: 1, turtle: 1 } },
         { label: '평소처럼 먹고 다음 날 조금 더 걷는다', weights: { turtle: 2 } },
       ],
@@ -106,7 +106,7 @@ const test: TestDefinition = {
       text: '밤 11시, 야식 생각이 난다',
       options: [
         { label: '물 한 잔 마시고 바로 잔다', weights: { turtle: 2 } },
-        { label: '다이어트 메이트한테 "나 좀 말려 줘"', weights: { mate: 1, allin: 1 } },
+        { label: '다이어트 메이트한테 "나 좀 말려 줘"', weights: { mate: 2 } },
         { label: '정신 차려 보니 배달 앱을 보고 있다', weights: { foodie: 2 } },
         { label: '이럴 때를 위해 사 둔 저칼로리 간식이 있다', weights: { gear: 2 } },
       ],
@@ -115,7 +115,7 @@ const test: TestDefinition = {
       id: 'q5',
       text: '운동을 하나 고른다면?',
       options: [
-        { label: '기록 남기기 좋은 헬스·홈트', weights: { planner: 1, allin: 1 } },
+        { label: '땀 쫙 빼는 고강도 운동', weights: { allin: 2 } },
         { label: '하루 만 보 걷기', weights: { turtle: 2 } },
         { label: '친구랑 같이 하는 운동 모임', weights: { mate: 2 } },
         { label: '요즘 뜨는 운동 장비부터 알아본다', weights: { gear: 2 } },
@@ -178,7 +178,7 @@ const test: TestDefinition = {
         { label: '평일이랑 똑같이 루틴대로', weights: { turtle: 2 } },
         { label: '주말엔 맛집 탐방이 국룰', weights: { foodie: 2 } },
         { label: '주말에 몰아서 운동한다', weights: { allin: 2 } },
-        { label: '다음 주 장보기와 식단 준비', weights: { planner: 1, gear: 1 } },
+        { label: '다음 주 장보기와 식단 준비', weights: { planner: 2 } },
       ],
     },
     {

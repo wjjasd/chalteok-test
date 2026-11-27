@@ -147,7 +147,7 @@ const test: TestDefinition = {
       options: [
         { label: '직접 출처를 찾아 확인한다', score: 0 },
         { label: '질문을 바꿔서 다시 물어본다', score: 2 },
-        { label: '다른 AI에게도 물어본다', score: 1 },
+        { label: '다른 AI에게도 물어본다', score: 2 },
         { label: 'AI가 그렇다면 그런 거겠지', score: 3 },
       ],
     },
@@ -177,7 +177,7 @@ const test: TestDefinition = {
       options: [
         { label: '오늘도 썼다', score: 0 },
         { label: '이번 주 안에', score: 1 },
-        { label: '직접 쓰고 맞춤법만 AI에게 맡긴다', score: 2 },
+        { label: '한 달쯤 전인 것 같다', score: 2 },
         { label: '기억이 가물가물하다', score: 3 },
       ],
     },
@@ -187,8 +187,8 @@ const test: TestDefinition = {
       options: [
         { label: '오히려 좋아, 평소랑 같다', score: 0 },
         { label: '좀 불편해도 해 볼 만하다', score: 1 },
-        { label: '몰래 쓸 방법부터 생각한다', score: 2 },
-        { label: '첫날부터 손이 허전할 것 같다', score: 3 },
+        { label: '몰래 쓸 방법부터 생각한다', score: 3 },
+        { label: '첫날부터 손이 허전할 것 같다', score: 2 },
       ],
     },
   ],

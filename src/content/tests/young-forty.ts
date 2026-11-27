@@ -77,7 +77,7 @@ const test: TestDefinition = {
         { label: '편한 게 최고, 늘 입던 걸로', score: 0 },
         { label: '깔끔한 기본템 조합', score: 1 },
         { label: '요즘 유행하는 핏으로 맞춘다', score: 2 },
-        { label: '아껴 둔 한정판 운동화부터 고른다', score: 3 },
+        { label: '요즘 꽂힌 스타일에 과감하게 도전한다', score: 3 },
       ],
     },
     {
@@ -157,7 +157,7 @@ const test: TestDefinition = {
         { label: '그냥 나이를 말한다', score: 0 },
         { label: '"많아요~" 하고 웃는다', score: 1 },
         { label: '"마음은 아직 20대"', score: 2 },
-        { label: '"몇 살로 보여요?"로 받아친다', score: 3 },
+        { label: '나이 얘기는 짧게, 요즘 빠진 취미 얘기로 넘어간다', score: 3 },
       ],
     },
     {
@@ -260,7 +260,7 @@ const test: TestDefinition = {
         '주말 일정에 운동 모임이 꼭 있어요',
         '신조어는 알자마자 바로 써 봐요',
         '최애 노래와 챌린지를 꿰고 있어요',
-        '"몇 살로 보여요?"가 은근 자신 있어요',
+        '나이 차이 많이 나는 친구가 자연스럽게 생겨요',
       ],
       advice: '요즘 이야기를 꺼내기 전에 상대가 요즘 좋아하는 것부터 물어보세요.',
       bestMatch: 'subtle',
