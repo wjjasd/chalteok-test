@@ -3,11 +3,17 @@ import type { TestDefinition } from '@/lib/tests/types'
 // @new-test:imports
 import quitTiming from './quit-timing'
 import stockType from './stock-type'
+import dietType from './diet-type'
+import aiDependency from './ai-dependency'
+import youngForty from './young-forty'
 
 export const TESTS: TestDefinition[] = [
   // @new-test:list
   quitTiming,
   stockType,
+  dietType,
+  aiDependency,
+  youngForty,
 ]
 
 export function getTest(slug: string): TestDefinition | undefined {
